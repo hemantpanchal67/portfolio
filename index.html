@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hemant Panchal | Technical Architect | Enterprise Solution Architect</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Portfolio of Hemant Panchal, Technical Architect and Enterprise Solution Architect with 15+ years of experience in distributed systems, low-code builder engines, .NET 10/8, Kafka, Kubernetes, and enterprise system design.">
+  <meta name="keywords" content="Hemant Panchal, Technical Architect, Enterprise Solution Architect, Solution Architect, .NET Architect, Microservices, Kafka, Low-Code Engine, System Design, Mumbai">
+  <meta name="author" content="Hemant Panchal">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph / Social Meta -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Hemant Panchal | Technical Architect & Enterprise Solution Architect">
+  <meta property="og:description" content="15+ years of enterprise architecture, distributed microservices, low-code engines, and high-performance system design.">
+  <meta property="og:url" content="https://hemantpanchal.github.io/portfolio/">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hemant Panchal | Technical Architect">
+  <meta name="twitter:description" content="Technical Architect & Enterprise Solution Architect with 15+ years of experience designing scalable systems.">
+
+  <!-- Favicon (Inline SVG) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230F2C59'/><text x='50%' y='65%' font-size='50' font-weight='800' fill='%2360A5FA' font-family='sans-serif' text-anchor='middle'>HP</text></svg>">
+
+  <!-- Stylesheet (Relative Path for GitHub Pages compatibility) -->
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+  <!-- Top Scroll Progress Bar -->
+  <div id="scroll-progress" role="progressbar" aria-label="Page scroll progress"></div>
+
+  <!-- Navigation Bar -->
+  <header class="navbar" role="banner">
+    <div class="container nav-container">
+      <a href="#hero" class="nav-logo" aria-label="Hemant Panchal Home">
+        <div class="logo-badge">HP</div>
+        <div class="logo-text">
+          <span class="logo-name">Hemant Panchal</span>
+          <span class="logo-role">Technical Architect</span>
+        </div>
+      </a>
+
+      <nav role="navigation" aria-label="Primary Navigation">
+        <ul class="nav-links" id="nav-links">
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#skills" class="nav-link">Skills</a></li>
+          <li><a href="#architecture" class="nav-link">Architecture</a></li>
+          <li><a href="#experience" class="nav-link">Experience</a></li>
+          <li><a href="#projects" class="nav-link">Projects</a></li>
+          <li><a href="#case-studies" class="nav-link">Case Studies</a></li>
+          <li><a href="#decisions" class="nav-link">Decisions</a></li>
+          <li><a href="#education" class="nav-link">Education</a></li>
+          <li><a href="#resume" class="nav-link">Resume</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle dark and light theme" title="Toggle Theme">
+          <!-- Sun Icon -->
+          <svg id="theme-icon-sun" viewBox="0 0 24 24">
+            <path d="M12 18C8.68629 18 6 15.3137 6 12C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16ZM11 1H13V4H11V1ZM11 20H13V23H11V20ZM3.51472 4.92893L4.92893 3.51472L7.05025 5.63604L5.63604 7.05025L3.51472 4.92893ZM16.9497 18.364L18.364 16.9497L20.4853 19.0711L19.0711 20.4853L16.9497 18.364ZM19.0711 3.51472L20.4853 4.92893L18.364 7.05025L16.9497 5.63604L19.0711 3.51472ZM5.63604 16.9497L7.05025 18.364L4.92893 20.4853L3.51472 19.0711L5.63604 16.9497ZM1 11H4V13H1V11ZM20 11H23V13H20V11Z"/>
+          </svg>
+          <!-- Moon Icon -->
+          <svg id="theme-icon-moon" style="display:none;" viewBox="0 0 24 24">
+            <path d="M10 7C10 10.866 13.134 14 17 14C18.7845 14 20.4187 13.3323 21.6667 12.228C20.4285 17.8494 15.4262 22 9.5 22C4.25329 22 0 17.7467 0 12.5C0 6.57378 4.1506 1.57152 9.77199 0.333313C8.66774 1.58133 8 3.21554 8 5C8 5.68884 8.1158 6.35338 8.3308 6.97457C8.8872 6.36881 9.68965 6 10.5 6C11.8807 6 13 7.11929 13 8.5C13 9.88071 11.8807 11 10.5 11C9.68965 11 8.8872 10.6312 8.3308 10.0254C8.1158 10.6466 8 11.3112 8 12C8 13.7845 8.66774 15.4187 9.77199 16.6667C15.3934 15.4285 19.544 10.4262 19.5 4.5C19.5 4.33146 19.495 4.16413 19.4851 3.99818C17.3879 5.86735 14.5779 7 11.5 7H10Z"/>
+          </svg>
+        </button>
+
+        <button id="hamburger-btn" class="hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================================================
+         HERO SECTION
+         ========================================================================== -->
+    <section id="hero" class="hero-section">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-content">
+            <div class="hero-status-pill">
+              <span class="status-dot"></span>
+              <span>Available for Technical Architect &amp; Solution Architect Opportunities</span>
+            </div>
+
+            <h1 class="hero-name">Hemant Panchal</h1>
+            <div class="hero-title">Technical Architect | Enterprise Solution Architect</div>
+
+            <p class="hero-summary">
+              Designing scalable enterprise applications, distributed microservices, and low-code builder ecosystems with 15+ years of engineering excellence, robust system architecture, and proven business outcomes across Banking, SaaS, Global Retail (Fortune 14), and High-Throughput platforms.
+            </p>
+
+            <div class="hero-cta-group">
+              <a href="#resume" class="btn btn-primary">
+                <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                <span>Download Resume</span>
+              </a>
+              <a href="#architecture" class="btn btn-secondary">
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                <span>View Architecture</span>
+              </a>
+              <a href="#experience" class="btn btn-secondary">
+                <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/></svg>
+                <span>View Experience</span>
+              </a>
+            </div>
+
+            <div class="hero-social-links">
+              <a href="mailto:career.hemantpanchal67@gmail.com" class="social-link" title="Email Hemant Panchal">
+                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                <span>career.hemantpanchal67@gmail.com</span>
+              </a>
+              <span class="social-link">📍 Mumbai, India</span>
+            </div>
+          </div>
+
+          <!-- Hero Architecture Live Spec Card -->
+          <div class="hero-spec-card reveal">
+            <div class="spec-card-header">
+              <div class="terminal-dots">
+                <span class="dot-red"></span>
+                <span class="dot-yellow"></span>
+                <span class="dot-green"></span>
+              </div>
+              <div class="spec-card-title">enterprise-architect-profile.json</div>
+            </div>
+
+            <div class="spec-metrics-list">
+              <div class="spec-item">
+                <div class="spec-icon">
+                  <svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+                </div>
+                <div class="spec-content">
+                  <h4>Core Architectural Expertise</h4>
+                  <p>Enterprise Solution Design, Microservices, Event-Driven Architecture (EDA), Clean Architecture &amp; Domain-Driven Design (DDD)</p>
+                </div>
+              </div>
+
+              <div class="spec-item">
+                <div class="spec-icon">
+                  <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+                </div>
+                <div class="spec-content">
+                  <h4>Enterprise Engine Ecosystem</h4>
+                  <p>Form Builder, Workflow Orchestration, Business Rule Engine (BRE), Document &amp; Report Engines, SLA Matrix &amp; Notification Engines</p>
+                </div>
+              </div>
+
+              <div class="spec-item">
+                <div class="spec-icon">
+                  <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+                </div>
+                <div class="spec-content">
+                  <h4>Modern Tech Backbone</h4>
+                  <p>.NET 10/8, ASP.NET Core, C#, Apache Kafka, PostgreSQL, Supabase, Redis, SQL Server, Kubernetes &amp; Azure/AWS</p>
+                </div>
+              </div>
+
+              <div class="spec-item">
+                <div class="spec-icon">
+                  <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                </div>
+                <div class="spec-content">
+                  <h4>Governance &amp; Reliability</h4>
+                  <p>Architecture Decision Records (ADRs), Zero-Trust Security, Idempotency, HA/DR, SonarQube Quality Gates</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Metrics Bar (Accurate from Resume) -->
+        <div class="metrics-bar reveal">
+          <div class="metric-card">
+            <div class="metric-number">15+</div>
+            <div class="metric-label">Years Engineering &amp; Architecture Experience</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-number">Fortune 14</div>
+            <div class="metric-label">Costco Wholesale Global eCommerce Delivery</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-number">900+</div>
+            <div class="metric-label">Enterprise Clients Reached (ZingHR SaaS)</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-number">7</div>
+            <div class="metric-label">Enterprise Builder &amp; Execution Engines</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         ABOUT ME / PROFESSIONAL SUMMARY
+         ========================================================================== -->
+    <section id="about" class="about-section">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">Executive Summary</span>
+          <h2 class="section-title">Professional Architecture Leadership</h2>
+          <p class="section-subtitle">A strategic technical architect who transforms complex business requirements into scalable, resilient, and maintainable software systems.</p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-text reveal">
+            <p>
+              I am an accomplished <strong>Technical Architect &amp; Enterprise Solution Architect</strong> with <strong>15+ years</strong> of continuous experience designing, engineering, and governing mission-critical enterprise systems.
+            </p>
+            <p>
+              Throughout my career, I have held technical leadership across high-stakes domains—spanning <strong>Banking &amp; FinTech solutions</strong>, <strong>Enterprise HRMS SaaS platforms (serving 900+ client organizations)</strong>, <strong>Fortune 14 Global Retail (Costco Wholesale US &amp; Canada)</strong>, <strong>High-Concurrency Live Sports Gaming (UEFA Champions League, IPL, Yahoo Cricket)</strong>, and <strong>Enterprise RFID Tracking Systems</strong>.
+            </p>
+            <p>
+              My primary architectural strength is bridging business strategy with technical execution: designing end-to-end architectures covering microservices, database models, asynchronous event messaging, API resiliency, zero-trust security, Kubernetes containerization, and continuous operational readiness.
+            </p>
+          </div>
+
+          <div class="about-pillars reveal">
+            <div class="pillar-card">
+              <div class="pillar-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/></svg>
+              </div>
+              <h3>Enterprise System Design</h3>
+              <p>Defining service boundaries, distributed data flows, domain models, and high-availability topologies.</p>
+            </div>
+
+            <div class="pillar-card">
+              <div class="pillar-icon">
+                <svg viewBox="0 0 24 24"><path d="M4 8h4V4H4v4zm6 12h4v-4h-4v4zm-6 0h4v-4H4v4zm0-6h4v-4H4v4zm6 0h4v-4h-4v4zm6-10v4h4V4h-4zm-6 4h4V4h-4v4zm6 6h4v-4h-4v4zm0 6h4v-4h-4v4z"/></svg>
+              </div>
+              <h3>Low-Code Builder Engines</h3>
+              <p>Architecting schema-driven Form, Workflow, BRE, Document, Report, SLA, and Notification engines.</p>
+            </div>
+
+            <div class="pillar-card">
+              <div class="pillar-icon">
+                <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+              </div>
+              <h3>Cloud &amp; Microservices</h3>
+              <p>Deploying resilient .NET 10/8 microservices, Kafka event streaming, and Kubernetes infrastructure.</p>
+            </div>
+
+            <div class="pillar-card">
+              <div class="pillar-icon">
+                <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              </div>
+              <h3>Governance &amp; Mentorship</h3>
+              <p>Authoring ADRs, establishing Clean Architecture / SOLID standards, and mentoring engineering squads.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         TECHNICAL EXPERTISE MATRIX
+         ========================================================================== -->
+    <section id="skills" class="skills-section">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">Core Competencies</span>
+          <h2 class="section-title">Technical Expertise &amp; Skills Matrix</h2>
+          <p class="section-subtitle">Verified technology stack and architectural capabilities based directly on enterprise project delivery.</p>
+        </div>
+
+        <div class="skills-grid reveal">
+          <!-- Card 1: Architecture & Design -->
+          <div class="skill-card">
+            <div class="skill-card-header">
+              <div class="skill-card-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              </div>
+              <h3>Architecture &amp; System Design</h3>
+            </div>
+            <div class="badges-container">
+              <span class="tech-badge primary-badge">Enterprise Architecture</span>
+              <span class="tech-badge primary-badge">Solution Architecture</span>
+              <span class="tech-badge">Microservices</span>
+              <span class="tech-badge">Distributed Systems</span>
+              <span class="tech-badge">Event-Driven Architecture</span>
+              <span class="tech-badge">Domain-Driven Design (DDD)</span>
+              <span class="tech-badge">Clean Architecture</span>
+              <span class="tech-badge">SOLID Principles</span>
+              <span class="tech-badge">High Availability (HA)</span>
+              <span class="tech-badge">Disaster Recovery (DR)</span>
+              <span class="tech-badge">Fault Tolerance</span>
+              <span class="tech-badge">ADR Governance</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Enterprise Builders & Engines -->
+          <div class="skill-card">
+            <div class="skill-card-header">
+              <div class="skill-card-icon">
+                <svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+              </div>
+              <h3>Enterprise Builders &amp; Engines</h3>
+            </div>
+            <div class="badges-container">
+              <span class="tech-badge primary-badge">Form Builder &amp; Engine</span>
+              <span class="tech-badge primary-badge">Workflow Builder &amp; Engine</span>
+              <span class="tech-badge primary-badge">Business Rule Engine (BRE)</span>
+              <span class="tech-badge">Report Builder &amp; Engine</span>
+              <span class="tech-badge">Document Builder &amp; Engine</span>
+              <span class="tech-badge">Dynamic Attribute Builder</span>
+              <span class="tech-badge">SLA &amp; Policy Engine</span>
+              <span class="tech-badge">Notification Builder &amp; Engine</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Frameworks & Languages -->
+          <div class="skill-card">
+            <div class="skill-card-header">
+              <div class="skill-card-icon">
+                <svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+              </div>
+              <h3>Frameworks &amp; Languages</h3>
+            </div>
+            <div class="badges-container">
+              <span class="tech-badge primary-badge">.NET 10</span>
+              <span class="tech-badge primary-badge">.NET 8</span>
+              <span class="tech-badge primary-badge">ASP.NET Core</span>
+              <span class="tech-badge">C#</span>
+              <span class="tech-badge">RESTful Web API</span>
+              <span class="tech-badge">ASP.NET MVC</span>
+              <span class="tech-badge">Windows Services</span>
+              <span class="tech-badge">JavaScript</span>
+              <span class="tech-badge">jQuery</span>
+              <span class="tech-badge">HTML5 / CSS3</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Databases & Caching -->
+          <div class="skill-card">
+            <div class="skill-card-header">
+              <div class="skill-card-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 4.02 2 6.5v11C2 19.98 6.48 22 12 22s10-2.02 10-4.5v-11C22 4.02 17.52 2 12 2zm0 18c-4.41 0-8-1.57-8-3.5V14.8c1.88 1.34 4.8 2.2 8 2.2s6.12-.86 8-2.2v1.7c0 1.93-3.59 3.5-8 3.5zm0-5.5c-4.41 0-8-1.57-8-3.5V9.3c1.88 1.34 4.8 2.2 8 2.2s6.12-.86 8-2.2v1.7c0 1.93-3.59 3.5-8 3.5zm0-5.5C7.59 9 4 7.43 4 5.5S7.59 2 12 2s8 1.57 8 3.5S16.41 9 12 9z"/></svg>
+              </div>
+              <h3>Databases &amp; Caching</h3>
+            </div>
+            <div class="badges-container">
+              <span class="tech-badge primary-badge">PostgreSQL</span>
+              <span class="tech-badge primary-badge">Supabase</span>
+              <span class="tech-badge primary-badge">Microsoft SQL Server</span>
+              <span class="tech-badge">Redis Caching</span>
+              <span class="tech-badge">Oracle</span>
+              <span class="tech-badge">Schema Design</span>
+              <span class="tech-badge">Stored Procedures</span>
+              <span class="tech-badge">Performance Indexing</span>
+              <span class="tech-badge">Query Optimization</span>
+            </div>
+          </div>
+
+          <!-- Card 5: Messaging & Event Streaming -->
+          <div class="skill-card">
+            <div class="skill-card-header">
+              <div class="skill-card-icon">
+                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/></svg>
+              </div>
+              <h3>Messaging &amp; Event Streaming</h3>
+            </div>
+            <div class="badges-container">
+              <span class="tech-badge primary-badge">Apache Kafka</span>
+              <span class="tech-badge primary-badge">RabbitMQ</span>
+              <span class="tech-badge">Message Queues</span>
+              <span class="tech-badge">Event Streaming</span>
+              <span class="tech-badge">Webhooks</span>
+              <span class="tech-badge">Idempotency Handlers</span>
+              <span class="tech-badge">Retry &amp; Circuit Breaker</span>
+              <span class="tech-badge">Dead-Letter Queues</span>
+            </div>
+          </div>
+
+          <!-- Card 6: Cloud, Containers & DevOps -->
+          <div class="skill-card">
+            <div class="skill-card-header">
+              <div class="skill-card-icon">
+                <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+              </div>
+              <h3>Cloud, Containers &amp; DevOps</h3>
+            </div>
+            <div class="badges-container">
+              <span class="tech-badge primary-badge">Microsoft Azure</span>
+              <span class="tech-badge primary-badge">Amazon Web Services (AWS)</span>
+              <span class="tech-badge primary-badge">Kubernetes</span>
+              <span class="tech-badge">Docker Containerization</span>
+              <span class="tech-badge">CI/CD Pipelines</span>
+              <span class="tech-badge">SonarQube Gates</span>
+              <span class="tech-badge">Environment Automation</span>
+              <span class="tech-badge">Release Management</span>
+            </div>
+          </div>
+
+          <!-- Card 7: Security, Testing & QA -->
+          <div class="skill-card">
+            <div class="skill-card-header">
+              <div class="skill-card-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+              </div>
+              <h3>Security &amp; Performance QA</h3>
+            </div>
+            <div class="badges-container">
+              <span class="tech-badge primary-badge">Zero-Trust Security</span>
+              <span class="tech-badge">OAuth2 &amp; OIDC</span>
+              <span class="tech-badge">Secrets Management</span>
+              <span class="tech-badge">Audit Logging</span>
+              <span class="tech-badge">JMeter</span>
+              <span class="tech-badge">BlazeMeter</span>
+              <span class="tech-badge">SonarQube</span>
+              <span class="tech-badge">WCAG / ADA Compliance</span>
+              <span class="tech-badge">APM &amp; Tracing</span>
+            </div>
+          </div>
+
+          <!-- Card 8: Leadership & Governance -->
+          <div class="skill-card">
+            <div class="skill-card-header">
+              <div class="skill-card-icon">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 3s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+              </div>
+              <h3>Leadership &amp; Governance</h3>
+            </div>
+            <div class="badges-container">
+              <span class="tech-badge primary-badge">Technical Leadership</span>
+              <span class="tech-badge primary-badge">Architecture Reviews</span>
+              <span class="tech-badge">Code Quality Enforcement</span>
+              <span class="tech-badge">Tech Debt Remediation</span>
+              <span class="tech-badge">Agile / Scrum Delivery</span>
+              <span class="tech-badge">Engineering Mentorship</span>
+              <span class="tech-badge">Cross-Team Alignment</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         ARCHITECTURE EXPERTISE & DIAGRAM SHOWCASE
+         ========================================================================== */
+    <section id="architecture" class="arch-section">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">System Design</span>
+          <h2 class="section-title">Architecture Showcase &amp; Diagrams</h2>
+          <p class="section-subtitle">Visual architecture models representing core enterprise solutions, low-code engines, and high-concurrency systems.</p>
+        </div>
+
+        <!-- Interactive Diagram Showcase -->
+        <div class="arch-showcase reveal">
+          <div class="arch-tabs-nav" role="tablist">
+            <button class="arch-tab-btn active" data-tab="builder" role="tab" aria-selected="true" aria-controls="tab-builder">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+              <span>1. Low-Code Engine Ecosystem</span>
+            </button>
+            <button class="arch-tab-btn" data-tab="microservices" role="tab" aria-selected="false" aria-controls="tab-microservices">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              <span>2. Microservices &amp; Event Mesh</span>
+            </button>
+            <button class="arch-tab-btn" data-tab="retail" role="tab" aria-selected="false" aria-controls="tab-retail">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 6h-2c0-2.76-2.24-5-5-5S7 3.24 7 6H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-7-3c1.66 0 3 1.34 3 3H9c0-1.66 1.34-3 3-3z"/></svg>
+              <span>3. Fortune 14 Retail Inventory</span>
+            </button>
+          </div>
+
+          <!-- Tab 1: Builder Ecosystem -->
+          <div class="arch-tab-panel active" id="tab-builder" role="tabpanel">
+            <div class="diagram-wrapper">
+              <img src="./assets/diagrams/enterprise-builder-engine.svg" alt="Enterprise Low-Code Engine Architecture Diagram" loading="lazy">
+            </div>
+            <p class="diagram-caption">
+              <strong>Enterprise Low-Code Engine Architecture:</strong> Visual design studio for Form, Workflow, BRE, Document, Report, SLA, and Notifications decoupled from execution runtimes via schema registries, API gateways, Kafka event streaming, and polyglot persistence.
+            </p>
+          </div>
+
+          <!-- Tab 2: Microservices -->
+          <div class="arch-tab-panel" id="tab-microservices" role="tabpanel">
+            <div class="diagram-wrapper">
+              <img src="./assets/diagrams/microservices-event-driven.svg" alt="Distributed Microservices & Event-Driven Architecture Diagram" loading="lazy">
+            </div>
+            <p class="diagram-caption">
+              <strong>Distributed Microservices &amp; Event-Driven Architecture:</strong> Zero-trust API Gateway layer routing to .NET 10/8 microservices with Apache Kafka event streaming, Supabase/PostgreSQL multi-tenancy, and Redis distributed caching.
+            </p>
+          </div>
+
+          <!-- Tab 3: Retail Inventory -->
+          <div class="arch-tab-panel" id="tab-retail" role="tabpanel">
+            <div class="diagram-wrapper">
+              <img src="./assets/diagrams/retail-inventory-system.svg" alt="Costco Wholesale Retail Inventory Architecture Diagram" loading="lazy">
+            </div>
+            <p class="diagram-caption">
+              <strong>Costco Wholesale High-Concurrency Inventory Architecture:</strong> Azure Cloud edge routing, ASP.NET MVC 5 eCommerce tire platform with Supabase (PostgreSQL) and Redis for sub-second inventory catalog lookups across US &amp; Canada.
+            </p>
+          </div>
+        </div>
+
+        <!-- Architectural Capabilities Grid -->
+        <div class="arch-capability-grid reveal">
+          <div class="arch-cap-card">
+            <h4>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="var(--accent-primary)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+              <span>API Resiliency &amp; Idempotency</span>
+            </h4>
+            <p>Designing semantic versioned REST APIs with circuit breakers, exponential retries, rate limiting, and idempotent key mechanisms for distributed consistency.</p>
+          </div>
+
+          <div class="arch-cap-card">
+            <h4>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="var(--accent-primary)"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+              <span>Zero-Trust Enterprise Security</span>
+            </h4>
+            <p>Enforcing OAuth2/OIDC authentication, granular RBAC, centralized secrets management, field-level encryption, and tamper-evident audit logging.</p>
+          </div>
+
+          <div class="arch-cap-card">
+            <h4>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="var(--accent-primary)"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+              <span>HA, Scalability &amp; DR</span>
+            </h4>
+            <p>Architecting multi-region disaster recovery, horizontal container scaling via Kubernetes, automated database failovers, and 99.99% uptime designs.</p>
+          </div>
+
+          <div class="arch-cap-card">
+            <h4>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="var(--accent-primary)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              <span>Architecture Governance (ADRs)</span>
+            </h4>
+            <p>Maintaining Architecture Decision Records (ADRs), conducting technical design assessments, POCs, and aligning business requirements with technical trade-offs.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         PROFESSIONAL EXPERIENCE TIMELINE
+         ========================================================================== -->
+    <section id="experience" class="exp-section">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">Career History</span>
+          <h2 class="section-title">Professional Experience Timeline</h2>
+          <p class="section-subtitle">15+ years of verified software engineering, technical architecture, and leadership delivery across enterprise organizations.</p>
+        </div>
+
+        <div class="timeline-container reveal">
+          
+          <!-- Company 1: Enablistar -->
+          <div class="timeline-item current">
+            <div class="timeline-marker"></div>
+            <div class="experience-card">
+              <div class="exp-header">
+                <div class="exp-role-info">
+                  <h3>Technical Architect</h3>
+                  <div class="exp-company">Enablistar Pvt. Ltd.</div>
+                  <div class="exp-domain">Domain: Banking &amp; Enterprise Financial Platforms</div>
+                </div>
+                <div class="exp-badge">April 2024 – Present</div>
+              </div>
+
+              <div class="exp-body">
+                <h4>End-to-End Solution Architecture &amp; Enterprise Engines</h4>
+                <ul class="exp-list">
+                  <li><strong>End-to-End Enterprise Architecture:</strong> Responsible for providing technical architecture and solution design covering application, database, APIs, integrations, infrastructure, security, deployment, monitoring, and operational readiness throughout the lifecycle.</li>
+                  <li><strong>Low-Code Builder Ecosystem:</strong> Architected complete suite of enterprise builders and runtime engines: <strong>Form Builder &amp; Dynamic Attribute Engine</strong>, <strong>Workflow Builder &amp; Orchestration Engine</strong>, <strong>Business Rule Engine (BRE)</strong>, <strong>Report Builder &amp; Engine</strong>, <strong>Document Builder &amp; Engine</strong>, <strong>SLA &amp; Approval Policy Engine</strong>, and <strong>Multichannel Notification Engine</strong>.</li>
+                  <li><strong>System Design &amp; Service Boundaries:</strong> Defined and validated system architecture, component design, service boundaries, data flows, and integration patterns for distributed enterprise services.</li>
+                  <li><strong>Technology Selection &amp; ADRs:</strong> Evaluated technology stacks, databases, cloud services, messaging, and caching with clear trade-offs; maintained Architecture Decision Records (ADRs).</li>
+                  <li><strong>Engineering Standards &amp; Clean Architecture:</strong> Defined and enforced SOLID principles, Clean Architecture, DDD, coding standards, and SonarQube quality gates across engineering teams.</li>
+                  <li><strong>API &amp; Integration Architecture:</strong> Architected resilient REST APIs and Kafka event integrations featuring semantic versioning, OAuth2/OIDC, circuit breaker, retry policies, timeouts, and idempotency.</li>
+                  <li><strong>Kubernetes, CI/CD &amp; Observability:</strong> Defined containerization standards, Kubernetes infrastructure, multi-stage automated CI/CD pipelines, audit logging, tracing, alerting, and DR protocols.</li>
+                  <li><strong>Technical Leadership &amp; Mentorship:</strong> Guided developers and technical leads, resolved complex production bottlenecks, and promoted engineering best practices.</li>
+                </ul>
+
+                <div class="exp-tech-stack">
+                  <span class="exp-tech-label">Tech Stack:</span>
+                  <span class="tech-badge">.NET 10</span>
+                  <span class="tech-badge">ASP.NET Core</span>
+                  <span class="tech-badge">Microservices</span>
+                  <span class="tech-badge">Apache Kafka</span>
+                  <span class="tech-badge">PostgreSQL</span>
+                  <span class="tech-badge">Supabase</span>
+                  <span class="tech-badge">Redis</span>
+                  <span class="tech-badge">Kubernetes</span>
+                  <span class="tech-badge">Clean Architecture</span>
+                  <span class="tech-badge">ADRs</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Company 2: ZingHR -->
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="experience-card">
+              <div class="exp-header">
+                <div class="exp-role-info">
+                  <h3>Project Manager / Technical Lead</h3>
+                  <div class="exp-company">Cnergyis Infotech India Pvt. Ltd. (ZingHR)</div>
+                  <div class="exp-domain">Domain: Enterprise HRMS SaaS Platform (900+ Enterprise Clients)</div>
+                </div>
+                <div class="exp-badge">March 2023 – April 2024</div>
+              </div>
+
+              <div class="exp-body">
+                <h4>Core Payroll Modernization &amp; Microservices Architecture</h4>
+                <ul class="exp-list">
+                  <li><strong>Payroll Engine Modernization:</strong> Re-architected core Payroll System into a generic, highly configurable multi-tenant engine supporting diverse salary structures and tax rules across 900+ enterprise clients.</li>
+                  <li><strong>Microservices &amp; Event-Driven Design:</strong> Implemented microservice architecture using .NET 8, Apache Kafka for asynchronous processing of payroll cycles, and Supabase (PostgreSQL).</li>
+                  <li><strong>Engineering Leadership &amp; Scrum:</strong> Led end-to-end development, code reviews, technical documentation, architectural grooming, and daily Scrum calls.</li>
+                  <li><strong>Requirement Translation:</strong> Collaborated with implementation specialists and delivery heads to convert client customization needs into standard, reusable product capabilities.</li>
+                </ul>
+
+                <div class="exp-tech-stack">
+                  <span class="exp-tech-label">Tech Stack:</span>
+                  <span class="tech-badge">.NET 8</span>
+                  <span class="tech-badge">Microservices</span>
+                  <span class="tech-badge">Apache Kafka</span>
+                  <span class="tech-badge">Supabase (PostgreSQL)</span>
+                  <span class="tech-badge">Scrum / Agile</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Company 3: Infogain (Costco Wholesale) -->
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="experience-card">
+              <div class="exp-header">
+                <div class="exp-role-info">
+                  <h3>Technology Lead</h3>
+                  <div class="exp-company">Infogain Software Engineering Business Technology</div>
+                  <div class="exp-domain">Client: Costco Wholesale Corporation (Fortune 14 Global Retailer) – US &amp; Canada</div>
+                </div>
+                <div class="exp-badge">Sept 2019 – March 2023 (3y 6m)</div>
+              </div>
+
+              <div class="exp-body">
+                <h4>Costco eCommerce Tire Solution &amp; Inventory Microservice</h4>
+                <ul class="exp-list">
+                  <li><strong>Fortune 14 Solution Delivery:</strong> Led end-to-end solution design, technical architecture, and delivery of the high-volume eCommerce Tire Solution for Costco Wholesale US and Canada.</li>
+                  <li><strong>Tire Inventory Module:</strong> Led the Tire Inventory module architecture, leveraging Supabase (PostgreSQL) and Redis distributed caching for high-speed stock searches alongside enterprise systems.</li>
+                  <li><strong>Quality, Accessibility &amp; Standards:</strong> Enforced coding standards, WCAG/ADA accessibility compliance, SonarQube quality gates, and automated code review pipelines.</li>
+                  <li><strong>Performance Engineering:</strong> Conducted performance load testing using BlazeMeter and JMeter, optimizing database queries, API response times, and caching hit ratios.</li>
+                  <li><strong>Client Leadership &amp; Releases:</strong> Led technical discussions with onsite senior leadership; managed release planning, production deployments, and critical incident support.</li>
+                  <li><strong>Honors &amp; Awards:</strong> Received <strong>"Star of the Month"</strong> award for outstanding performance and engineering excellence on the Costco Wholesale platform.</li>
+                </ul>
+
+                <div class="exp-tech-stack">
+                  <span class="exp-tech-label">Tech Stack:</span>
+                  <span class="tech-badge">ASP.NET MVC 5</span>
+                  <span class="tech-badge">C#</span>
+                  <span class="tech-badge">SQL Server</span>
+                  <span class="tech-badge">Supabase / PostgreSQL</span>
+                  <span class="tech-badge">Redis Cache</span>
+                  <span class="tech-badge">Azure Cloud</span>
+                  <span class="tech-badge">BlazeMeter / JMeter</span>
+                  <span class="tech-badge">SonarQube</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Company 4: Sportz Interactive -->
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="experience-card">
+              <div class="exp-header">
+                <div class="exp-role-info">
+                  <h3>Senior Associate – Technical Lead</h3>
+                  <div class="exp-company">Sportz Interactive Pvt. Ltd.</div>
+                  <div class="exp-domain">Clients: UEFA Champions League, Yahoo Cricket, IPL, European Rugby (EPCR), ESPN CricInfo</div>
+                </div>
+                <div class="exp-badge">Oct 2016 – Sept 2019 (2y 5m)</div>
+              </div>
+
+              <div class="exp-body">
+                <h4>High-Concurrency Live Sports Gaming &amp; Data Ingestion</h4>
+                <ul class="exp-list">
+                  <li><strong>High-Concurrency Gaming Platforms:</strong> Designed and developed high-throughput backend services and Web APIs for Daily Fantasy Cricket, Football, and Rugby games.</li>
+                  <li><strong>Low-Latency APIs:</strong> Engineered Web APIs in .NET Core, ASP.NET, Windows Services, AWS, and PostgreSQL to handle massive traffic spikes during live match broadcasts.</li>
+                  <li><strong>Real-Time Simulation &amp; Scoring:</strong> Built match data feed ingestion daemons, automated game simulation engines, and real-time point calculation/leaderboard systems.</li>
+                  <li><strong>API Contracts:</strong> Authored standardized API documentation for frontend/mobile clients and integrated third-party live sports data feeds.</li>
+                </ul>
+
+                <div class="exp-tech-stack">
+                  <span class="exp-tech-label">Tech Stack:</span>
+                  <span class="tech-badge">.NET Core</span>
+                  <span class="tech-badge">ASP.NET Web API</span>
+                  <span class="tech-badge">Windows Services</span>
+                  <span class="tech-badge">AWS</span>
+                  <span class="tech-badge">PostgreSQL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Company 5: Sodexo -->
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="experience-card">
+              <div class="exp-header">
+                <div class="exp-role-info">
+                  <h3>Programmer Analyst</h3>
+                  <div class="exp-company">Sodexo SVC India Pvt. Ltd.</div>
+                  <div class="exp-domain">Projects: Enterprise Payment System (EPS), EPS SWOS, Voucher SWOS, SVAR</div>
+                </div>
+                <div class="exp-badge">Oct 2014 – Oct 2016 (2y)</div>
+              </div>
+
+              <div class="exp-body">
+                <h4>Enterprise Payment &amp; Voucher Database Architecture</h4>
+                <ul class="exp-list">
+                  <li><strong>Database &amp; Transaction Systems:</strong> Designed relational database objects including tables, complex stored procedures, triggers, and functions on SQL Server.</li>
+                  <li><strong>Modular Architecture:</strong> Involved in architectural refactoring to convert siloed components into reusable, generic enterprise modules.</li>
+                  <li><strong>Performance Tuning:</strong> Modified heavy queries and batch procedures to optimize execution time for high-volume voucher transactions.</li>
+                </ul>
+
+                <div class="exp-tech-stack">
+                  <span class="exp-tech-label">Tech Stack:</span>
+                  <span class="tech-badge">ASP.NET MVC</span>
+                  <span class="tech-badge">SQL Server</span>
+                  <span class="tech-badge">Stored Procedures</span>
+                  <span class="tech-badge">Transaction Processing</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Company 6: Tara Jewels -->
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="experience-card">
+              <div class="exp-header">
+                <div class="exp-role-info">
+                  <h3>Software Developer</h3>
+                  <div class="exp-company">Tara Jewels Pvt. Ltd.</div>
+                  <div class="exp-domain">Projects: Online Retail Portal, Import-Export, Jewelry Catalog, Staff Attendance</div>
+                </div>
+                <div class="exp-badge">Oct 2012 – Oct 2014 (2y)</div>
+              </div>
+
+              <div class="exp-body">
+                <h4>Full-Stack Web Development &amp; Business Systems</h4>
+                <ul class="exp-list">
+                  <li><strong>Web Application Development:</strong> Developed web applications for online retail, inventory tracking, and import-export operations in ASP.NET MVC and C#.</li>
+                  <li><strong>Database &amp; Reporting:</strong> Designed stored procedures, database tables, and Excel reporting engines; reviewed code for performance optimization.</li>
+                </ul>
+
+                <div class="exp-tech-stack">
+                  <span class="exp-tech-label">Tech Stack:</span>
+                  <span class="tech-badge">ASP.NET MVC</span>
+                  <span class="tech-badge">C#</span>
+                  <span class="tech-badge">SQL Server 2005</span>
+                  <span class="tech-badge">jQuery</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Company 7: Aim Global Solutions -->
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="experience-card">
+              <div class="exp-header">
+                <div class="exp-role-info">
+                  <h3>Software Developer</h3>
+                  <div class="exp-company">Aim Global Solutions Pvt. Ltd.</div>
+                  <div class="exp-domain">Projects: RFID Vehicle/Document Tracking, Prison Management System, Defense Applications</div>
+                </div>
+                <div class="exp-badge">Jun 2011 – Oct 2012 (1y 6m)</div>
+              </div>
+
+              <div class="exp-body">
+                <h4>RFID Hardware Integration &amp; Smart Device Applications</h4>
+                <ul class="exp-list">
+                  <li><strong>RFID &amp; Smart Device Engineering:</strong> Developed software for RFID vehicle tracking, document tracking, and handheld smart devices (Windows CE) with RFID readers and tags.</li>
+                  <li><strong>Client Engagement:</strong> Participated in requirement gathering with enterprise/defense stakeholders and conducted live on-site demonstrations.</li>
+                </ul>
+
+                <div class="exp-tech-stack">
+                  <span class="exp-tech-label">Tech Stack:</span>
+                  <span class="tech-badge">ASP.NET</span>
+                  <span class="tech-badge">Windows Applications</span>
+                  <span class="tech-badge">Windows CE</span>
+                  <span class="tech-badge">RFID Devices &amp; Tags</span>
+                  <span class="tech-badge">SQL Server 2005</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         ENTERPRISE PROJECTS
+         ========================================================================== -->
+    <section id="projects" class="projects-section">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">Portfolio Highlights</span>
+          <h2 class="section-title">Key Enterprise Projects</h2>
+          <p class="section-subtitle">Significant enterprise systems delivered across banking, SaaS, global retail, and high-concurrency platforms.</p>
+        </div>
+
+        <div class="projects-grid reveal">
+          <!-- Project 1: Low-Code Engine Ecosystem -->
+          <div class="project-card">
+            <div>
+              <div class="project-card-header">
+                <span class="project-domain">Banking / Enterprise</span>
+                <span class="tech-badge">Enablistar</span>
+              </div>
+              <h3>Low-Code Builder &amp; Rules Platform</h3>
+              <div class="project-role">Technical Architect</div>
+              <p class="project-description">
+                End-to-end architecture of an extensible enterprise engine suite enabling business users to configure dynamic forms, workflows, business rules, reports, documents, SLAs, and omnichannel notifications without code changes.
+              </p>
+              <ul class="project-highlights">
+                <li><strong>Architecture:</strong> Schema-driven Microservices + Kafka + PostgreSQL</li>
+                <li><strong>7 Integrated Engines:</strong> Form, Workflow, BRE, Document, Report, SLA, Notification</li>
+                <li><strong>Standards:</strong> Clean Architecture, DDD, ADRs, Zero-Trust Security</li>
+              </ul>
+            </div>
+            <div class="exp-tech-stack">
+              <span class="tech-badge">.NET 10</span>
+              <span class="tech-badge">Kafka</span>
+              <span class="tech-badge">PostgreSQL</span>
+              <span class="tech-badge">Kubernetes</span>
+            </div>
+          </div>
+
+          <!-- Project 2: ZingHR Payroll Engine -->
+          <div class="project-card">
+            <div>
+              <div class="project-card-header">
+                <span class="project-domain">HRMS SaaS (900+ Clients)</span>
+                <span class="tech-badge">ZingHR</span>
+              </div>
+              <h3>Multi-Tenant Payroll Modernization</h3>
+              <div class="project-role">Project Manager / Tech Lead</div>
+              <p class="project-description">
+                Modernized the core payroll engine into a generic, multi-tenant microservices platform capable of executing complex statutory calculations and payroll cycles across 900+ enterprise clients.
+              </p>
+              <ul class="project-highlights">
+                <li><strong>Architecture:</strong> Event-driven Microservices with Kafka &amp; Supabase</li>
+                <li><strong>Impact:</strong> Unified payroll computation logic across 900+ client organizations</li>
+                <li><strong>Leadership:</strong> Managed Scrum sprint execution, reviews, and delivery</li>
+              </ul>
+            </div>
+            <div class="exp-tech-stack">
+              <span class="tech-badge">.NET 8</span>
+              <span class="tech-badge">Apache Kafka</span>
+              <span class="tech-badge">Supabase</span>
+              <span class="tech-badge">PostgreSQL</span>
+            </div>
+          </div>
+
+          <!-- Project 3: Costco Wholesale eCommerce -->
+          <div class="project-card">
+            <div>
+              <div class="project-card-header">
+                <span class="project-domain">Fortune 14 Global Retail</span>
+                <span class="tech-badge">Costco Wholesale</span>
+              </div>
+              <h3>Costco eCommerce Tire Solution</h3>
+              <div class="project-role">Technology Lead</div>
+              <p class="project-description">
+                Led the architecture and delivery of the high-traffic eCommerce Tire platform for Costco Wholesale US and Canada, including the Tire Inventory microservice for real-time warehouse availability.
+              </p>
+              <ul class="project-highlights">
+                <li><strong>Architecture:</strong> ASP.NET MVC 5, Redis Cache, Supabase (PostgreSQL), Azure</li>
+                <li><strong>Quality &amp; Compliance:</strong> WCAG/ADA accessibility &amp; SonarQube gates</li>
+                <li><strong>Recognition:</strong> Awarded "Star of the Month" for delivery excellence</li>
+              </ul>
+            </div>
+            <div class="exp-tech-stack">
+              <span class="tech-badge">ASP.NET MVC</span>
+              <span class="tech-badge">Redis</span>
+              <span class="tech-badge">Supabase</span>
+              <span class="tech-badge">BlazeMeter</span>
+            </div>
+          </div>
+
+          <!-- Project 4: Fantasy Sports Gaming -->
+          <div class="project-card">
+            <div>
+              <div class="project-card-header">
+                <span class="project-domain">Sports Fantasy &amp; Gaming</span>
+                <span class="tech-badge">Sportz Interactive</span>
+              </div>
+              <h3>Real-Time Live Fantasy Gaming Backend</h3>
+              <div class="project-role">Senior Associate – Tech Lead</div>
+              <p class="project-description">
+                Architected high-throughput backend APIs and simulation daemons for Daily Fantasy sports games powering UEFA Champions League, Yahoo Cricket, IPL, and ESPN CricInfo platforms.
+              </p>
+              <ul class="project-highlights">
+                <li><strong>Architecture:</strong> .NET Core Web API, Windows Services, AWS, PostgreSQL</li>
+                <li><strong>High Concurrency:</strong> Handled massive traffic spikes during live match broadcasts</li>
+                <li><strong>Real-time Feeds:</strong> Automated live match point calculations and rankings</li>
+              </ul>
+            </div>
+            <div class="exp-tech-stack">
+              <span class="tech-badge">.NET Core</span>
+              <span class="tech-badge">Web API</span>
+              <span class="tech-badge">AWS</span>
+              <span class="tech-badge">PostgreSQL</span>
+            </div>
+          </div>
+
+          <!-- Project 5: Enterprise Payment System -->
+          <div class="project-card">
+            <div>
+              <div class="project-card-header">
+                <span class="project-domain">Payments &amp; Vouchers</span>
+                <span class="tech-badge">Sodexo</span>
+              </div>
+              <h3>Enterprise Payment &amp; Voucher Suite</h3>
+              <div class="project-role">Programmer Analyst</div>
+              <p class="project-description">
+                Designed database architecture, stored procedures, and modular web applications for Sodexo EPS and Voucher SWOS transaction platforms.
+              </p>
+              <ul class="project-highlights">
+                <li><strong>Architecture:</strong> ASP.NET MVC, Microsoft SQL Server, Stored Procedures</li>
+                <li><strong>Optimization:</strong> Refactored heavy queries and streamlined transaction batches</li>
+              </ul>
+            </div>
+            <div class="exp-tech-stack">
+              <span class="tech-badge">ASP.NET MVC</span>
+              <span class="tech-badge">SQL Server</span>
+              <span class="tech-badge">Transaction DB</span>
+            </div>
+          </div>
+
+          <!-- Project 6: RFID Handheld Tracking -->
+          <div class="project-card">
+            <div>
+              <div class="project-card-header">
+                <span class="project-domain">RFID &amp; Embedded Systems</span>
+                <span class="tech-badge">Aim Global</span>
+              </div>
+              <h3>RFID Smart Device Tracking Platform</h3>
+              <div class="project-role">Software Developer</div>
+              <p class="project-description">
+                Engineered RFID vehicle tracking, document tracking, and smart handheld device applications (Windows CE) with RFID reader/tag integrations for defense and prison management.
+              </p>
+              <ul class="project-highlights">
+                <li><strong>Integration:</strong> RFID hardware protocols, Windows CE handheld readers</li>
+                <li><strong>Delivery:</strong> Onsite client demonstrations and deployment</li>
+              </ul>
+            </div>
+            <div class="exp-tech-stack">
+              <span class="tech-badge">Windows CE</span>
+              <span class="tech-badge">RFID Hardware</span>
+              <span class="tech-badge">ASP.NET</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         ARCHITECTURE CASE STUDIES (EXPANDABLE)
+         ========================================================================== -->
+    <section id="case-studies" class="case-studies-section">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">Deep Dives</span>
+          <h2 class="section-title">Architecture Case Studies</h2>
+          <p class="section-subtitle">In-depth technical breakdown of business challenges, system design decisions, scalability, and engineering contributions.</p>
+        </div>
+
+        <div class="case-studies-container reveal">
+          
+          <!-- Case Study 1: Enablistar Low-Code -->
+          <div class="case-study-card open">
+            <div class="case-study-header" role="button" tabindex="0" aria-expanded="true">
+              <div class="case-study-title-group">
+                <h3>Case Study 1: Enterprise Low-Code Builder &amp; Dynamic Engine Platform</h3>
+                <div class="case-study-meta">
+                  <span>Enablistar Pvt. Ltd.</span> • <span>Banking &amp; Enterprise</span> • <span>Role: Technical Architect</span>
+                </div>
+              </div>
+              <div class="case-study-toggle-icon">
+                <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+              </div>
+            </div>
+
+            <div class="case-study-content">
+              <div class="case-study-grid">
+                <div class="case-block">
+                  <h4>Business Problem &amp; Objective</h4>
+                  <p>Enterprise banking applications required frequent changes to dynamic forms, approval matrices, document templates, and business rules, which previously required time-consuming code changes, manual QA cycles, and production redeployments.</p>
+                </div>
+
+                <div class="case-block">
+                  <h4>Architectural Approach</h4>
+                  <p>Architected a decoupled, metadata-driven low-code platform featuring dedicated runtime engines (Form, Workflow, BRE, Document, Report, SLA, Notification) backed by a centralized schema registry and event-driven messaging.</p>
+                </div>
+
+                <div class="case-block">
+                  <h4>Key Design Decisions &amp; Trade-offs</h4>
+                  <ul>
+                    <li><strong>Declarative Rule Engine:</strong> Decoupled business logic from core codebase using condition evaluation trees.</li>
+                    <li><strong>State Machine Workflows:</strong> Modeled workflows as deterministic state machines to ensure auditability and recoverability.</li>
+                    <li><strong>Architecture Decision Records (ADRs):</strong> Maintained ADRs documenting stack selections and boundary decisions.</li>
+                  </ul>
+                </div>
+
+                <div class="case-block">
+                  <h4>Scalability, Reliability &amp; Security</h4>
+                  <ul>
+                    <li><strong>Scalability:</strong> Stateless execution engines horizontally scalable on Kubernetes with Redis caching.</li>
+                    <li><strong>Reliability:</strong> Kafka event queues with idempotent consumers and dead-letter handling.</li>
+                    <li><strong>Security:</strong> Zero-Trust access control, OAuth2/OIDC, and immutable audit logs.</li>
+                  </ul>
+                </div>
+
+                <div class="case-block" style="grid-column: 1 / -1;">
+                  <h4>My Architectural Responsibility</h4>
+                  <p>Provided end-to-end technical architecture, selected technology frameworks, authored system specifications, defined API contracts, enforced Clean Architecture/DDD/SOLID standards, and guided development leads through implementation.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Case Study 2: ZingHR Multi-Tenant Payroll -->
+          <div class="case-study-card">
+            <div class="case-study-header" role="button" tabindex="0" aria-expanded="false">
+              <div class="case-study-title-group">
+                <h3>Case Study 2: Multi-Tenant Enterprise Payroll Modernization</h3>
+                <div class="case-study-meta">
+                  <span>ZingHR</span> • <span>HRMS SaaS (900+ Clients)</span> • <span>Role: Project Manager / Tech Lead</span>
+                </div>
+              </div>
+              <div class="case-study-toggle-icon">
+                <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+              </div>
+            </div>
+
+            <div class="case-study-content">
+              <div class="case-study-grid">
+                <div class="case-block">
+                  <h4>Business Problem &amp; Objective</h4>
+                  <p>With over 900 enterprise clients having bespoke payroll formulas, tax calculation rules, and statutory compliances, the legacy system faced performance bottlenecks and high maintenance overhead during month-end payroll execution.</p>
+                </div>
+
+                <div class="case-block">
+                  <h4>Architectural Approach</h4>
+                  <p>Architected a generic multi-tenant payroll engine leveraging .NET 8 microservices, Supabase (PostgreSQL) partitioned data models, and Apache Kafka for asynchronous batch processing.</p>
+                </div>
+
+                <div class="case-block">
+                  <h4>Key Design Decisions</h4>
+                  <ul>
+                    <li><strong>Generic Formula Engine:</strong> Abstracted client-specific payroll calculation formulas into configurable rule sets.</li>
+                    <li><strong>Asynchronous Batch Queuing:</strong> Decoupled bulk salary calculations from web UI using Kafka event topics.</li>
+                  </ul>
+                </div>
+
+                <div class="case-block">
+                  <h4>Scalability &amp; Delivery Management</h4>
+                  <ul>
+                    <li><strong>High-Throughput Batching:</strong> Enabled parallel processing of payroll batches across distributed worker nodes.</li>
+                    <li><strong>Agile Execution:</strong> Managed daily Scrum calls, code reviews, and cross-team delivery milestones.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Case Study 3: Costco eCommerce Tire Solution -->
+          <div class="case-study-card">
+            <div class="case-study-header" role="button" tabindex="0" aria-expanded="false">
+              <div class="case-study-title-group">
+                <h3>Case Study 3: Fortune 14 Global Retail eCommerce &amp; Inventory Engine</h3>
+                <div class="case-study-meta">
+                  <span>Infogain / Costco Wholesale</span> • <span>Global Retail</span> • <span>Role: Technology Lead</span>
+                </div>
+              </div>
+              <div class="case-study-toggle-icon">
+                <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+              </div>
+            </div>
+
+            <div class="case-study-content">
+              <div class="case-study-grid">
+                <div class="case-block">
+                  <h4>Business Problem &amp; Objective</h4>
+                  <p>Costco Wholesale required a highly scalable, accessible eCommerce tire platform to support millions of shoppers across the US and Canada with real-time tire inventory availability across hundreds of regional warehouses.</p>
+                </div>
+
+                <div class="case-block">
+                  <h4>Architectural Approach</h4>
+                  <p>Engineered the eCommerce platform utilizing ASP.NET MVC 5 and C#, coupled with a dedicated Tire Inventory module powered by Supabase (PostgreSQL) and Redis distributed caching for sub-second inventory lookups.</p>
+                </div>
+
+                <div class="case-block">
+                  <h4>Performance &amp; Quality Engineering</h4>
+                  <ul>
+                    <li><strong>Stress Testing:</strong> Conducted comprehensive load tests via BlazeMeter and JMeter to ensure peak holiday resilience.</li>
+                    <li><strong>Compliance:</strong> Enforced WCAG/ADA accessibility standards and SonarQube quality gates.</li>
+                  </ul>
+                </div>
+
+                <div class="case-block">
+                  <h4>Leadership &amp; Business Impact</h4>
+                  <ul>
+                    <li><strong>Stakeholder Alignment:</strong> Led technical roadmap steering with Costco onsite senior leadership.</li>
+                    <li><strong>Award:</strong> Received the "Star of the Month" award for engineering excellence and delivery reliability.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         ARCHITECTURE THINKING & DECISION FRAMEWORK
+         ========================================================================== -->
+    <section id="decisions" class="decisions-section">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">Methodology</span>
+          <h2 class="section-title">Architecture Thinking &amp; Governance</h2>
+          <p class="section-subtitle">How I approach architectural decision-making, evaluate trade-offs, and maintain long-term system health.</p>
+        </div>
+
+        <div class="decisions-grid reveal">
+          <div class="decision-card">
+            <h3>Architecture Decision Records (ADRs)</h3>
+            <div class="decision-context">Governance &amp; Traceability</div>
+            <p>I establish and maintain ADRs to formally document context, options evaluated, chosen architecture, consequences, and trade-offs, ensuring institutional technical clarity across engineering teams.</p>
+          </div>
+
+          <div class="decision-card">
+            <h3>Declarative Engines vs. Custom Code</h3>
+            <div class="decision-context">Maintainability &amp; Agility</div>
+            <p>Where business rules and forms evolve rapidly, I architect schema-driven engines (BRE, Form Builder) that decouple business policy changes from software deployment cycles.</p>
+          </div>
+
+          <div class="decision-card">
+            <h3>Polyglot Persistence &amp; Caching</h3>
+            <div class="decision-context">Performance &amp; Cost Optimization</div>
+            <p>I strategically match storage technologies to access patterns—using PostgreSQL/Supabase for structured data, Redis for sub-millisecond caching, and SQL Server for relational reporting.</p>
+          </div>
+
+          <div class="decision-card">
+            <h3>Resilient Asynchronous Messaging</h3>
+            <div class="decision-context">Decoupling &amp; Fault Tolerance</div>
+            <p>I design event streaming via Apache Kafka and message queues with strict idempotency and retry policies, isolating failures and preventing cascading outages in distributed systems.</p>
+          </div>
+
+          <div class="decision-card">
+            <h3>Zero-Trust Security &amp; Compliance</h3>
+            <div class="decision-context">Security Architecture</div>
+            <p>I embed security at the architectural core: token-based authentication (OAuth2/OIDC), centralized secrets management, encryption at rest/in transit, and tamper-evident audit logging.</p>
+          </div>
+
+          <div class="decision-card">
+            <h3>Quality Gates &amp; Observability</h3>
+            <div class="decision-context">Operational Readiness</div>
+            <p>I enforce automated SonarQube quality gates, load testing with JMeter/BlazeMeter, distributed tracing, and actionable alerting to ensure systems are production-ready on day one.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         EDUCATION & HONORS
+         ========================================================================== -->
+    <section id="education" class="education-section">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">Credentials</span>
+          <h2 class="section-title">Education &amp; Key Recognition</h2>
+          <p class="section-subtitle">Academic background and organizational honors verified from professional career history.</p>
+        </div>
+
+        <div class="edu-rec-grid reveal">
+          <!-- Education Card -->
+          <div class="edu-card">
+            <h3 style="margin-bottom: 1.5rem; font-size: 1.25rem;">Academic Qualifications</h3>
+            
+            <div class="edu-item">
+              <div class="edu-degree">Bachelor of Science in Information Technology (B.Sc. IT)</div>
+              <div class="edu-inst">Mumbai University – Usha Pravin Gandhi College of Management</div>
+              <div class="edu-meta">Graduated: 2011 | Score: 71.33% (First Class with Distinction)</div>
+            </div>
+
+            <div class="edu-item">
+              <div class="edu-degree">Higher Secondary Certificate (H.S.C.)</div>
+              <div class="edu-inst">Maharashtra State Board – Mithibai College</div>
+              <div class="edu-meta">Completed: 2008 | Score: 68.33%</div>
+            </div>
+
+            <div class="edu-item">
+              <div class="edu-degree">Secondary School Certificate (S.S.C.)</div>
+              <div class="edu-inst">Maharashtra State Board – G.P.P. High School</div>
+              <div class="edu-meta">Completed: 2006 | Score: 77.87%</div>
+            </div>
+          </div>
+
+          <!-- Recognition Card -->
+          <div class="rec-card">
+            <h3 style="margin-bottom: 1.5rem; font-size: 1.25rem;">Honors &amp; Recognition</h3>
+            
+            <div class="award-item">
+              <div class="award-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
+              <div class="award-details">
+                <h4>"Star of the Month" Award</h4>
+                <p>Awarded by Infogain Software Engineering for outstanding engineering performance, technical leadership, and delivery excellence on the Costco Wholesale platform.</p>
+              </div>
+            </div>
+
+            <div class="award-item">
+              <div class="award-icon">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14l-5-5 1.41-1.41L12 14.17l7.59-7.59L21 8l-9 9z"/></svg>
+              </div>
+              <div class="award-details">
+                <h4>15+ Years Industry Milestones</h4>
+                <p>Successfully designed and deployed enterprise systems supporting Fortune 14 global retail operations, 900+ enterprise SaaS clients, and millions of concurrent live sports users.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         RESUME DOWNLOAD SECTION
+         ========================================================================== -->
+    <section id="resume" class="resume-section">
+      <div class="container">
+        <div class="resume-banner reveal">
+          <div class="resume-info">
+            <span class="section-tag" style="margin-bottom: 0.5rem;">Curriculum Vitae</span>
+            <h3>Download Complete Technical Architect Resume</h3>
+            <p>Access the complete, recruiter-ready resume in PDF or Word (.docx) format covering full career history, low-code engine architectures, microservices implementations, and technical competencies.</p>
+          </div>
+
+          <div class="resume-actions">
+            <a href="./assets/resume.pdf" class="btn btn-primary" download="Hemant_Panchal_Resume.pdf">
+              <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+              <span>Download PDF</span>
+            </a>
+            <a href="./assets/Hemant_Panchal_Resume.docx" class="btn btn-secondary" download="Hemant_Panchal_Resume.docx">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+              <span>Download DOCX</span>
+            </a>
+            <a href="./assets/resume.pdf" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+              <span>View PDF</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         CONTACT SECTION
+         ========================================================================== -->
+    <section id="contact" class="contact-section">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">Get In Touch</span>
+          <h2 class="section-title">Connect &amp; Collaborate</h2>
+          <p class="section-subtitle">Interested in discussing enterprise architecture, solution design, technical leadership, or consulting opportunities?</p>
+        </div>
+
+        <div class="contact-grid reveal">
+          <div class="contact-info">
+            <p>
+              I am always open to discussing enterprise solution design, low-code platform architecture, microservices transformations, and senior engineering leadership roles.
+            </p>
+            <a href="mailto:career.hemantpanchal67@gmail.com" class="btn btn-primary" style="margin-bottom: 1.5rem;">
+              <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+              <span>Send Direct Email</span>
+            </a>
+          </div>
+
+          <div class="contact-card-list">
+            <div class="contact-card">
+              <div class="contact-card-left">
+                <div class="contact-icon">
+                  <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </div>
+                <div>
+                  <div class="contact-label">Email Address</div>
+                  <div class="contact-value">career.hemantpanchal67@gmail.com</div>
+                </div>
+              </div>
+              <button id="copy-email-btn" class="copy-btn" title="Copy email address to clipboard">Copy</button>
+            </div>
+
+            <div class="contact-card">
+              <div class="contact-card-left">
+                <div class="contact-icon">
+                  <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                </div>
+                <div>
+                  <div class="contact-label">Phone Number</div>
+                  <div class="contact-value">+91-8108710030</div>
+                </div>
+              </div>
+              <a href="tel:+918108710030" class="copy-btn">Call</a>
+            </div>
+
+            <div class="contact-card">
+              <div class="contact-card-left">
+                <div class="contact-icon">
+                  <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                </div>
+                <div>
+                  <div class="contact-label">Location</div>
+                  <div class="contact-value">Mumbai, Maharashtra, India</div>
+                </div>
+              </div>
+              <span class="copy-btn" style="cursor: default; opacity: 0.7;">UTC+5:30</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container footer-container">
+      <div class="footer-text">
+        © 2026 Hemant Panchal. All rights reserved. | Technical Architect &amp; Enterprise Solution Architect.
+      </div>
+      <div class="footer-links">
+        <a href="#hero" class="social-link">Back to Top</a>
+        <a href="mailto:career.hemantpanchal67@gmail.com" class="social-link">Email</a>
+        <a href="./assets/resume.pdf" class="social-link" download>Resume</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back To Top Floating Button -->
+  <button id="back-to-top" class="back-to-top" aria-label="Scroll back to top of page" title="Back to Top">
+    <svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+  </button>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="alert" aria-live="polite">
+    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+    <span id="toast-msg">Email copied to clipboard!</span>
+  </div>
+
+  <!-- Vanilla JavaScript -->
+  <script src="./script.js"></script>
+</body>
+</html>
