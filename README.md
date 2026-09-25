@@ -9,7 +9,7 @@ A production-quality, fast, accessible, and lightweight personal portfolio websi
 - **Senior Positioning:** Communicates enterprise-grade technical leadership, distributed system design, low-code/no-code engine architecture, and governance.
 - **Zero Framework Bloat:** Built with pure **HTML5**, **CSS3**, **Vanilla JavaScript**, and responsive **SVGs**. No runtime dependencies, no backend, no server requirements.
 - **Subpath & Local Compatibility:** Uses strictly relative paths (`./`) ensuring seamless operation both locally (`file:///` or `localhost`) and under GitHub Pages subpaths (e.g., `https://username.github.io/repository/`).
-- **Interactive Features:** Dark/Light theme toggle (persisted via `localStorage` with `prefers-color-scheme` fallback), dynamic SVG architecture diagram tab switcher, expandable case studies, sticky navigation scroll spy, scroll progress bar, 1-click email copy toast, and smooth scroll reveal animations.
+- **Interactive Features:** Dark/Light theme toggle (persisted via `localStorage` with `prefers-color-scheme` fallback), expandable case studies, sticky navigation scroll spy, scroll progress bar, 1-click email copy toast, and smooth scroll reveal animations.
 - **Recruiter Optimized:** Executive scannability, verified metrics (15+ Years, Fortune 14 Retail, 900+ SaaS Clients), and instant resume download options (PDF and Word `.docx`).
 
 ---
