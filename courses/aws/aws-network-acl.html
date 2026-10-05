@@ -364,6 +364,14 @@
 
   :root { --tk-kw:#0000ff; --tk-ct:#af00db; --tk-str:#a31515; --tk-com:#008000; --tk-num:#098658; --tk-ty:#267f99; --tk-fn:#795e26; --tk-var:#001080; }
   :root[data-theme="dark"], :root[data-theme="blueprint"] { --tk-kw:#7cc4ff; --tk-ct:#e3a6ff; --tk-str:#ffb08a; --tk-com:#8fd18f; --tk-num:#c8e8a8; --tk-ty:#5ee6cf; --tk-fn:#ffe39a; --tk-var:#b8e4ff; }
+  /* iPad / iOS Safari: lock the page itself so only #cmsmain and #cmsside scroll. Without this the whole window can scroll
+     (rubber-band, URL-bar resize, orientation change) and the top bar plus breadcrumb row slide out of view. */
+  html { overscroll-behavior: none; }
+  body.cms { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
+  body.cms #cms { position: absolute; top: 0; left: 0; right: 0; bottom: 0; height: auto; }
+  #cmsmain, #cmsside { overscroll-behavior: contain; }
+  #cmsbar { position: relative; z-index: 30; }
+
   /* code editor background: off-white (not the theme's blue tint); dark editor for the Dark theme; Blueprint keeps its own tone */
   :root { --codebg:#fbfaf5; }
   :root[data-theme="dark"] { --codebg:#1e1e1e; }
@@ -1230,7 +1238,19 @@ aws logs filter-log-events --log-group-name vpc-flow --filter-pattern "REJECT"</
   }
   window.__highlightCode = run; window.__highlight = highlight;
 
-  function start() { initHome(); run(); setTimeout(run, 400); setTimeout(run, 1500); }
+  /* ---------------- keep the window pinned (iPad rotation / URL-bar resize can scroll it) ---------------- */
+  function pin() {
+    if (!document.body.classList.contains('cms')) return;
+    if (window.pageYOffset || window.pageXOffset) window.scrollTo(0, 0);
+    var root = document.documentElement; if (root.scrollTop) root.scrollTop = 0; if (document.body.scrollTop) document.body.scrollTop = 0;
+  }
+  function pinSoon() { pin(); setTimeout(pin, 100); setTimeout(pin, 400); setTimeout(pin, 900); }
+  window.addEventListener('orientationchange', pinSoon);
+  window.addEventListener('resize', pinSoon);
+  window.addEventListener('scroll', pin, { passive: true });
+  if (window.visualViewport) { window.visualViewport.addEventListener('resize', pinSoon); window.visualViewport.addEventListener('scroll', pin); }
+
+  function start() { initHome(); run(); pin(); setTimeout(run, 400); setTimeout(run, 1500); }
   if (document.readyState === 'complete') start(); else window.addEventListener('load', start);
 })();
 </script>
