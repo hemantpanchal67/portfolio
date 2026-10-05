@@ -346,6 +346,14 @@
   .sn .archtools { margin:6px 0 10px; }
   .sn .diagramwrap { margin:8px 0 12px; }
   @media (max-width:900px) { #cmsbar .animbtn { display:none; } }
+
+  /* diagram-highlight-v2 */
+  .diagramwrap svg { overflow: visible; }
+  .stp { transform-box: fill-box; transform-origin: center; }
+  @keyframes act {
+    0%, 12.5% { opacity: 1; transform: scale(1.05); filter: drop-shadow(0 5px 7px rgba(0,0,0,.35)); }
+    13.5%, 100% { opacity: 1; transform: none; filter: none; }
+  }
 </style>
 </head>
 <body>

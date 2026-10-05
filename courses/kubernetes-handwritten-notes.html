@@ -324,6 +324,14 @@
     .lfoot { grid-template-columns:minmax(0,1fr) minmax(0,1.5fr) minmax(0,1fr); gap:6px; padding:8px 0 10px; } .lfoot button { min-height:46px; padding:0 8px; font-size:14px; }
   }
   @media print { #cmsbar, #cmsside, .lfoot, .hx { display:none !important; } body.cms { overflow:visible; } #cms { display:block; height:auto; } #cmsmain { overflow:visible; } .lesson { display:block !important; page-break-after:always; } }
+
+  /* diagram-highlight-v2 */
+  .diagramwrap svg { overflow: visible; }
+  .stp { transform-box: fill-box; transform-origin: center; }
+  @keyframes act {
+    0%, 12.5% { opacity: 1; transform: scale(1.05); filter: drop-shadow(0 5px 7px rgba(0,0,0,.35)); }
+    13.5%, 100% { opacity: 1; transform: none; filter: none; }
+  }
 </style>
 </head>
 <body>
