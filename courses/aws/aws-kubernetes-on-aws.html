@@ -364,6 +364,11 @@
 
   :root { --tk-kw:#0000ff; --tk-ct:#af00db; --tk-str:#a31515; --tk-com:#008000; --tk-num:#098658; --tk-ty:#267f99; --tk-fn:#795e26; --tk-var:#001080; }
   :root[data-theme="dark"], :root[data-theme="blueprint"] { --tk-kw:#7cc4ff; --tk-ct:#e3a6ff; --tk-str:#ffb08a; --tk-com:#8fd18f; --tk-num:#c8e8a8; --tk-ty:#5ee6cf; --tk-fn:#ffe39a; --tk-var:#b8e4ff; }
+  /* code editor background: off-white (not the theme's blue tint); dark editor for the Dark theme; Blueprint keeps its own tone */
+  :root { --codebg:#fbfaf5; }
+  :root[data-theme="dark"] { --codebg:#1e1e1e; }
+  :root[data-theme="blueprint"] { --codebg:#0f3358; }
+  pre, .sn pre, .codewrap pre { background:var(--codebg) !important; }
   pre .t-kw { color:var(--tk-kw); } pre .t-ct { color:var(--tk-ct); } pre .t-str { color:var(--tk-str); } pre .t-num { color:var(--tk-num); }
   pre .t-ty { color:var(--tk-ty); } pre .t-fn { color:var(--tk-fn); } pre .t-var { color:var(--tk-var); }
   pre .t-com { color:var(--tk-com); font-style:italic; }
@@ -1104,14 +1109,14 @@ spec: { minAvailable: 4, selector: { matchLabels: { app: web } } }</code></pre><
 <script>
 /* ui-extras-v3: back-to-index button + editor-style syntax highlighting. Injected into every course page. */
 (function () {
-  var HOME = '../index.html';
+  var HOME = '../index.html#aws';
 
   /* ---------------- back to index ---------------- */
   function makeHome(floating) {
     var a = document.createElement('a');
     a.className = 'homebtn' + (floating ? ' homefloat' : '');
-    a.href = HOME; a.title = 'Back to all courses'; a.setAttribute('aria-label', 'Back to all courses');
-    a.innerHTML = '<span class="hbi">⌂</span><span class="hbl"> All courses</span>';
+    a.href = HOME; a.title = 'Back to the course list'; a.setAttribute('aria-label', 'Back to the course list');
+    a.innerHTML = '<span class="hbi">⌂</span><span class="hbl"> Courses</span>';
     return a;
   }
   function addHome() {
