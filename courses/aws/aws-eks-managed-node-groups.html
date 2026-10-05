@@ -354,6 +354,28 @@
     0%, 12.5% { opacity: 1; transform: scale(1.05); filter: drop-shadow(0 5px 7px rgba(0,0,0,.35)); }
     13.5%, 100% { opacity: 1; transform: none; filter: none; }
   }
+  /*UIX-CSS-START*/
+  /* ui-extras-v3: home button, editor-style code colours, rounded modal tables */
+  .homebtn { flex:none; display:inline-flex; align-items:center; gap:2px; min-height:40px; padding:0 12px; margin:0 6px 0 0; font:600 14px/1 system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--fb,#fff); border:2px solid var(--ink); border-radius:10px; text-decoration:none; white-space:nowrap; cursor:pointer; }
+  .homebtn:hover, .homebtn:focus-visible { background:var(--hi); }
+  .homebtn .hbi { font-size:18px; line-height:1; }
+  @media (max-width:640px) { .homebtn { padding:0 10px; min-width:40px; justify-content:center; } .homebtn .hbl { display:none; } }
+  .homefloat { position:fixed; top:10px; left:10px; z-index:60; box-shadow:2px 3px 0 rgba(0,0,0,.2); }
+
+  :root { --tk-kw:#0000ff; --tk-ct:#af00db; --tk-str:#a31515; --tk-com:#008000; --tk-num:#098658; --tk-ty:#267f99; --tk-fn:#795e26; --tk-var:#001080; }
+  :root[data-theme="dark"], :root[data-theme="blueprint"] { --tk-kw:#7cc4ff; --tk-ct:#e3a6ff; --tk-str:#ffb08a; --tk-com:#8fd18f; --tk-num:#c8e8a8; --tk-ty:#5ee6cf; --tk-fn:#ffe39a; --tk-var:#b8e4ff; }
+  pre .t-kw { color:var(--tk-kw); } pre .t-ct { color:var(--tk-ct); } pre .t-str { color:var(--tk-str); } pre .t-num { color:var(--tk-num); }
+  pre .t-ty { color:var(--tk-ty); } pre .t-fn { color:var(--tk-fn); } pre .t-var { color:var(--tk-var); }
+  pre .t-com { color:var(--tk-com); font-style:italic; }
+
+  .kqa, #kModal .kqa { overflow:hidden; }
+  .kqa[open] summary, #kModal .kqa[open] summary { border-radius:10px 10px 0 0; }
+  .kqa:not([open]) summary, #kModal .kqa:not([open]) summary { border-radius:10px; }
+  .kfacts, #kModal .kfacts { border-collapse:separate; border-spacing:0; border:2px solid var(--ink); border-radius:12px; overflow:hidden; }
+  .kfacts td, #kModal .kfacts td { border:0; border-bottom:1.5px solid var(--ink); }
+  .kfacts td:first-child, #kModal .kfacts td:first-child { border-right:1.5px solid var(--ink); }
+  .kfacts tr:last-child td, #kModal .kfacts tr:last-child td { border-bottom:0; }
+  /*UIX-CSS-END*/
 </style>
 </head>
 <body>
@@ -374,12 +396,12 @@
     </select></label>
   <label>Font
     <select id="fontSel">
-      <option value="patrick">✍️ Patrick Hand (default)</option>
+      <option value="patrick">✍️ Patrick Hand</option>
       <option value="caveat">Caveat – cursive</option>
       <option value="kalam">Kalam – natural</option>
       <option value="indie">Indie Flower – playful</option>
       <option value="architect">Architects Daughter – neat</option>
-      <option value="serif">Merriweather – serif</option>
+      <option value="serif">Merriweather – serif (default)</option>
       <option value="sans">Inter – clean sans</option>
       <option value="mono">Monospace – code style</option>
     </select></label>
@@ -516,7 +538,7 @@ kubectl -n kube-system logs deploy/cluster-autoscaler --tail=50</code></pre></ar
   };
   var root = document.documentElement, KEY = 'notes-appearance-v1';
   var themeSel = document.getElementById('themeSel'), fontSel = document.getElementById('fontSel'), sizeSel = document.getElementById('sizeSel');
-  var DEF = { theme:'classic', font:'patrick', size:'20px' };
+  var DEF = { theme:'classic', font:'serif', size:'20px' };
   function load(){ try { return Object.assign({}, DEF, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch(e){ return Object.assign({}, DEF); } }
   function save(s){ try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e){} }
   function apply(s){
@@ -1054,5 +1076,175 @@ kubectl -n kube-system logs deploy/cluster-autoscaler --tail=50</code></pre></ar
   });
 })();
 </script>
+<!--UIX-JS-START-->
+<script>
+/* ui-extras-v3: back-to-index button + editor-style syntax highlighting. Injected into every course page. */
+(function () {
+  var HOME = '../index.html';
+
+  /* ---------------- back to index ---------------- */
+  function makeHome(floating) {
+    var a = document.createElement('a');
+    a.className = 'homebtn' + (floating ? ' homefloat' : '');
+    a.href = HOME; a.title = 'Back to all courses'; a.setAttribute('aria-label', 'Back to all courses');
+    a.innerHTML = '<span class="hbi">⌂</span><span class="hbl"> All courses</span>';
+    return a;
+  }
+  function addHome() {
+    var bar = document.getElementById('cmsbar');
+    if (!bar) return false;
+    if (bar.querySelector('.homebtn')) return true;
+    var a = makeHome(false), menu = document.getElementById('cmsMenu');
+    if (menu && menu.nextSibling) bar.insertBefore(a, menu.nextSibling); else bar.insertBefore(a, bar.firstChild);
+    return true;
+  }
+  function initHome() {
+    if (addHome()) return;
+    var tries = 0, t = setInterval(function () {
+      if (addHome()) { clearInterval(t); return; }
+      if (++tries > 30) { clearInterval(t); if (!document.querySelector('.homebtn')) document.body.appendChild(makeHome(true)); }
+    }, 100);
+  }
+
+  /* ---------------- syntax highlighting ---------------- */
+  function words(s) { var o = {}; s.split(/\s+/).forEach(function (w) { if (w) o[w] = 1; }); return o; }
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  var CS_KW = words('abstract as base bool byte char checked class const decimal delegate double enum event explicit extern false fixed float implicit in int interface internal is lock long namespace new null object operator out override params private protected public readonly ref sbyte sealed short sizeof stackalloc static string struct this true typeof uint ulong unchecked unsafe ushort using var virtual void volatile record init required get set when with from select where orderby group into join let partial global nameof dynamic async value');
+  var CS_CTL = words('if else switch case default for foreach while do break continue return throw try catch finally await yield goto');
+  var JS_KW = words('const let var function new class extends import from export default async static get set interface type enum implements public private protected readonly as null undefined true false void delete typeof instanceof in of this super abstract declare namespace');
+  var JS_CTL = words('if else for while do switch case break continue return throw try catch finally await yield');
+  var PY_KW = words('def class lambda is not and or in as with None True False global nonlocal async self cls print');
+  var PY_CTL = words('if elif else for while return try except finally raise yield break continue pass import from await assert del');
+  var SQL_KW = words('select from where and or not in is null as join left right inner outer full cross natural on group by order having limit offset fetch first next rows only insert into values update set delete create alter drop table index unique primary key foreign references constraint default check view materialized with recursive union intersect except all distinct case when then else end exists between like ilike similar to asc desc nulls begin commit rollback savepoint transaction returning using partition range list hash attach detach concurrently if for over unbounded preceding following current row explain analyze verbose buffers vacuum reindex cluster grant revoke schema database extension function procedure returns language replace trigger before after each execute declare cursor conflict do nothing cascade restrict add column rename truncate temporary temp unlogged tablespace lock share nowait skip locked generated always identity stored include storage inherits owner publication subscription connection slot window filter within lateral any some collate enable disable force row level security policy role user password login superuser to');
+  var SQL_TY = words('bigint int integer smallint text varchar char character boolean bool numeric decimal real double precision float timestamp timestamptz date time timetz interval jsonb json uuid serial bigserial smallserial bytea inet cidr money oid xml tsvector tsquery vector geometry geography array');
+  var BASH_KW = words('if then else elif fi for while until do done case esac in function select time');
+  var BASH_CTL = words('return exit break continue');
+  var HCL_KW = words('resource data variable output module provider locals terraform dynamic for in if true false null for_each count content lifecycle depends_on required_providers backend');
+  var DOCKER_KW = words('FROM RUN CMD LABEL EXPOSE ENV ADD COPY ENTRYPOINT VOLUME USER WORKDIR ARG ONBUILD STOPSIGNAL HEALTHCHECK SHELL AS MAINTAINER');
+  var JAVA_KW = words('abstract assert boolean byte char class const double enum extends final float implements import instanceof int interface long native new package private protected public short static strictfp super synchronized this throws transient void volatile null true false var record sealed permits');
+  var JAVA_CTL = words('if else switch case default for while do break continue return throw try catch finally');
+  var NGINX_KW = words('server location upstream http events worker_processes listen server_name root index proxy_pass proxy_set_header return rewrite try_files include add_header ssl_certificate ssl_certificate_key gzip access_log error_log keepalive_timeout client_max_body_size');
+  var LITS = words('true false null nil none undefined yes no on off');
+
+  var LANGS = {
+    sql: { ci: 1, lc: '--[^\\n]*', bc: '/\\*[\\s\\S]*?\\*/', str: ["\\$\\$[\\s\\S]*?\\$\\$", "'(?:[^']|'')*'"], idq: '"[^"\\n]*"', pre: [['v', '\\$\\d+|:[A-Za-z_]\\w*(?!:)']], kw: SQL_KW, ty: SQL_TY },
+    csharp: { lc: '//[^\\n]*', bc: '/\\*[\\s\\S]*?\\*/', str: ['"""[\\s\\S]*?"""', '\\$@"(?:[^"]|"")*"|@\\$"(?:[^"]|"")*"|@"(?:[^"]|"")*"', '\\$"(?:[^"\\\\\\n]|\\\\.)*"', '"(?:[^"\\\\\\n]|\\\\.)*"', "'(?:[^'\\\\\\n]|\\\\.)*'"], pre: [['m', '^[ \\t]*#\\w+[^\\n]*']], kw: CS_KW, ctl: CS_CTL, pascal: 1 },
+    javascript: { lc: '//[^\\n]*', bc: '/\\*[\\s\\S]*?\\*/', str: ['`(?:[^`\\\\]|\\\\[\\s\\S])*`', '"(?:[^"\\\\\\n]|\\\\.)*"', "'(?:[^'\\\\\\n]|\\\\.)*'"], kw: JS_KW, ctl: JS_CTL, pascal: 1 },
+    python: { lc: '#[^\\n]*', str: ['[rRbBfFuU]{0,2}"""[\\s\\S]*?"""', "[rRbBfFuU]{0,2}'''[\\s\\S]*?'''", '[rRbBfFuU]{0,2}"(?:[^"\\\\\\n]|\\\\.)*"', "[rRbBfFuU]{0,2}'(?:[^'\\\\\\n]|\\\\.)*'"], pre: [['f', '@[A-Za-z_][\\w.]*']], kw: PY_KW, ctl: PY_CTL, pascal: 1 },
+    bash: { lc: '#[^\\n]*', str: ['"(?:[^"\\\\]|\\\\[\\s\\S])*"', "'[^']*'"], pre: [['v', '\\$\\{[^}\\n]*\\}|\\$[A-Za-z_]\\w*|\\$[0-9?@#*!$]'], ['p', '--?[A-Za-z][\\w-]*']], kw: BASH_KW, ctl: BASH_CTL, wordRe: '[A-Za-z_][A-Za-z0-9_.\\-]*', cmd: 'fn' },
+    yaml: { lc: '#[^\\n]*', str: ['"(?:[^"\\\\\\n]|\\\\.)*"', "'(?:[^'\\n]|'')*'"], pre: [['p', '^[ \\t]*(?:-[ \\t]+)?[A-Za-z_][\\w.\\-/]*(?=[ \\t]*:(?:[ \\t]|$))'], ['v', '[&*][A-Za-z_]\\w*']], kw: {}, lit: 1, strKey: 1, wordRe: '[A-Za-z_][A-Za-z0-9_.\\-]*' },
+    json: { str: ['"(?:[^"\\\\\\n]|\\\\.)*"'], kw: {}, lit: 1, strKey: 1 },
+    hcl: { lc: '(?:#|//)[^\\n]*', bc: '/\\*[\\s\\S]*?\\*/', str: ['"(?:[^"\\\\\\n]|\\\\.)*"'], pre: [['p', '[A-Za-z_][\\w-]*(?=[ \\t]*=(?!=))']], kw: HCL_KW, lit: 1 },
+    dockerfile: { lc: '^[ \\t]*#[^\\n]*', str: ['"(?:[^"\\\\\\n]|\\\\.)*"', "'[^'\\n]*'"], pre: [['v', '\\$\\{[^}\\n]*\\}|\\$[A-Za-z_]\\w*'], ['p', '--[A-Za-z][\\w-]*']], kw: DOCKER_KW, bash: 1 },
+    ini: { lc: '^[ \\t]*[#;][^\\n]*', str: ['"(?:[^"\\\\\\n]|\\\\.)*"'], pre: [['t', '^[ \\t]*\\[[^\\]\\n]+\\]'], ['p', '^[ \\t]*[A-Za-z_][\\w.\\-]*(?=[ \\t]*[=:])']], kw: {}, lit: 1, wordRe: '[A-Za-z_][A-Za-z0-9_.\\-]*' },
+    xml: { bc: '\\x3c!--[\\s\\S]*?-->', str: ['"[^"]*"', "'[^']*'"], pre: [['k', '</?[A-Za-z][\\w:.\\-]*'], ['p', '[A-Za-z_:][\\w:.\\-]*(?=\\s*=)']], kw: {}, wordRe: '[A-Za-z_][A-Za-z0-9_.\\-]*' },
+    java: { lc: '//[^\\n]*', bc: '/\\*[\\s\\S]*?\\*/', str: ['"""[\\s\\S]*?"""', '"(?:[^"\\\\\\n]|\\\\.)*"', "'(?:[^'\\\\\\n]|\\\\.)*'"], pre: [['p', '@[A-Za-z_]\\w*']], kw: JAVA_KW, ctl: JAVA_CTL, pascal: 1 },
+    nginx: { lc: '#[^\\n]*', str: ['"(?:[^"\\\\\\n]|\\\\.)*"', "'[^'\\n]*'"], pre: [['v', '\\$[A-Za-z_]\\w*']], kw: NGINX_KW, cmd: 'kw', wordRe: '[A-Za-z_][A-Za-z0-9_.\\-]*' },
+    http: { str: ['"(?:[^"\\\\\\n]|\\\\.)*"'], pre: [['k', '^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b'], ['t', 'HTTP/\\d(?:\\.\\d)?'], ['p', '^[A-Za-z][\\w-]*(?=:)']], kw: {}, lit: 1 }
+  };
+  var ALIAS = { cs: 'csharp', 'c#': 'csharp', dotnet: 'csharp', js: 'javascript', ts: 'javascript', typescript: 'javascript', jsx: 'javascript', tsx: 'javascript', py: 'python', sh: 'bash', shell: 'bash', zsh: 'bash', powershell: 'bash', ps1: 'bash', yml: 'yaml', terraform: 'hcl', tf: 'hcl', docker: 'dockerfile', properties: 'ini', conf: 'ini', toml: 'ini', html: 'xml', xaml: 'xml', razor: 'csharp', psql: 'sql', postgres: 'sql', mysql: 'sql', tsql: 'sql' };
+  var CACHE = {};
+
+  function compile(name) {
+    if (CACHE[name]) return CACHE[name];
+    var c = LANGS[name], parts = [], names = [];
+    function add(n, re) { parts.push('(' + re + ')'); names.push(n); }
+    if (c.bc) add('c', c.bc);
+    if (c.lc) add('c', c.lc);
+    (c.str || []).forEach(function (s) { add('s', s); });
+    if (c.idq) add('i', c.idq);
+    (c.pre || []).forEach(function (p) { add(p[0], p[1]); });
+    add('n', '\\b0[xX][0-9a-fA-F_]+\\b|\\b\\d[\\d_]*(?:\\.\\d+)?(?:[eE][+-]?\\d+)?[a-zA-Z]*\\b');
+    add('w', c.wordRe || '[A-Za-z_][A-Za-z0-9_]*');
+    add('o', '[|;&(){}]|=>|->|::');
+    var out = { re: new RegExp(parts.join('|'), 'gm'), names: names, c: c };
+    CACHE[name] = out; return out;
+  }
+
+  function span(cls, text) { return '<span class="t-' + cls + '">' + esc(text) + '</span>'; }
+
+  function highlight(src, lang) {
+    var cp = compile(lang), c = cp.c, re = cp.re, names = cp.names, out = '', last = 0, m, atCmd = true, prevDot = false;
+    re.lastIndex = 0;
+    while ((m = re.exec(src)) !== null) {
+      if (m[0].length === 0) { re.lastIndex++; continue; }
+      var gap = src.slice(last, m.index);
+      if (gap) {
+        out += esc(gap);
+        if (c.cmd && gap.indexOf('\n') >= 0 && gap.replace(/\\[ \t]*\n/g, '').indexOf('\n') >= 0) atCmd = true;
+        prevDot = /\.\s*$/.test(gap);
+      }
+      var type = null;
+      for (var g = 0; g < names.length; g++) { if (m[g + 1] !== undefined) { type = names[g]; break; } }
+      var t = m[0];
+      if (type === 'w') {
+        var key = c.ci ? t.toLowerCase() : t, after = src.charAt(re.lastIndex), cls = null;
+        if (c.kw && c.kw[key]) cls = c.ctl && c.ctl[key] ? 'ct' : 'kw';
+        else if (c.ctl && c.ctl[key]) cls = 'ct';
+        else if (c.ty && c.ty[key]) cls = 'ty';
+        else if (c.lit && LITS[t.toLowerCase()]) cls = 'kw';
+        else if (c.cmd && atCmd) cls = c.cmd;
+        else if (!prevDot && after === '(' && lang !== 'sql') cls = 'fn';
+        else if (lang === 'sql' && after === '(') cls = 'fn';
+        else if (c.pascal && /^[A-Z][A-Za-z0-9_]*$/.test(t) && t.length > 1 && !/^[A-Z0-9_]+$/.test(t)) cls = 'ty';
+        else if (c.pascal && /^I[A-Z][a-z]/.test(t)) cls = 'ty';
+        if (c.cmd) { atCmd = !!(c.kw && c.kw[key] && /^(if|then|else|elif|do|while|until|time)$/.test(key)); }
+        out += cls ? span(cls, t) : esc(t);
+        prevDot = false;
+      } else if (type === 'o') {
+        if (c.cmd && /^[|;&(]$/.test(t)) atCmd = true;
+        out += esc(t); prevDot = false;
+      } else if (type === 's' && c.strKey && /^[ \t]*:/.test(src.slice(re.lastIndex, re.lastIndex + 12))) {
+        out += span('var', t); prevDot = false;
+      } else if (type === 'p') {
+        var mm = /^([ \t]*(?:-[ \t]+)?)([\s\S]*)$/.exec(t);
+        out += esc(mm[1]) + span('var', mm[2]); prevDot = false;
+      } else {
+        var map = { c: 'com', s: 'str', i: 'var', n: 'num', v: 'var', f: 'fn', p: 'var', k: 'kw', t: 'ty', m: 'ct' };
+        out += span(map[type] || 'str', t);
+        if (c.cmd && type === 'c') atCmd = true;
+        prevDot = false;
+      }
+      last = re.lastIndex;
+    }
+    out += esc(src.slice(last));
+    return out;
+  }
+
+  function guess(text) {
+    var t = text.replace(/^\s+/, '');
+    if (/^[{\[]/.test(t) && /["\]}]/.test(t)) return 'json';
+    if (/^\s*(apiVersion|kind|metadata|spec|version|services|name|on|jobs):/m.test(text) && /:\s/.test(text)) return 'yaml';
+    if (/^\s*(\$ |#!\/|kubectl|docker|aws|helm|git|curl|sudo|npm|dotnet|az |eksctl|terraform|echo|export|cd |ls |cat |mkdir|chmod)/m.test(text)) return 'bash';
+    if (/\b(select|insert into|update|delete from|create table|alter table)\b/i.test(text) && /\b(from|into|set|table|values)\b/i.test(text)) return 'sql';
+    if (/\b(public|private|internal)\b[\s\S]*[;{]|\bnamespace\b|\busing\s+[A-Z]/.test(text)) return 'csharp';
+    return null;
+  }
+
+  function norm(l) {
+    if (!l) return null;
+    l = String(l).toLowerCase().trim();
+    l = ALIAS[l] || l;
+    return LANGS[l] ? l : null;
+  }
+
+  function run() {
+    [].forEach.call(document.querySelectorAll('pre'), function (pre) {
+      if (pre.getAttribute('data-hl')) return;
+      var code = pre.querySelector('code') || pre;
+      if (code.children.length > 0) { pre.setAttribute('data-hl', 'pre'); return; }
+      var text = code.textContent, lang = norm(pre.getAttribute('data-lang')) || (pre.getAttribute('data-lang') ? null : guess(text));
+      if (!lang) { pre.setAttribute('data-hl', 'none'); return; }
+      try { code.innerHTML = highlight(text, lang); pre.setAttribute('data-hl', lang); } catch (e) { pre.setAttribute('data-hl', 'err'); }
+    });
+  }
+  window.__highlightCode = run; window.__highlight = highlight;
+
+  function start() { initHome(); run(); setTimeout(run, 400); setTimeout(run, 1500); }
+  if (document.readyState === 'complete') start(); else window.addEventListener('load', start);
+})();
+</script>
+<!--UIX-JS-END-->
 </body>
 </html>
