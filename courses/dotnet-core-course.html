@@ -366,11 +366,42 @@
   :root[data-theme="dark"], :root[data-theme="blueprint"] { --tk-kw:#7cc4ff; --tk-ct:#e3a6ff; --tk-str:#ffb08a; --tk-com:#8fd18f; --tk-num:#c8e8a8; --tk-ty:#5ee6cf; --tk-fn:#ffe39a; --tk-var:#b8e4ff; }
   /* iPad / iOS Safari: lock the page itself so only #cmsmain and #cmsside scroll. Without this the whole window can scroll
      (rubber-band, URL-bar resize, orientation change) and the top bar plus breadcrumb row slide out of view. */
-  html { overscroll-behavior: none; }
-  body.cms { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
-  body.cms #cms { position: absolute; top: 0; left: 0; right: 0; bottom: 0; height: auto; }
+  html { overscroll-behavior: none; background: var(--paper); }
+  /* no explicit width/height here: iOS keeps the old size after a rotation; four insets always follow the real viewport */
+  body.cms { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: auto; height: auto; overflow: hidden; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
+  body.cms #cms { position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: auto; height: auto; }
+  /* safe areas (notch / home indicator / rounded corners in landscape) */
+  #cmsbar { padding-left: max(10px, env(safe-area-inset-left)); }
+  #cmsmain { padding-left: max(clamp(12px, 2.4vw, 40px), env(safe-area-inset-left)); padding-right: max(clamp(12px, 2.4vw, 40px), env(safe-area-inset-right)); }
+  .lfoot { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+
+  /* tablets and iPad in landscape: use the whole width (slimmer course menu, no 1200px cap on the lesson) */
+  @media (min-width: 901px) and (max-width: 1500px) {
+    #cms { grid-template-columns: minmax(220px, 290px) minmax(0, 1fr); }
+    .lesson, .lfoot { max-width: none; }
+    #cmsmain { padding-left: max(clamp(12px, 1.6vw, 24px), env(safe-area-inset-left)); padding-right: max(clamp(12px, 1.6vw, 24px), env(safe-area-inset-right)); }
+    .sn { padding-left: 18px; padding-right: 18px; }
+    .sn svg, .diagramwrap svg { max-width: 100%; }
+    #cmsbar .ttl { font-size: 24px; }
+  }
+  /* short landscape screens (iPad 768 to 834 px high): tighter vertical spacing so more lesson shows */
+  @media (orientation: landscape) and (max-height: 860px) and (min-width: 901px) {
+    .lesson .hero h1 { font-size: clamp(26px, 3vw, 38px); }
+    .sn { padding-top: 10px; padding-bottom: 14px; }
+    .lfoot { padding-top: 6px; }
+    .lfoot button { min-height: 44px; }
+    #kModal { padding: 8px; }
+    #kModal .kcard { max-height: calc(100% - 2px); }
+  }
+  #cmsmain { overflow-x: hidden; }
   #cmsmain, #cmsside { overscroll-behavior: contain; }
   #cmsbar { position: relative; z-index: 30; }
+
+  /* copy button: icon only */
+  .codewrap .copy { display:inline-flex; align-items:center; justify-content:center; width:34px; min-width:34px; height:34px; min-height:34px; padding:0; line-height:1; font-size:0; color:var(--ink); }
+  .codewrap .copy svg { width:18px; height:18px; display:block; pointer-events:none; }
+  .codewrap .copy:hover, .codewrap .copy:focus-visible { background:var(--hi); }
+  .codewrap .copy.done { color:var(--green); border-color:var(--green); }
 
   /* code editor background: off-white (not the theme's blue tint); dark editor for the Dark theme; Blueprint keeps its own tone */
   :root { --codebg:#fbfaf5; }
@@ -2382,7 +2413,22 @@ UseAuthentication → UseAuthorization → (UseRateLimiter / UseOutputCache) →
     return LANGS[l] ? l : null;
   }
 
+  /* copy button: icon only (the page script swaps its text to "Copied" for 1.5 s; show a tick instead) */
+  var ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
+  var ICON_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12.5 9.5 18 20 6.5"/></svg>';
+  function iconize(b) {
+    if (b.__ic) return; b.__ic = 1;
+    function render(done) { b.innerHTML = done ? ICON_OK : ICON_COPY; b.classList.toggle('done', !!done); }
+    render(false); b.title = 'Copy code'; b.setAttribute('aria-label', 'Copy code');
+    new MutationObserver(function () {
+      var t = (b.textContent || '').trim();
+      if (!t) return;
+      if (/copied/i.test(t)) { render(true); setTimeout(function () { render(false); }, 1500); } else render(false);
+    }).observe(b, { childList: true, characterData: true, subtree: true });
+  }
+
   function run() {
+    [].forEach.call(document.querySelectorAll('.codewrap .copy'), iconize);
     [].forEach.call(document.querySelectorAll('pre'), function (pre) {
       if (pre.getAttribute('data-hl')) return;
       var code = pre.querySelector('code') || pre;
@@ -2400,7 +2446,13 @@ UseAuthentication → UseAuthorization → (UseRateLimiter / UseOutputCache) →
     if (window.pageYOffset || window.pageXOffset) window.scrollTo(0, 0);
     var root = document.documentElement; if (root.scrollTop) root.scrollTop = 0; if (document.body.scrollTop) document.body.scrollTop = 0;
   }
-  function pinSoon() { pin(); setTimeout(pin, 100); setTimeout(pin, 400); setTimeout(pin, 900); }
+  /* iOS can keep the pre-rotation layout size until something nudges it: force a reflow and re-apply the viewport meta */
+  function reflow() {
+    var d = document.documentElement, m = document.querySelector('meta[name="viewport"]');
+    d.style.minHeight = 'calc(100% + 1px)'; void d.offsetHeight; d.style.minHeight = '';
+    if (m) { var c = m.getAttribute('content'); m.setAttribute('content', c); }
+  }
+  function pinSoon() { pin(); reflow(); setTimeout(function () { pin(); reflow(); }, 120); setTimeout(pin, 400); setTimeout(function () { pin(); reflow(); }, 900); }
   window.addEventListener('orientationchange', pinSoon);
   window.addEventListener('resize', pinSoon);
   window.addEventListener('scroll', pin, { passive: true });
