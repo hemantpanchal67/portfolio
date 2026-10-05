@@ -370,6 +370,13 @@
   /* no explicit width/height here: iOS keeps the old size after a rotation; four insets always follow the real viewport */
   body.cms { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: auto; height: auto; overflow: hidden; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
   body.cms #cms { position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: auto; height: auto; }
+  /* hide/show the course menu: with the menu display:none the lesson area used to fall into the 0px grid column and collapse to a sliver.
+     Give both areas explicit cells and let the lesson area take the full row when the menu is hidden. */
+  #cmsside { grid-column: 1; grid-row: 2; }
+  #cmsmain { grid-column: 2; grid-row: 2; }
+  #cms.noside { grid-template-columns: minmax(0, 1fr); }
+  #cms.noside #cmsmain { grid-column: 1 / -1; }
+  @media (max-width: 900px) { #cmsmain { grid-column: 1 / -1; } #cms.noside { grid-template-columns: minmax(0, 1fr); } }
   /* safe areas (notch / home indicator / rounded corners in landscape) */
   #cmsbar { padding-left: max(10px, env(safe-area-inset-left)); }
   #cmsmain { padding-left: max(clamp(12px, 2.4vw, 40px), env(safe-area-inset-left)); padding-right: max(clamp(12px, 2.4vw, 40px), env(safe-area-inset-right)); }
