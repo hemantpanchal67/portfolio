@@ -1,0 +1,1034 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#fdfbf2">
+<title>AWS Network ACL – Complete Course</title>
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@500;700&family=Indie+Flower&family=Inter:wght@400;600&family=Kalam:wght@400;700&family=Merriweather:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#e9e4d6; --paper:#fdfbf2; --line:#cfe0f1; --margin:#e58a8a; --ink:#1f3a8a; --hi:#fff176; --red:#c62828; --green:#2e7d32; --orange:#ef6c00;
+          --fb:#ffffff; --fy:#fff3a8; --fg:#d7f0d4; --fr:#fde0dc; --fo:#ffe0b2; --code:#eef3ff; --codesoft:#eef3ff88; --th:#dfe8ff; --note:#ffe9a8; --shadow:rgba(0,0,0,.25);
+          --body-font:'Patrick Hand','Caveat',cursive; --head-font:'Caveat',cursive; --code-font:'Caveat',cursive; --fs:20px; }
+  :root[data-theme="dark"] { --bg:#0e1015; --paper:#1d212a; --line:#2d3441; --margin:#b34a4a; --ink:#cfdcff; --hi:#6b5d00; --red:#ff8a80; --green:#81c784; --orange:#ffb74d;
+          --fb:#262b36; --fy:#4a4320; --fg:#1f3d27; --fr:#4a2323; --fo:#4a3216; --code:#2a3142; --codesoft:#2a314288; --th:#2a3350; --note:#5a4b1a; --shadow:rgba(0,0,0,.6); }
+  :root[data-theme="sepia"] { --bg:#cdbf9f; --paper:#f4ecd8; --line:#dccda6; --margin:#c98b6b; --ink:#4b3621; --hi:#f7d774; --red:#9c2f1f; --green:#4d6b2f; --orange:#b5651d;
+          --fb:#fbf6e8; --fy:#f2dd9b; --fg:#dfe6c3; --fr:#f1d2c4; --fo:#f3d9b0; --code:#ebdfc2; --codesoft:#ebdfc288; --th:#e6d6ae; --note:#f3d98c; }
+  :root[data-theme="blueprint"] { --bg:#071c33; --paper:#0f3a66; --line:#2b5d92; --margin:#8fc1ee; --ink:#e8f2ff; --hi:#1f6aa8; --red:#ffd166; --green:#8ff0b5; --orange:#ffb86b;
+          --fb:#144a80; --fy:#2a5f96; --fg:#14584f; --fr:#6a3a58; --fo:#6b5a2e; --code:#164b7d; --codesoft:#164b7d88; --th:#1d5a96; --note:#356fa6; --shadow:rgba(0,0,0,.6); }
+  :root[data-theme="mint"] { --bg:#c4e0d3; --paper:#f1faf5; --line:#c6e4d4; --margin:#7bbf9b; --ink:#14463a; --hi:#d4f58a; --red:#b3261e; --green:#1b6b3a; --orange:#c2670a;
+          --fb:#ffffff; --fy:#f3f2b4; --fg:#cdeed9; --fr:#fbd9d4; --fo:#fde3bd; --code:#e0f2ea; --codesoft:#e0f2ea88; --th:#cfeadc; --note:#e5f2a6; }
+  :root[data-theme="clean"] { --bg:#f1f3f5; --paper:#ffffff; --line:transparent; --margin:transparent; --ink:#1b2a41; --hi:#ffe98a; --red:#c0392b; --green:#2e7d32; --orange:#d35400;
+          --fb:#ffffff; --fy:#fff6c8; --fg:#e3f4e3; --fr:#fdeaea; --fo:#fff0dc; --code:#eef2f7; --codesoft:#eef2f788; --th:#e3ebf6; --note:#fff1b8; --shadow:rgba(0,0,0,.15); }
+  #toolbar { position:sticky; top:0; z-index:50; display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:center; padding:8px 14px;
+          background:var(--paper); color:var(--ink); border-bottom:3px solid var(--margin); box-shadow:0 3px 10px var(--shadow); font-family:system-ui,'Segoe UI',sans-serif; font-size:15px; line-height:1.2; }
+  #toolbar b { font-size:16px; } #toolbar label { display:flex; align-items:center; gap:6px; }
+  #toolbar select, #toolbar button { font:inherit; padding:5px 8px; border:2px solid var(--ink); border-radius:8px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  @media print { #toolbar { display:none; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); font-family:var(--body-font); color:var(--ink); font-size:var(--fs); }
+  .page { max-width:900px; margin:26px auto; padding:30px 30px 40px 84px; position:relative; box-shadow:0 6px 18px var(--shadow); line-height:32px;
+      background: linear-gradient(90deg, transparent calc(var(--mx,62px) - 2px), var(--margin) calc(var(--mx,62px) - 2px), var(--margin) var(--mx,62px), transparent var(--mx,62px)),
+      repeating-linear-gradient(transparent 0, transparent 31px, var(--line) 31px, var(--line) 32px), var(--paper); }
+  .page::after { content:attr(data-p); position:absolute; right:18px; bottom:8px; font-family:var(--head-font); font-size:22px; opacity:.6; }
+  h1 { font-family:var(--head-font); font-size:58px; margin:0 0 4px; line-height:64px; transform:rotate(-1deg); }
+  h1 span { border-bottom:4px double var(--red); }
+  h2 { font-family:var(--head-font); font-size:36px; margin:32px 0 0; line-height:32px; color:var(--red); transform:rotate(-.6deg); }
+  h2::after { content:""; display:block; height:3px; width:55%; background:var(--red); border-radius:50%; opacity:.6; margin-top:2px; }
+  h1 + h2, h1 + p + h2 { margin-top:16px; }
+  h3 { font-family:var(--head-font); font-size:28px; margin:16px 0 0; line-height:32px; color:var(--orange); }
+  p, ul, ol { margin:0; }
+  p.el { text-align:justify; margin:4px 0 6px; } .el b, li b { color:var(--red); }
+  ul, ol { padding-left:30px; }
+  ul { list-style:none; } ul li::before { content:"➜ "; color:var(--red); margin-left:-28px; display:inline-block; width:28px; }
+  .hi { background:linear-gradient(transparent 20%, var(--hi) 20%, var(--hi) 90%, transparent 90%); padding:0 3px; }
+  .note { display:inline-block; background:var(--note); padding:4px 14px; transform:rotate(-1deg); box-shadow:2px 3px 6px rgba(0,0,0,.2); line-height:28px; margin:8px 0; }
+  .green { color:var(--green); } .red { color:var(--red); }
+  code { font-family:var(--code-font); font-size:23px; background:var(--code); padding:0 5px; border:1px dashed var(--ink); border-radius:4px; }
+  pre { margin:4px 0; font-family:var(--code-font); font-size:22px; line-height:32px; background:var(--codesoft); border-left:4px solid var(--ink); padding:0 12px; overflow-x:auto; }
+  table { border-collapse:collapse; margin:8px 0; width:100%; line-height:27px; font-size:19px; }
+  th, td { border:2px solid var(--ink); padding:2px 9px; text-align:left; vertical-align:top; }
+  th { font-family:var(--head-font); font-size:25px; background:var(--th); }
+  svg { width:100%; height:auto; display:block; margin:10px 0; }
+  svg text { font-family:var(--head-font); font-size:22px; fill:var(--ink); text-anchor:middle; }
+  svg .b { fill:var(--fb); stroke:var(--ink); stroke-width:2.5; }
+  svg .y { fill:var(--fy); stroke:var(--ink); stroke-width:2.5; }
+  svg .g { fill:var(--fg); stroke:var(--green); stroke-width:2.5; }
+  svg .r { fill:var(--fr); stroke:var(--red); stroke-width:2.5; }
+  svg .o { fill:var(--fo); stroke:var(--orange); stroke-width:2.5; }
+  svg .zone { fill:none; stroke:var(--ink); stroke-width:2.5; stroke-dasharray:9 6; }
+  svg .l { stroke:var(--ink); stroke-width:2.5; fill:none; marker-end:url(#ar); }
+  svg .d { stroke:var(--red); stroke-width:2.5; fill:none; stroke-dasharray:6 5; marker-end:url(#ar); }
+  svg .s { font-size:17px; fill:var(--red); }
+  svg .t { font-size:28px; fill:var(--red); font-weight:700; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
+  @media (max-width:700px){ body{font-size:17px} .page{padding:20px 12px 30px 48px} .two{grid-template-columns:1fr} }
+  @media print { body{background:#fff} .page{box-shadow:none; margin:0; page-break-after:always} }
+
+  /* ===== iPad / touch friendly ===== */
+  html { -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-behavior:smooth; }
+  body { padding-bottom:calc(150px + env(safe-area-inset-bottom)); padding-left:env(safe-area-inset-left); padding-right:env(safe-area-inset-right); -webkit-tap-highlight-color:transparent; }
+  button, select { touch-action:manipulation; }
+  #toolbar { padding-top:calc(8px + env(safe-area-inset-top)); transition:transform .25s ease; }
+  #toolbar.hide { transform:translateY(-115%); }
+  #toolbar select, #toolbar button { min-height:44px; font-size:16px; }
+  .page { --mx:62px; }
+  @media (max-width:1100px) {
+    .page { margin:14px auto; max-width:calc(100% - 28px); padding:26px 26px 46px 80px; }
+    p.el, li, td { font-size:1em; }
+    table { font-size:18px; }
+    svg text { stroke:none; }
+  }
+  @media (max-width:820px) {
+    .page { --mx:40px; padding:22px 18px 44px 60px; max-width:calc(100% - 16px); margin:10px auto; }
+    h1 { font-size:46px; line-height:52px; } h2 { font-size:32px; }
+    table { display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .two { grid-template-columns:1fr; }
+  }
+  @media (orientation:landscape) and (min-width:1000px) and (max-width:1400px) { .page { max-width:900px; } }
+  /* read-from-here buttons */
+  .spk { display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; margin-left:10px; vertical-align:middle; padding:0; font-size:18px; line-height:1;
+         border:2px solid var(--ink); border-radius:50%; background:var(--fb); color:var(--ink); cursor:pointer; transform:rotate(.6deg); }
+  .spk:active { background:var(--hi); }
+  /* narrator dock */
+  #narrator { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(10px + env(safe-area-inset-bottom)); z-index:60; width:min(760px, calc(100% - 20px));
+              background:var(--paper); color:var(--ink); border:3px solid var(--ink); border-radius:20px; box-shadow:0 8px 24px var(--shadow); font-family:system-ui,'Segoe UI',sans-serif; font-size:16px; line-height:1.25; overflow:hidden; }
+  #narrator .prog { height:6px; background:var(--code); } #narrator .prog i { display:block; height:100%; width:0; background:var(--red); transition:width .3s; }
+  #narrator .row { display:flex; align-items:center; gap:8px 12px; padding:8px 12px; flex-wrap:wrap; }
+  #narrator .extra { border-top:1px dashed var(--ink); justify-content:space-between; }
+  #narrator.min .extra { display:none; }
+  #narrator button { min-width:48px; min-height:48px; font-size:22px; padding:0 10px; border:2px solid var(--ink); border-radius:14px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  #narrator button.main { background:var(--red); color:var(--paper); min-width:60px; font-size:26px; }
+  #narrator button:active { transform:scale(.95); }
+  #narrator #nStatus { flex:1 1 140px; min-width:0; font-size:15px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #narrator label { display:flex; align-items:center; gap:6px; font-size:15px; }
+  #narrator select { min-height:44px; font-size:16px; max-width:220px; padding:4px 8px; border:2px solid var(--ink); border-radius:10px; background:var(--fb); color:var(--ink); }
+  #narrator input[type=checkbox] { width:22px; height:22px; accent-color:var(--red); }
+  .reading { background:var(--hi) !important; box-shadow:0 0 0 4px var(--hi); border-radius:6px; transition:background .2s; }
+  svg.reading { box-shadow:none; outline:4px solid var(--hi); outline-offset:2px; background:transparent !important; }
+  @media print { #narrator, .spk { display:none !important; } }
+
+  /* ===== settings button + panel ===== */
+  #settingsBtn { position:fixed; top:calc(10px + env(safe-area-inset-top)); right:calc(12px + env(safe-area-inset-right)); z-index:70; width:52px; height:52px; padding:0; font-size:26px; line-height:1;
+                 border:3px solid var(--ink); border-radius:50%; background:var(--paper); color:var(--ink); box-shadow:0 4px 12px var(--shadow); cursor:pointer; touch-action:manipulation; }
+  #settingsBtn:active { transform:scale(.94); }
+  #settingsPanel { position:fixed; top:calc(72px + env(safe-area-inset-top)); right:calc(12px + env(safe-area-inset-right)); z-index:80; width:min(400px, calc(100% - 24px)); max-height:calc(100vh - 100px - env(safe-area-inset-top));
+                   overflow-y:auto; -webkit-overflow-scrolling:touch; display:none; padding:14px 16px 16px; background:var(--paper); color:var(--ink); border:3px solid var(--ink); border-radius:18px;
+                   box-shadow:0 12px 32px var(--shadow); font-family:system-ui,'Segoe UI',sans-serif; font-size:16px; line-height:1.3; }
+  #settingsPanel.open { display:block; overflow-x:hidden; }
+  #settingsPanel label select { min-width:0; max-width:62%; text-overflow:ellipsis; }
+  #settingsPanel { max-height:calc(100vh - 190px - env(safe-area-inset-top)); }
+  #settingsPanel .hd { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; font-size:19px; font-weight:700; }
+  #settingsPanel .hd button { width:44px; height:44px; font-size:20px; border:2px solid var(--ink); border-radius:12px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  #settingsPanel h4 { margin:14px 0 6px; padding-top:10px; border-top:2px dashed var(--ink); font-size:16px; }
+  #settingsPanel h4:first-of-type { border-top:0; padding-top:0; }
+  #settingsPanel label { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:8px 0; }
+  #settingsPanel label select { flex:0 0 62%; min-height:44px; font-size:16px; padding:4px 8px; border:2px solid var(--ink); border-radius:10px; background:var(--fb); color:var(--ink); }
+  #settingsPanel label.chk { justify-content:flex-start; min-height:44px; }
+  #settingsPanel input[type=checkbox] { width:24px; height:24px; accent-color:var(--red); }
+  #settingsPanel .reset { width:100%; min-height:46px; margin-top:8px; font-size:16px; border:2px solid var(--ink); border-radius:12px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  #settingsScrim { position:fixed; inset:0; z-index:75; display:none; background:rgba(0,0,0,.25); }
+  #settingsScrim.open { display:block; }
+  @media print { #settingsBtn, #settingsPanel, #settingsScrim { display:none !important; } }
+
+  /* ===== narrator controls now live inside the settings panel ===== */
+  body { padding-bottom:calc(40px + env(safe-area-inset-bottom)) !important; }
+  #settingsPanel { max-height:calc(100vh - 100px - env(safe-area-inset-top)); }
+  #settingsPanel #narrator { position:static; transform:none; width:auto; margin:6px 0 12px; border:2px solid var(--ink); border-radius:14px; box-shadow:none; background:var(--code); }
+  #settingsPanel #narrator .row { padding:8px; gap:8px; justify-content:center; }
+  #settingsPanel #narrator #nStatus { flex:1 1 100%; order:5; text-align:center; white-space:normal; font-size:15px; }
+  #settingsBtn.playing { background:var(--red); color:var(--paper); }
+
+  /* ===== animated architecture pages ===== */
+  .tag { font-family:var(--body-font); font-size:20px; color:var(--paper); background:var(--red); border-radius:12px; padding:0 10px; vertical-align:middle; }
+  .animbtn { min-height:46px; margin:6px 0 10px; padding:0 16px; font-size:16px; font-family:system-ui,'Segoe UI',sans-serif; border:2px solid var(--ink); border-radius:12px; background:var(--fb); color:var(--ink); cursor:pointer; touch-action:manipulation; }
+  .animbtn[aria-pressed="true"] { background:var(--hi); }
+  ol.steps { padding-left:34px; } ol.steps li { margin:2px 0; }
+  .stpli { border-radius:8px; animation:actbg 16s linear infinite; }
+  .stp { animation:act 16s linear infinite; }
+  @keyframes act { 0%,12.5% { opacity:1; } 12.6%,100% { opacity:.22; } }
+  @keyframes actbg { 0%,12.5% { background:var(--hi); } 12.6%,100% { background:transparent; } }
+  @keyframes dashmove { to { stroke-dashoffset:-28; } }
+  @keyframes blinkip { 0%,100% { opacity:1; } 50% { opacity:.25; } }
+  svg .flow { stroke-dasharray:8 6; animation:dashmove 1.1s linear infinite; }
+  svg .blink { animation:blinkip 2.4s ease-in-out infinite; }
+  svg .bus { stroke:var(--orange); stroke-width:3; fill:none; }
+  svg .soft { stroke:var(--ink); stroke-width:2; fill:none; opacity:.5; }
+  svg .m { font-size:17px; }
+  svg .pk1 { fill:var(--red); stroke:var(--ink); stroke-width:2; }
+  svg .pk2 { fill:var(--orange); stroke:var(--ink); stroke-width:2; }
+  svg .pk3 { fill:var(--green); stroke:var(--ink); stroke-width:2; }
+  svg .pkb { fill:var(--ink); stroke:var(--paper); stroke-width:2; }
+  svg .bdg { fill:var(--hi); stroke:var(--ink); stroke-width:2.5; }
+  svg .bt { font-size:16px; font-weight:700; }
+  .anim-paused .flow, .anim-paused .blink, .anim-paused .stp, .anim-paused .stpli { animation-play-state:paused !important; }
+  @media (prefers-reduced-motion:reduce) { .flow, .blink, .stp, .stpli { animation:none !important; } }
+  @media (max-width:820px) { .tag { display:none; } }
+
+  /* ===== full-width interactive architecture page (not notebook styled) ===== */
+  .archpage { margin:0; padding:22px clamp(10px, 2.4vw, 40px) 46px; background:var(--paper); color:var(--ink); font-family:var(--body-font); font-size:var(--fs); line-height:1.5;
+              border-top:8px solid var(--red); border-bottom:8px solid var(--red); box-shadow:0 6px 18px var(--shadow); }
+  .archpage h1 { font-size:clamp(34px, 4vw, 54px); line-height:1.15; margin:0 0 6px; transform:none; }
+  .archpage h1 span { border:0; }
+  .archpage h2 { font-size:28px; line-height:1.2; margin:0 0 8px; transform:none; }
+  .archpage h2::after { display:none; }
+  .archpage h3 { font-size:22px; margin:0 0 6px; line-height:1.2; }
+  .archpage p, .archpage ol, .archpage ul { margin:0; }
+  .archpage .lead { max-width:1100px; font-size:1.05em; margin-bottom:10px; }
+  .archpage .archtools { display:flex; flex-wrap:wrap; gap:10px; margin:8px 0 14px; }
+  .archpage .animbtn.primary { background:var(--red); color:var(--paper); border-color:var(--red); font-weight:700; }
+  .diagramwrap { background:var(--fb); border:3px solid var(--ink); border-radius:18px; padding:10px clamp(4px, 1vw, 14px); box-shadow:0 6px 16px var(--shadow); }
+  .diagramwrap svg { margin:0 auto; max-width:1700px; }
+  .clk { cursor:pointer; outline:none; }
+  .clk:hover rect, .clk:focus-visible rect { stroke-width:4.5; filter:brightness(1.07) drop-shadow(0 0 4px var(--red)); }
+  .clk:hover text, .clk:focus-visible text { font-weight:700; }
+  .clk.lnk:hover path:not(.hit), .clk.lnk:focus-visible path:not(.hit) { stroke-width:6; filter:drop-shadow(0 0 4px var(--red)); }
+  .clk:focus-visible { outline:3px solid var(--red); outline-offset:3px; }
+  svg .hit { stroke:transparent; stroke-width:20; fill:none; pointer-events:stroke; marker-end:none; }
+  svg circle { pointer-events:none; }
+  .archidx { margin:18px 0 8px; }
+  .archidx .cgrp { display:flex; flex-wrap:wrap; align-items:center; gap:6px 8px; margin:8px 0; }
+  .archidx .cgrp h3 { margin:0 8px 0 0; min-width:210px; color:var(--orange); }
+  .archidx .cgrp > div { display:flex; flex-wrap:wrap; gap:8px; }
+  .kchip { min-height:44px; padding:6px 14px; font:inherit; font-size:.9em; color:var(--ink); background:var(--fb); border:2px solid var(--ink); border-radius:22px; cursor:pointer; touch-action:manipulation; }
+  .kchip:hover, .kchip:focus-visible { background:var(--hi); }
+  .archgrid { display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:18px; margin-top:18px; }
+  .acard { background:var(--fb); border:2px solid var(--ink); border-radius:16px; padding:14px 18px 16px; }
+  .acard table { margin:4px 0; font-size:.88em; }
+  .acard .tip { margin-top:8px; background:var(--note); padding:6px 12px; border-radius:10px; }
+  @media (max-width:820px) { .archidx .cgrp h3 { min-width:100%; } }
+
+  /* ===== detail modal ===== */
+  body.kmodal-open { overflow:hidden; }
+  #kModal { position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center; padding:clamp(6px, 2vw, 24px); background:rgba(8,12,28,.62); -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px); }
+  #kModal.open { display:flex; }
+  #kModal .kcard { width:min(1040px, 100%); max-height:100%; display:flex; flex-direction:column; background:var(--paper); color:var(--ink); border:3px solid var(--ink); border-radius:22px; overflow:hidden;
+                   box-shadow:0 20px 60px rgba(0,0,0,.5); font-family:system-ui,'Segoe UI',Roboto,sans-serif; font-size:16px; line-height:1.55; animation:kpop .18s ease-out; }
+  @keyframes kpop { from { transform:translateY(14px) scale(.98); opacity:0; } to { transform:none; opacity:1; } }
+  .khead { display:flex; align-items:center; gap:14px; padding:14px 18px; background:var(--th); border-bottom:3px solid var(--ink); }
+  .khead .ico { font-size:34px; line-height:1; }
+  .khead h3 { font-family:inherit; color:var(--ink); transform:none; flex:1; margin:0; font-size:21px; line-height:1.25; }
+  .khead .meta { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+  .kpill { display:inline-block; padding:1px 10px; border-radius:12px; font-size:13px; font-weight:600; background:var(--hi); border:1.5px solid var(--ink); }
+  .kpill.red { background:var(--red); color:var(--paper); border-color:var(--red); }
+  .kclose { flex:none; width:48px; height:48px; font-size:22px; border:2px solid var(--ink); border-radius:14px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  .kbody { overflow:auto; -webkit-overflow-scrolling:touch; padding:6px 22px 18px; }
+  .ksec { margin-top:14px; }
+  .ksec h4 { margin:0 0 6px; font-size:15px; letter-spacing:.06em; text-transform:uppercase; color:var(--red); }
+  .ksec p, .ksec ul { margin:0; } .ksec ul { padding-left:22px; } .ksec li { margin:3px 0; }
+  .ksec code, .kqa code { font-family:Consolas,'Courier New',monospace; font-size:.92em; background:var(--code); border:1px solid var(--ink); border-radius:4px; padding:0 4px; }
+  .kdiagram { background:var(--note); border-left:5px solid var(--red); border-radius:8px; padding:8px 12px; }
+  .kfacts { width:100%; border-collapse:collapse; font-size:15px; } .kfacts td { border:1.5px solid var(--ink); padding:5px 10px; vertical-align:top; } .kfacts td:first-child { width:30%; font-weight:700; background:var(--th); }
+  .kqa-h { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .kqa-h button { min-height:38px; padding:0 12px; font:inherit; font-size:14px; border:2px solid var(--ink); border-radius:10px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  .kqa { border:2px solid var(--ink); border-radius:12px; margin:8px 0; background:var(--fb); }
+  .kqa summary { cursor:pointer; padding:10px 14px; font-weight:700; list-style:none; display:flex; gap:10px; min-height:44px; align-items:center; }
+  .kqa summary::-webkit-details-marker { display:none; }
+  .kqa summary::before { content:'Q'; flex:none; width:26px; height:26px; border-radius:50%; background:var(--red); color:var(--paper); display:inline-flex; align-items:center; justify-content:center; font-size:13px; }
+  .kqa[open] summary { background:var(--th); border-bottom:2px solid var(--ink); }
+  .kqa .ans { padding:10px 14px 12px 50px; }
+  .krel { display:flex; flex-wrap:wrap; gap:8px; }
+  .krel .kchip { font-size:14px; }
+  .kfoot { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 14px; border-top:3px solid var(--ink); background:var(--th); }
+  .kfoot button { min-height:46px; padding:0 18px; font:inherit; font-weight:700; border:2px solid var(--ink); border-radius:12px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  .kfoot button.primary { background:var(--red); color:var(--paper); border-color:var(--red); }
+  .kfoot .pos { font-size:14px; opacity:.85; text-align:center; }
+  @media print { #kModal { display:none !important; } }
+  @media (prefers-reduced-motion:reduce) { #kModal .kcard { animation:none; } }
+
+  /* ===== course layout (left curriculum, right lesson panel) ===== */
+  html, body { height:100%; }
+  body.cms { margin:0; padding:0 !important; overflow:hidden; background:var(--paper); }
+  #cms { display:grid; grid-template-columns:minmax(250px, 340px) minmax(0, 1fr); grid-template-rows:58px minmax(0, 1fr); height:100vh; height:100dvh; }
+  #cms.noside { grid-template-columns:0 minmax(0, 1fr); }
+  #cms.noside #cmsside { display:none; }
+  #cmsbar { grid-column:1 / -1; display:flex; align-items:center; gap:12px; min-width:0; padding:0 80px 0 10px; background:var(--th); border-bottom:3px solid var(--red); }
+  #cmsbar .menu { flex:none; width:46px; height:46px; font-size:24px; line-height:1; border:2px solid var(--ink); border-radius:12px; background:var(--fb); color:var(--ink); cursor:pointer; touch-action:manipulation; }
+  #cmsbar .ttl { flex:1 1 auto; min-width:0; white-space:nowrap; overflow:hidden; font-family:var(--head-font); font-size:28px; line-height:1.2; color:var(--ink); }
+  #cmsbar .prog { flex:0 1 340px; min-width:110px; font:600 13px/1.2 system-ui,'Segoe UI',sans-serif; color:var(--ink); }
+  #cmsbar .prog .bar { height:9px; margin-top:4px; border:2px solid var(--ink); border-radius:6px; background:var(--fb); overflow:hidden; }
+  #cmsbar .prog .bar i { display:block; height:100%; width:0; background:var(--green); transition:width .3s; }
+  #cmsbar .prog span { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #cmsside { overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; min-width:0; background:var(--fb); border-right:3px solid var(--ink); font-size:calc(var(--fs) - 2px); }
+  .sbhead { padding:12px 14px; border-bottom:2px dashed var(--ink); position:sticky; top:0; z-index:2; background:var(--fb); }
+  .sbhead h2 { margin:0 0 8px; font-size:24px; line-height:1.2; transform:none; color:var(--red); }
+  .sbhead h2::after { display:none; }
+  .sbhead input { width:100%; min-height:44px; padding:6px 12px; font:16px system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--paper); border:2px solid var(--ink); border-radius:12px; }
+  .sbtools { display:flex; gap:8px; margin-top:8px; }
+  .sbtools button { flex:1; min-height:40px; font:14px system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--fb); border:2px solid var(--ink); border-radius:10px; cursor:pointer; }
+  .sec { border-bottom:2px solid var(--ink); }
+  .sechd { display:flex; align-items:center; gap:8px; width:100%; min-height:50px; padding:8px 14px; text-align:left; font:inherit; font-weight:700; color:var(--ink); background:var(--th); border:0; cursor:pointer; touch-action:manipulation; }
+  .sechd .t { flex:1; min-width:0; overflow-wrap:anywhere; line-height:1.25; }
+  .sechd .cnt { flex:none; font:600 12px system-ui,'Segoe UI',sans-serif; opacity:.8; }
+  .sechd .chev { flex:none; transition:transform .2s; }
+  .sec.collapsed .chev { transform:rotate(-90deg); }
+  .sec.collapsed .lessons { display:none; }
+  .lessonbtn { display:flex; align-items:flex-start; gap:10px; width:100%; min-height:48px; padding:9px 12px 9px 16px; text-align:left; font:inherit; color:var(--ink); background:transparent; border:0; border-left:6px solid transparent; cursor:pointer; touch-action:manipulation; }
+  .lessonbtn:hover { background:var(--code); }
+  .lessonbtn.active { background:var(--hi); border-left-color:var(--red); font-weight:700; }
+  .lessonbtn .ck { flex:none; width:24px; height:24px; margin-top:1px; border:2px solid var(--ink); border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font:700 12px system-ui,'Segoe UI',sans-serif; }
+  .lessonbtn.done .ck { background:var(--green); border-color:var(--green); color:#fff; }
+  .lessonbtn .lt { flex:1; min-width:0; overflow-wrap:anywhere; line-height:1.25; }
+  .lessonbtn .tm { display:block; margin-top:2px; font:12px system-ui,'Segoe UI',sans-serif; opacity:.7; font-weight:400; }
+  .lessonbtn[hidden], .sec[hidden] { display:none; }
+  #cmsmain { overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; min-width:0; position:relative; padding:16px clamp(12px, 2.4vw, 40px) 0; }
+  .lesson { display:none; max-width:1200px; margin:0 auto; padding-bottom:22px; }
+  .lesson.active { display:block; }
+  .lcrumb { margin:0 0 10px; font:14px/1.3 system-ui,'Segoe UI',sans-serif; opacity:.85; overflow-wrap:anywhere; }
+  .lesson .hero { margin:0 0 12px; }
+  .lesson .hero h1 { font-size:clamp(32px, 4vw, 50px); line-height:1.15; margin:0 0 4px; transform:none; }
+  .lesson .hero p { margin:0; }
+  .sn { background:var(--fb); border:2px solid var(--ink); border-radius:16px; padding:14px 20px 18px; margin:0; box-shadow:0 4px 12px var(--shadow); line-height:1.55; }
+  .sn > h2 { margin:0 0 8px; font-size:clamp(28px, 3vw, 36px); line-height:1.2; color:var(--red); transform:none; }
+  .sn > h2::after { width:55%; }
+  .sn > h1 { font-size:clamp(30px, 3.4vw, 46px); line-height:1.15; margin:0 0 6px; transform:none; }
+  .sn h3 { line-height:1.25; }
+  .sn svg { max-width:1500px; margin:12px auto; }
+  .sn li, .sn p, .sn td, .sn th, .sn code, .sn .note, .sn h1, .sn h2, .sn h3 { overflow-wrap:break-word; }
+  .sn code { overflow-wrap:anywhere; }
+  .sn pre { white-space:pre; overflow-x:auto; max-width:100%; }
+  .sn table { width:100%; max-width:100%; table-layout:auto; }
+  .sn td, .sn th { min-width:5em; word-break:normal; }
+  .sn p.el { text-align:left; }
+  .sn .two { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:0 28px; }
+  .lesson .archpage { margin:0; padding:0; border:0; box-shadow:none; background:transparent; }
+  .lesson .archpage > .archhead { margin-bottom:12px; }
+  .lfoot { position:sticky; bottom:0; z-index:5; display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr); gap:10px; max-width:1200px; margin:0 auto; padding:10px 0 12px; background:var(--paper); border-top:3px solid var(--ink); }
+  .lfoot button { min-width:0; min-height:50px; padding:0 14px; white-space:nowrap; overflow:hidden; font:700 16px system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--fb); border:2px solid var(--ink); border-radius:14px; cursor:pointer; touch-action:manipulation; }
+  .lfoot button.primary { background:var(--red); border-color:var(--red); color:var(--paper); }
+  .lfoot button.done { background:var(--green); border-color:var(--green); color:#fff; }
+  .lfoot button:disabled { opacity:.4; cursor:default; }
+  #cmsscrim { display:none; }
+  /* Explain in Hindi */
+  .hx { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:2px 0 14px; }
+  .hx button { min-height:48px; padding:0 18px; white-space:nowrap; overflow:hidden; max-width:100%; font:700 16px system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--fb); border:2px solid var(--ink); border-radius:24px; cursor:pointer; touch-action:manipulation; }
+  .hx button.hxbtn { background:var(--red); border-color:var(--red); color:var(--paper); }
+  .hx .hxsub { flex:1 1 220px; min-width:0; font:14px/1.35 system-ui,'Segoe UI',sans-serif; opacity:.85; }
+  .hx .hxcap { flex:1 1 100%; min-width:0; padding:10px 14px; background:var(--note); border-left:6px solid var(--red); border-radius:10px; font:16px/1.5 system-ui,'Segoe UI',sans-serif; }
+  .hx .hxcap b { display:block; margin-bottom:2px; font-size:13px; letter-spacing:.05em; text-transform:uppercase; color:var(--red); }
+  .hx .hxmsg { flex:1 1 100%; padding:8px 12px; border:2px dashed var(--red); border-radius:10px; font:15px/1.4 system-ui,'Segoe UI',sans-serif; }
+  .hx [hidden] { display:none !important; }
+  svg .spot > rect { stroke:var(--red) !important; stroke-width:6 !important; filter:drop-shadow(0 0 10px var(--red)); }
+  svg .spot.lnk path:not(.hit) { stroke:var(--red) !important; stroke-width:7 !important; filter:drop-shadow(0 0 8px var(--red)); }
+  svg .spot text { font-weight:700; }
+  @media (max-width:900px) {
+    #cms { grid-template-columns:minmax(0, 1fr); }
+    #cmsside { position:fixed; top:58px; bottom:0; left:0; width:min(340px, 88vw); z-index:90; transform:translateX(-105%); transition:transform .25s; box-shadow:6px 0 18px var(--shadow); }
+    #cms.sideopen #cmsside { transform:none; }
+    #cms.noside { grid-template-columns:minmax(0, 1fr); }
+    #cms.noside #cmsside { display:block; }
+    #cms.sideopen #cmsscrim { display:block; position:fixed; top:58px; left:0; right:0; bottom:0; z-index:80; background:rgba(0,0,0,.4); }
+    #cmsbar .prog { display:none; }
+    .lfoot { grid-template-columns:minmax(0,1fr) minmax(0,1.5fr) minmax(0,1fr); gap:6px; padding:8px 0 10px; } .lfoot button { min-height:46px; padding:0 8px; font-size:14px; }
+  }
+  @media print { #cmsbar, #cmsside, .lfoot, .hx { display:none !important; } body.cms { overflow:visible; } #cms { display:block; height:auto; } #cmsmain { overflow:visible; } .lesson { display:block !important; page-break-after:always; } }
+
+  /* ===== DotNet course additions ===== */
+  .sn pre { font-family:Consolas,'Courier New',monospace; font-size:14.5px; line-height:1.55; background:var(--code); border:1.5px solid var(--ink); border-left:6px solid var(--red); border-radius:10px; padding:12px 14px; margin:8px 0; overflow-x:auto; max-width:100%; white-space:pre; }
+  .sn pre code { font-family:inherit; font-size:inherit; background:none; border:0; padding:0; overflow-wrap:normal; }
+  .codewrap { position:relative; margin:8px 0; }
+  .codewrap pre { margin:0; padding-top:26px; }
+  .codewrap pre[data-lang]::before { content:attr(data-lang); position:absolute; top:5px; left:14px; font:700 11px system-ui,'Segoe UI',sans-serif; letter-spacing:.08em; text-transform:uppercase; opacity:.65; color:var(--ink); }
+  .codewrap .copy { position:absolute; top:4px; right:6px; min-height:30px; padding:0 12px; font:12px system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--fb); border:1.5px solid var(--ink); border-radius:8px; cursor:pointer; }
+  .qa-item { border:2px solid var(--ink); border-radius:12px; margin:10px 0; overflow:hidden; background:var(--paper); }
+  .qa-item .qq { margin:0; padding:8px 14px; background:var(--th); line-height:1.4; }
+  .qa-item .aa { margin:0; padding:8px 14px 10px; line-height:1.5; }
+  .qa-item .aa p { margin:0 0 7px; } .qa-item .aa ul { margin:3px 0 8px; } .qa-item .aa .codewrap { margin:6px 0 10px; }
+  .qa-item .aa .tip { background:var(--note); border-left:5px solid var(--red); border-radius:8px; padding:6px 12px; }
+  .qa-item .qq { cursor:default; } .qa-practice { margin:2px 0 12px; }
+  .practice .qa-item .qq { cursor:pointer; } .practice .qa-item .qq::after { content:'  ▸ tap to reveal'; font:12px system-ui,sans-serif; opacity:.6; }
+  .practice .qa-item.open .qq::after { content:'  ▾'; }
+  .practice .qa-item:not(.open) .aa { display:none; }
+  .qa-item code { font-family:Consolas,'Courier New',monospace; font-size:.9em; }
+  #cmsbar .animbtn { flex:none; min-height:40px; margin:0; padding:0 12px; font-size:13px; white-space:nowrap; }
+  .sn .archtools { margin:6px 0 10px; }
+  .sn .diagramwrap { margin:8px 0 12px; }
+  @media (max-width:900px) { #cmsbar .animbtn { display:none; } }
+</style>
+</head>
+<body>
+
+<button id="settingsBtn" type="button" aria-label="Open settings" aria-expanded="false" aria-controls="settingsPanel" title="Settings">⚙️</button>
+<div id="settingsScrim"></div>
+<div id="settingsPanel" role="dialog" aria-label="Settings">
+  <div class="hd"><span>⚙️ Settings</span><button id="settingsClose" type="button" aria-label="Close settings">✕</button></div>
+  <h4>🎨 Appearance</h4>
+  <label>Theme
+    <select id="themeSel">
+      <option value="classic">📒 Classic notebook</option>
+      <option value="dark">🌙 Dark</option>
+      <option value="sepia">📜 Sepia</option>
+      <option value="blueprint">📘 Blueprint</option>
+      <option value="mint">🌿 Mint</option>
+      <option value="clean">⬜ Clean (no lines)</option>
+    </select></label>
+  <label>Font
+    <select id="fontSel">
+      <option value="patrick">✍️ Patrick Hand (default)</option>
+      <option value="caveat">Caveat – cursive</option>
+      <option value="kalam">Kalam – natural</option>
+      <option value="indie">Indie Flower – playful</option>
+      <option value="architect">Architects Daughter – neat</option>
+      <option value="serif">Merriweather – serif</option>
+      <option value="sans">Inter – clean sans</option>
+      <option value="mono">Monospace – code style</option>
+    </select></label>
+  <label>Text size
+    <select id="sizeSel"><option value="17px">Small</option><option value="20px" selected>Medium</option><option value="23px">Large</option><option value="26px">Extra large</option></select></label>
+  <button id="resetBtn" class="reset" type="button">↺ Reset appearance</button>
+  <h4>🎧 Narrator</h4>
+<div id="narrator">
+  <div class="prog"><i id="nBar"></i></div>
+  <div class="row">
+    <button id="nPrev" aria-label="Previous section" title="Previous section">⏮</button>
+    <button id="nPlay" class="main" aria-label="Play narration" title="Play / pause">▶</button>
+    <button id="nStop" aria-label="Stop" title="Stop">⏹</button>
+    <button id="nNext" aria-label="Next section" title="Next section">⏭</button>
+    <div id="nStatus">🎧 Narrator – tap ▶ to listen</div>
+    </div>
+  </div>
+
+  <label>Speed
+    <select id="nRate"><option value="0.75">0.75×</option><option value="0.9">0.9×</option><option value="1" selected>1×</option><option value="1.15">1.15×</option><option value="1.3">1.3×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option></select></label>
+  <label>Voice <select id="nVoice"><option value="">Default voice</option></select></label>
+  <label class="chk"><input type="checkbox" id="nLabels"> Read diagram labels aloud</label>
+</div>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--ink)"/></marker>
+</defs></svg>
+
+<div id="src" hidden><section data-sec="Fundamentals"><article data-key="what" data-title="1. What is a Network ACL?"><h2>1. What is a Network ACL?</h2><p class="el">A <b>network access control list (NACL)</b> is an optional, <b>stateless firewall at the subnet boundary</b>. It inspects every packet entering or leaving a subnet and decides, based on a numbered list of rules, whether to allow or deny it. Where a security group protects a single network interface, a NACL protects <b>everything in the subnet</b> at once, which makes it a good <b>second layer</b> of defence and a handy place for subnet-wide rules.</p><p class="el">Its defining properties are that it is <b>stateless</b> (return traffic needs explicit rules), that rules are <b>numbered and evaluated in order with the first match winning</b>, and that it supports both <b>allow and deny</b> actions. Each subnet is associated with <b>exactly one</b> NACL, while one NACL can serve many subnets.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="an">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated anatomy of a network ACL" data-order="an"><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="a-sub" tabindex="0" role="button" aria-label="Subnet-level"><title>Subnet-level – click for details</title><rect class="g" x="20" y="30" width="223" height="104" rx="10"/><text x="131.5" y="78.1" style="font-size:19px">Subnet level</text><text x="131.5" y="99.6" class="m" style="font-size:14px">one per subnet</text></g></g>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="a-stateless" tabindex="0" role="button" aria-label="Stateless"><title>Stateless – click for details</title><rect class="r" x="265" y="30" width="223" height="104" rx="10"/><text x="376.5" y="78.1" style="font-size:19px">Stateless</text><text x="376.5" y="99.6" class="m" style="font-size:14px">return rules</text></g></g>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="a-order" tabindex="0" role="button" aria-label="Numbered rules"><title>Numbered rules – click for details</title><rect class="b" x="510" y="30" width="223" height="104" rx="10"/><text x="621.5" y="78.1" style="font-size:19px">Numbered rules</text><text x="621.5" y="99.6" class="m" style="font-size:14px">first match wins</text></g></g>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="a-allowdeny" tabindex="0" role="button" aria-label="Allow and deny"><title>Allow and deny – click for details</title><rect class="o" x="755" y="30" width="223" height="104" rx="10"/><text x="866.5" y="78.1" style="font-size:19px">Allow and deny</text><text x="866.5" y="99.6" class="m" style="font-size:14px">explicit blocks</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><h3>Features and benefits</h3><p class="el">NACLs let you <b>explicitly deny</b> traffic such as a malicious IP, add a <b>subnet-wide guardrail</b> that protects you from security-group mistakes, and <b>segment</b> subnets from each other. They are free and apply instantly.</p><h3>Problems and limits</h3><p class="el">Statelessness makes them <b>easy to misconfigure</b>, particularly forgetting <b>ephemeral ports</b> for return traffic. They only understand IPs, ports and protocols, not domains or application content, have a limited number of rules, and apply only to traffic that <b>crosses the subnet boundary</b>, not between instances in the same subnet. For these reasons most teams keep the default allow-all NACL and rely on security groups, adding NACLs only for specific needs.</p><pre data-lang="bash"><code>NACL=$(aws ec2 create-network-acl --vpc-id vpc-123 --query NetworkAcl.NetworkAclId --output text)
+aws ec2 create-network-acl-entry --network-acl-id $NACL --ingress --rule-number 100 --protocol tcp --port-range From=443,To=443 --cidr-block 0.0.0.0/0 --rule-action allow
+aws ec2 create-network-acl-entry --network-acl-id $NACL --egress  --rule-number 100 --protocol tcp --port-range From=1024,To=65535 --cidr-block 0.0.0.0/0 --rule-action allow
+aws ec2 replace-network-acl-association --association-id aclassoc-123 --network-acl-id $NACL</code></pre></article><article data-key="path" data-title="2. How a Packet Flows: NACL and Security Group Together"><h2>2. How a Packet Flows: NACL and Security Group Together</h2><p class="el">For a request into an instance, the packet is first checked by the <b>subnet NACL inbound</b> rules and then by the <b>security group</b> on the interface; both must allow it. The reply leaves through the security group, which allows it automatically because it is stateful, and then must pass the <b>NACL outbound</b> rules, which have no memory of the request and need a matching rule, typically for the <b>ephemeral port range</b>. Traffic between two subnets crosses <b>both</b> subnets' NACLs in each direction.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="pa">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated packet path through NACL and security group" data-order="pa"><circle r="8" class="pk1"><animateMotion dur="6s" begin="0s" repeatCount="indefinite" path="M125.5,82 L374.5,82 L623.5,82 L872.5,82"/></circle><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="r-in" tabindex="0" role="button" aria-label="Subnet entry"><title>Subnet entry – click for details</title><rect class="o" x="20" y="30" width="211" height="104" rx="10"/><text x="125.5" y="78.1" style="font-size:19px">NACL inbound</text><text x="125.5" y="99.6" class="m" style="font-size:14px">subnet entry</text></g></g>
+<path class="l" d="M231,82 H269"/>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="r-sg" tabindex="0" role="button" aria-label="Security group"><title>Security group – click for details</title><rect class="g" x="269" y="30" width="211" height="104" rx="10"/><text x="374.5" y="78.1" style="font-size:19px">Security group</text><text x="374.5" y="99.6" class="m" style="font-size:14px">ENI</text></g></g>
+<path class="l" d="M480,82 H518"/>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="r-app" tabindex="0" role="button" aria-label="Instance"><title>Instance – click for details</title><rect class="y" x="518" y="30" width="211" height="104" rx="10"/><text x="623.5" y="78.1" style="font-size:19px">Instance</text><text x="623.5" y="99.6" class="m" style="font-size:14px">replies</text></g></g>
+<path class="l" d="M729,82 H767"/>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="r-out" tabindex="0" role="button" aria-label="Subnet exit"><title>Subnet exit – click for details</title><rect class="b" x="767" y="30" width="211" height="104" rx="10"/><text x="872.5" y="78.1" style="font-size:19px">NACL outbound</text><text x="872.5" y="99.6" class="m" style="font-size:14px">subnet exit</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><table><tr><th></th><th>Security group</th><th>Network ACL</th></tr><tr><td>Level</td><td>Network interface</td><td>Subnet</td></tr><tr><td>State</td><td>Stateful</td><td>Stateless</td></tr><tr><td>Rules</td><td>Allow only</td><td>Allow and deny</td></tr><tr><td>Evaluation</td><td>All rules together</td><td>In order, first match</td></tr><tr><td>Return traffic</td><td>Automatic</td><td>Needs explicit rule</td></tr><tr><td>Default</td><td>Deny inbound</td><td>Default NACL allows all</td></tr></table><span class="note">A client picks a random <b>ephemeral port</b> as source. Linux commonly uses 32768–60999, Windows 49152–65535, and NAT Gateways and many load balancers use 1024–65535. Allowing 1024–65535 for return traffic covers all of them.</span></article><article data-key="rules" data-title="3. Rules, Defaults and Per-Tier Design"><h2>3. Rules, Defaults and Per-Tier Design</h2><p class="el">Every VPC has a <b>default NACL</b> that allows all traffic in both directions, and new subnets use it automatically. A <b>custom NACL</b> starts by denying everything, so you must add rules for both directions. Rule numbers range from 1 to 32766, and a good habit is to number in steps of <b>10 or 100</b> so you can insert rules later. The final rule, shown as <code>*</code>, denies anything unmatched and cannot be changed. Changing a subnet's association takes effect <b>immediately</b>, so test first.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="ty">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated default and custom NACLs" data-order="ty"><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="d-default" tabindex="0" role="button" aria-label="Default NACL"><title>Default NACL – click for details</title><rect class="g" x="20" y="30" width="223" height="104" rx="10"/><text x="131.5" y="78.1" style="font-size:19px">Default</text><text x="131.5" y="99.6" class="m" style="font-size:14px">allow all</text></g></g>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="d-custom" tabindex="0" role="button" aria-label="Custom NACL"><title>Custom NACL – click for details</title><rect class="r" x="265" y="30" width="223" height="104" rx="10"/><text x="376.5" y="78.1" style="font-size:19px">Custom</text><text x="376.5" y="99.6" class="m" style="font-size:14px">deny all first</text></g></g>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="d-assoc" tabindex="0" role="button" aria-label="Association"><title>Association – click for details</title><rect class="o" x="510" y="30" width="223" height="104" rx="10"/><text x="621.5" y="78.1" style="font-size:19px">Association</text><text x="621.5" y="99.6" class="m" style="font-size:14px">immediate</text></g></g>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="d-tier" tabindex="0" role="button" aria-label="Per-tier NACLs"><title>Per-tier NACLs – click for details</title><rect class="b" x="755" y="30" width="223" height="104" rx="10"/><text x="866.5" y="78.1" style="font-size:19px">Per tier</text><text x="866.5" y="99.6" class="m" style="font-size:14px">defence in depth</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><pre data-lang="hcl"><code>resource "aws_network_acl" "data" {
+  vpc_id     = aws_vpc.main.id
+  subnet_ids = [for s in aws_subnet.data : s.id]
+
+  ingress { rule_no = 100  action = "allow"  protocol = "tcp"  from_port = 5432  to_port = 5432  cidr_block = "10.0.10.0/22" }   # app subnets
+  egress  { rule_no = 100  action = "allow"  protocol = "tcp"  from_port = 1024  to_port = 65535 cidr_block = "10.0.10.0/22" }   # replies
+  ingress { rule_no = 50   action = "deny"   protocol = "-1"   from_port = 0     to_port = 0     cidr_block = "198.51.100.0/24" }  # blocked range
+}</code></pre><p class="el">A common design is a <b>NACL per tier</b>: public subnets allow web ports and replies, app subnets allow the app port from the public CIDRs, and data subnets allow the database port only from the app CIDRs. Keep it <b>simple and documented</b>; complex NACLs are hard to debug.</p></article></section><section data-sec="Operations"><article data-key="uses" data-title="4. When to Use NACLs (and When Not To)"><h2>4. When to Use NACLs (and When Not To)</h2><p class="el">Use a NACL when you need what security groups cannot give. First, <b>explicit denies</b>, such as blocking an abusive address range. Second, a <b>subnet-wide guardrail</b> that overrides mistakes, for example denying database ports from the internet on every data subnet. Third, <b>segmentation</b> between subnets or environments. Fourth, compliance requirements that call for a second, independent control.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="us">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated when NACLs are useful" data-order="us"><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="u-block" tabindex="0" role="button" aria-label="Block bad IPs"><title>Block bad IPs – click for details</title><rect class="r" x="20" y="30" width="223" height="104" rx="10"/><text x="131.5" y="78.1" style="font-size:19px">Block IPs</text><text x="131.5" y="99.6" class="m" style="font-size:14px">deny rules</text></g></g>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="u-guard" tabindex="0" role="button" aria-label="Guardrail"><title>Guardrail – click for details</title><rect class="o" x="265" y="30" width="223" height="104" rx="10"/><text x="376.5" y="78.1" style="font-size:19px">Guardrail</text><text x="376.5" y="99.6" class="m" style="font-size:14px">subnet-wide backstop</text></g></g>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="u-iso" tabindex="0" role="button" aria-label="Isolate subnets"><title>Isolate subnets – click for details</title><rect class="b" x="510" y="30" width="223" height="104" rx="10"/><text x="621.5" y="78.1" style="font-size:19px">Isolate subnets</text><text x="621.5" y="99.6" class="m" style="font-size:14px">segmentation</text></g></g>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="u-nfw" tabindex="0" role="button" aria-label="Beyond NACLs"><title>Beyond NACLs – click for details</title><rect class="g" x="755" y="30" width="223" height="104" rx="10"/><text x="866.5" y="78.1" style="font-size:19px">Beyond NACLs</text><text x="866.5" y="99.6" class="m" style="font-size:14px">Network Firewall · WAF</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><p class="el">Do <b>not</b> expect them to handle everything. For <b>domain filtering, intrusion prevention or large block lists</b>, use <b>AWS Network Firewall</b> or <b>AWS WAF</b>. For routine allow rules between tiers, <b>security groups</b> are simpler and safer because they are stateful. A pragmatic rule is: security groups for normal access, NACLs for explicit denies and guardrails.</p><pre data-lang="bash"><code>aws ec2 create-network-acl-entry --network-acl-id acl-123 --ingress --rule-number 10 --protocol -1 --cidr-block 198.51.100.0/24 --rule-action deny
+aws ec2 describe-network-acls --filters Name=association.subnet-id,Values=subnet-123</code></pre></article><article data-key="trouble" data-title="5. Troubleshooting &amp; Real Scenarios"><h2>5. Troubleshooting & Real Scenarios</h2><p class="el">When a connection fails and security groups look right, suspect the NACL. The most common cause is <b>missing ephemeral port rules</b>, so the request arrives but the reply is dropped. Next check <b>rule order</b>, because a lower-numbered deny can mask a later allow. Remember that traffic between subnets is evaluated by <b>both subnets' NACLs</b>, and confirm with <b>VPC Flow Logs</b> and <b>Reachability Analyzer</b>, which can name the exact blocking component.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="tb">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated NACL troubleshooting" data-order="tb"><circle r="8" class="pk1"><animateMotion dur="6s" begin="0s" repeatCount="indefinite" path="M125.5,82 L374.5,82 L623.5,82 L872.5,82"/></circle><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="x-eph" tabindex="0" role="button" aria-label="Ephemeral ports"><title>Ephemeral ports – click for details</title><rect class="r" x="20" y="30" width="211" height="104" rx="10"/><text x="125.5" y="78.1" style="font-size:19px">Ephemeral ports</text><text x="125.5" y="99.6" class="m" style="font-size:14px">return traffic</text></g></g>
+<path class="l" d="M231,82 H269"/>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="x-num" tabindex="0" role="button" aria-label="Rule order"><title>Rule order – click for details</title><rect class="o" x="269" y="30" width="211" height="104" rx="10"/><text x="374.5" y="78.1" style="font-size:19px">Rule order</text><text x="374.5" y="99.6" class="m" style="font-size:14px">first match</text></g></g>
+<path class="l" d="M480,82 H518"/>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="x-both" tabindex="0" role="button" aria-label="Both subnets"><title>Both subnets – click for details</title><rect class="b" x="518" y="30" width="211" height="104" rx="10"/><text x="623.5" y="78.1" style="font-size:19px">Both subnets</text><text x="623.5" y="99.6" class="m" style="font-size:14px">four checks</text></g></g>
+<path class="l" d="M729,82 H767"/>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="x-logs" tabindex="0" role="button" aria-label="Flow logs"><title>Flow logs – click for details</title><rect class="g" x="767" y="30" width="211" height="104" rx="10"/><text x="872.5" y="78.1" style="font-size:19px">Flow logs</text><text x="872.5" y="99.6" class="m" style="font-size:14px">evidence</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><table><tr><th>Scenario</th><th>Cause and fix</th></tr><tr><td>Web works inbound but pages never return</td><td>Outbound ephemeral ports missing; allow 1024-65535</td></tr><tr><td>Allow rule ignored</td><td>Lower-numbered deny matched first; renumber</td></tr><tr><td>App to DB fails across subnets</td><td>DB subnet inbound and app subnet outbound/inbound return rules</td></tr><tr><td>Updates fail from private subnet</td><td>NACL blocks return from NAT; allow ephemeral ports from 0.0.0.0/0</td></tr><tr><td>Everything broke after change</td><td>Association swapped; revert association to previous NACL</td></tr></table><pre data-lang="bash"><code>aws ec2 describe-network-acls --network-acl-ids acl-123 --query "NetworkAcls[].Entries"
+aws ec2 create-network-insights-path --source eni-a --destination eni-b --protocol tcp --destination-port 5432
+aws logs filter-log-events --log-group-name vpc-flow --filter-pattern "REJECT"</code></pre></article></section><section data-sec="Interview Preparation"><article data-key="qa" data-title="6. Interview Q&amp;A: Network ACL"><h2>6. Interview Q&A: Network ACL</h2><div class="qa-item"><p class="qq"><b>Q1. What is a network ACL?</b></p><div class="aa"><p><b>Short answer:</b> A stateless, numbered-rule firewall applied at the subnet boundary that can allow or deny traffic.</p><p>Each subnet has exactly one NACL.</p></div></div><div class="qa-item"><p class="qq"><b>Q2. What does stateless mean?</b></p><div class="aa"><p><b>Short answer:</b> The NACL does not track connections, so return traffic must be allowed by explicit rules.</p><p>Security groups are stateful.</p></div></div><div class="qa-item"><p class="qq"><b>Q3. NACL versus security group?</b></p><div class="aa"><p><b>Short answer:</b> NACLs are stateless, subnet-level and support deny; security groups are stateful, interface-level and allow-only.</p><p>Use both.</p></div></div><div class="qa-item"><p class="qq"><b>Q4. How are NACL rules evaluated?</b></p><div class="aa"><p><b>Short answer:</b> In ascending rule-number order, and the first matching rule applies.</p><p>The final * rule denies all.</p></div></div><div class="qa-item"><p class="qq"><b>Q5. What is the default NACL behaviour?</b></p><div class="aa"><p><b>Short answer:</b> The default NACL allows all inbound and outbound traffic.</p><p>A custom NACL denies all until rules are added.</p></div></div><div class="qa-item"><p class="qq"><b>Q6. How many NACLs can a subnet have?</b></p><div class="aa"><p><b>Short answer:</b> Exactly one, but one NACL can be associated with many subnets.</p><p>Swapping is immediate.</p></div></div><div class="qa-item"><p class="qq"><b>Q7. What are ephemeral ports?</b></p><div class="aa"><p><b>Short answer:</b> Random high ports clients use as the source of a connection, which become destination ports of replies.</p><p>Allow 1024-65535 in NACLs for return traffic.</p></div></div><div class="qa-item"><p class="qq"><b>Q8. Which is evaluated first inbound?</b></p><div class="aa"><p><b>Short answer:</b> The NACL is evaluated before the security group on inbound traffic.</p><p>Outbound it is the security group first, then the NACL.</p></div></div><div class="qa-item"><p class="qq"><b>Q9. Do NACLs filter traffic within a subnet?</b></p><div class="aa"><p><b>Short answer:</b> No, only traffic crossing the subnet boundary.</p><p>Use security groups within a subnet.</p></div></div><div class="qa-item"><p class="qq"><b>Q10. How do you block an IP address?</b></p><div class="aa"><p><b>Short answer:</b> Add a DENY rule with a low number to the NACL.</p><p>Security groups cannot deny.</p></div></div><div class="qa-item"><p class="qq"><b>Q11. Why use rule numbers in steps of 10 or 100?</b></p><div class="aa"><p><b>Short answer:</b> So you can insert new rules between existing ones without renumbering.</p><p>Rule order decides the outcome.</p></div></div><div class="qa-item"><p class="qq"><b>Q12. What is the maximum number of NACL rules?</b></p><div class="aa"><p><b>Short answer:</b> A default quota (20 per direction, adjustable up to a limit) applies, so keep rules few.</p><p>Check current quotas.</p></div></div><div class="qa-item"><p class="qq"><b>Q13. Traffic between two subnets: how many NACL checks?</b></p><div class="aa"><p><b>Short answer:</b> Four per round trip: the source subnet outbound and destination subnet inbound, then the reverse for the reply.</p><p>Both subnets need rules.</p></div></div><div class="qa-item"><p class="qq"><b>Q14. A web request works but the page does not load. Why?</b></p><div class="aa"><p><b>Short answer:</b> The outbound ephemeral port rule is missing, so replies are dropped.</p><p>Allow 1024-65535 outbound.</p></div></div><div class="qa-item"><p class="qq"><b>Q15. How do you diagnose NACL issues?</b></p><div class="aa"><p><b>Short answer:</b> Use VPC Flow Logs for REJECT records and Reachability Analyzer to identify the blocking component.</p><p>Review rule order.</p></div></div><div class="qa-item"><p class="qq"><b>Q16. When would you use NACLs?</b></p><div class="aa"><p><b>Short answer:</b> For explicit denies, subnet-wide guardrails, segmentation and compliance backstops.</p><p>Otherwise stick to security groups.</p></div></div><div class="qa-item"><p class="qq"><b>Q17. What are alternatives to NACLs for deeper filtering?</b></p><div class="aa"><p><b>Short answer:</b> AWS Network Firewall, AWS WAF and Gateway Load Balancer appliances.</p><p>They inspect domains and content.</p></div></div><div class="qa-item"><p class="qq"><b>Q18. Is it safe to swap a subnet's NACL?</b></p><div class="aa"><p><b>Short answer:</b> It takes effect immediately and can break live traffic.</p><p>Test and have a rollback.</p></div></div><div class="qa-item"><p class="qq"><b>Q19. Can NACLs filter by domain name?</b></p><div class="aa"><p><b>Short answer:</b> No, only IP ranges, ports and protocols.</p><p>Use Network Firewall for domains.</p></div></div><div class="qa-item"><p class="qq"><b>Q20. How do NACLs handle IPv6?</b></p><div class="aa"><p><b>Short answer:</b> Rules for IPv6 use separate IPv6 CIDR entries; IPv4 rules do not cover IPv6.</p><p>Add both families when needed.</p></div></div></article><article data-key="cheat" data-title="7. Cheat Sheet &amp; Mind Map"><h2>7. Cheat Sheet & Mind Map</h2><table><tr><th>Topic</th><th>Remember</th></tr><tr><td>Level</td><td>Subnet boundary; one NACL per subnet</td></tr><tr><td>State</td><td>Stateless: add return rules</td></tr><tr><td>Rules</td><td>Numbered, first match, allow and deny</td></tr><tr><td>Default</td><td>Default NACL allows all; custom denies all</td></tr><tr><td>Ephemeral</td><td>1024–65535 for replies</td></tr><tr><td>Use</td><td>Deny IPs, guardrails, segmentation</td></tr><tr><td>Not for</td><td>Domains, deep inspection: Network Firewall, WAF</td></tr><tr><td>Debug</td><td>Ports → order → both subnets → flow logs</td></tr></table><div class="diagramwrap"><svg viewBox="0 0 1000 600" role="img" aria-label="Animated Network ACL mind map"><ellipse class="g" cx="500" cy="300" rx="125" ry="62"/>
+<text x="500" y="296" class="t" style="font-size:24px">Network ACL</text>
+<text x="500" y="324" class="m">stateless subnet firewall</text>
+<path class="soft flow" d="M500,300 L500,65"/>
+<rect class="g" x="385" y="13" width="230" height="104" rx="14"/><text x="500" y="43" style="font-weight:700;fill:var(--red);font-size:18px">Scope</text>
+<text x="500" y="67" class="m" style="font-size:15px">subnet level</text>
+<text x="500" y="86" class="m" style="font-size:15px">one per subnet</text>
+<text x="500" y="105" class="m" style="font-size:15px">default allows all</text>
+<path class="soft flow" d="M500,300 L820,183"/>
+<rect class="y" x="705" y="131" width="230" height="104" rx="14"/><text x="820" y="161" style="font-weight:700;fill:var(--red);font-size:18px">Rules</text>
+<text x="820" y="185" class="m" style="font-size:15px">numbered</text>
+<text x="820" y="204" class="m" style="font-size:15px">first match</text>
+<text x="820" y="223" class="m" style="font-size:15px">allow + deny</text>
+<path class="soft flow" d="M500,300 L820,417"/>
+<rect class="o" x="705" y="365" width="230" height="104" rx="14"/><text x="820" y="395" style="font-weight:700;fill:var(--red);font-size:18px">State</text>
+<text x="820" y="419" class="m" style="font-size:15px">stateless</text>
+<text x="820" y="438" class="m" style="font-size:15px">ephemeral ports</text>
+<text x="820" y="457" class="m" style="font-size:15px">both directions</text>
+<path class="soft flow" d="M500,300 L500,535"/>
+<rect class="b" x="385" y="483" width="230" height="104" rx="14"/><text x="500" y="513" style="font-weight:700;fill:var(--red);font-size:18px">Uses</text>
+<text x="500" y="537" class="m" style="font-size:15px">block IPs</text>
+<text x="500" y="556" class="m" style="font-size:15px">guardrail</text>
+<text x="500" y="575" class="m" style="font-size:15px">segmentation</text>
+<path class="soft flow" d="M500,300 L180,418"/>
+<rect class="r" x="65" y="366" width="230" height="104" rx="14"/><text x="180" y="396" style="font-weight:700;fill:var(--red);font-size:18px">vs SG</text>
+<text x="180" y="420" class="m" style="font-size:15px">SG stateful</text>
+<text x="180" y="439" class="m" style="font-size:15px">SG allow only</text>
+<text x="180" y="458" class="m" style="font-size:15px">SG on ENI</text>
+<path class="soft flow" d="M500,300 L180,182"/>
+<rect class="y" x="65" y="130" width="230" height="104" rx="14"/><text x="180" y="160" style="font-weight:700;fill:var(--red);font-size:18px">Debug</text>
+<text x="180" y="184" class="m" style="font-size:15px">ports</text>
+<text x="180" y="203" class="m" style="font-size:15px">order</text>
+<text x="180" y="222" class="m" style="font-size:15px">both subnets</text></svg></div></article></section></div>
+<div id="kModal" role="dialog" aria-modal="true" aria-labelledby="kTitle" aria-hidden="true">
+  <div class="kcard">
+    <div class="khead"><span class="ico" id="kIcon"></span><div style="flex:1;min-width:0"><h3 id="kTitle"></h3><div class="meta" id="kMeta"></div></div><button type="button" class="kclose" id="kClose" aria-label="Close">✕</button></div>
+    <div class="kbody" id="kBody"></div>
+    <div class="kfoot"><button type="button" id="kPrev">◀ Prev</button><span class="pos" id="kPos"></span><button type="button" id="kNext" class="primary">Next ▶</button></div>
+  </div>
+</div>
+<script>
+(function(){
+  var FONTS = {
+    patrick:  ["'Patrick Hand','Caveat',cursive", "'Caveat',cursive", "'Caveat',cursive"],
+    caveat:   ["'Caveat',cursive", "'Caveat',cursive", "'Caveat',cursive"],
+    kalam:    ["'Kalam',cursive", "'Kalam',cursive", "'Kalam',cursive"],
+    indie:    ["'Indie Flower',cursive", "'Indie Flower',cursive", "'Indie Flower',cursive"],
+    architect:["'Architects Daughter',cursive", "'Architects Daughter',cursive", "'Architects Daughter',cursive"],
+    serif:    ["'Merriweather',Georgia,serif", "'Merriweather',Georgia,serif", "Consolas,'Courier New',monospace"],
+    sans:     ["'Inter',system-ui,'Segoe UI',sans-serif", "'Inter',system-ui,'Segoe UI',sans-serif", "Consolas,'Courier New',monospace"],
+    mono:     ["Consolas,'Courier New',monospace", "Consolas,'Courier New',monospace", "Consolas,'Courier New',monospace"]
+  };
+  var root = document.documentElement, KEY = 'notes-appearance-v1';
+  var themeSel = document.getElementById('themeSel'), fontSel = document.getElementById('fontSel'), sizeSel = document.getElementById('sizeSel');
+  var DEF = { theme:'classic', font:'patrick', size:'20px' };
+  function load(){ try { return Object.assign({}, DEF, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch(e){ return Object.assign({}, DEF); } }
+  function save(s){ try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e){} }
+  function apply(s){
+    if (s.theme === 'classic') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', s.theme);
+    var f = FONTS[s.font] || FONTS.patrick;
+    root.style.setProperty('--body-font', f[0]); root.style.setProperty('--head-font', f[1]); root.style.setProperty('--code-font', f[2]);
+    root.style.setProperty('--fs', s.size);
+    themeSel.value = s.theme; fontSel.value = s.font; sizeSel.value = s.size;
+  }
+  var state = load(); apply(state);
+  function change(){ state = { theme:themeSel.value, font:fontSel.value, size:sizeSel.value }; apply(state); save(state); }
+  themeSel.onchange = fontSel.onchange = sizeSel.onchange = change;
+  document.getElementById('resetBtn').onclick = function(){ state = Object.assign({}, DEF); apply(state); save(state); };
+})();
+</script>
+<script>(function(){
+  var COURSE_KEY = 'aws-nacl-v1', store = { done:{}, last:null, collapsed:{} };
+  try { var s0 = JSON.parse(localStorage.getItem(COURSE_KEY) || '{}'); for (var k0 in s0) store[k0] = s0[k0]; } catch(e){}
+  function save(){ try { localStorage.setItem(COURSE_KEY, JSON.stringify(store)); } catch(e){} }
+  function mk(tag, cls, html){ var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  var HX = {"what":[{"en":"A network ACL is a stateless firewall at the subnet boundary. Rules are numbered, the first match wins, and you can allow or deny. Because it is stateless you must allow return traffic yourself.","hi":"Network ACL subnet boundary \u092a\u0930 stateless firewall \u0939\u0948\u0964 Rules numbered \u0939\u094b\u0924\u0947 \u0939\u0948\u0902, \u092a\u0939\u0932\u093e match \u091c\u0940\u0924\u0924\u093e \u0939\u0948, \u0914\u0930 allow \u092f\u093e deny \u0926\u094b\u0928\u094b\u0902 \u0915\u0930 \u0938\u0915\u0924\u0947 \u0939\u094b\u0964 Stateless \u0939\u094b\u0928\u0947 \u0915\u0940 \u0935\u091c\u0939 \u0938\u0947 return traffic \u0916\u0941\u0926 allow \u0915\u0930\u0928\u093e \u092a\u0921\u093c\u0924\u093e \u0939\u0948\u0964","k":["a-sub","a-stateless","a-order","a-allowdeny"]},{"en":"Most teams keep the default allow all NACL and add custom ones only when needed.","hi":"\u091c\u093c\u094d\u092f\u093e\u0926\u093e\u0924\u0930 teams default allow all NACL \u0930\u0916\u0924\u0940 \u0939\u0948\u0902 \u0914\u0930 \u091c\u093c\u0930\u0942\u0930\u0924 \u092a\u0921\u093c\u0928\u0947 \u092a\u0930 \u0939\u0940 custom NACL \u091c\u094b\u0921\u093c\u0924\u0940 \u0939\u0948\u0902\u0964","k":[]}],"path":[{"en":"Inbound traffic passes the NACL, then the security group. The reply passes the security group automatically and then the NACL outbound rules, which need an explicit rule for ephemeral ports.","hi":"Inbound traffic \u092a\u0939\u0932\u0947 NACL \u0938\u0947, \u092b\u093f\u0930 security group \u0938\u0947 \u0917\u0941\u091c\u093c\u0930\u0924\u093e \u0939\u0948\u0964 Reply security group \u0938\u0947 \u0905\u092a\u0928\u0947 \u0906\u092a \u0917\u0941\u091c\u093c\u0930\u0924\u093e \u0939\u0948 \u0914\u0930 \u092b\u093f\u0930 NACL outbound rules \u0938\u0947, \u091c\u093f\u0938\u092e\u0947\u0902 ephemeral ports \u0915\u0947 \u0932\u093f\u090f explicit rule \u091a\u093e\u0939\u093f\u090f\u0964","k":["r-in","r-sg","r-app","r-out"]},{"en":"Allowing 1024 to 65535 for return traffic covers all operating systems.","hi":"Return traffic \u0915\u0947 \u0932\u093f\u090f 1024 \u0938\u0947 65535 allow \u0915\u0930\u0928\u0947 \u0938\u0947 \u0938\u093e\u0930\u0947 operating systems cover \u0939\u094b \u091c\u093e\u0924\u0947 \u0939\u0948\u0902\u0964","k":[]}],"rules":[{"en":"The default NACL allows everything. A custom NACL denies everything until you add rules in both directions. Number rules in steps so you can insert later, and consider one NACL per tier.","hi":"Default NACL \u0938\u092c allow \u0915\u0930\u0924\u093e \u0939\u0948\u0964 Custom NACL \u0938\u092c deny \u0915\u0930\u0924\u093e \u0939\u0948 \u091c\u092c \u0924\u0915 \u0906\u092a \u0926\u094b\u0928\u094b\u0902 directions \u092e\u0947\u0902 rules \u0928 \u091c\u094b\u0921\u093c\u0947\u0902\u0964 Rules \u0915\u094b steps \u092e\u0947\u0902 number \u0915\u0930\u094b \u0924\u093e\u0915\u093f \u092c\u093e\u0926 \u092e\u0947\u0902 insert \u0915\u0930 \u0938\u0915\u094b, \u0914\u0930 \u0939\u0930 tier \u0915\u0947 \u0932\u093f\u090f \u090f\u0915 NACL \u0938\u094b\u091a\u094b\u0964","k":["d-default","d-custom","d-assoc","d-tier"]},{"en":"Changing the association applies immediately, so test first.","hi":"Association \u092c\u0926\u0932\u0928\u093e \u0924\u0941\u0930\u0902\u0924 apply \u0939\u094b\u0924\u093e \u0939\u0948, \u0907\u0938\u0932\u093f\u090f \u092a\u0939\u0932\u0947 test \u0915\u0930\u094b\u0964","k":[]}],"uses":[{"en":"Use NACLs for explicit denies, subnet wide guardrails and segmentation. For domain filtering or inspection use Network Firewall or WAF, and use security groups for normal access.","hi":"Explicit denies, subnet wide guardrails \u0914\u0930 segmentation \u0915\u0947 \u0932\u093f\u090f NACLs use \u0915\u0930\u094b\u0964 Domain filtering \u092f\u093e inspection \u0915\u0947 \u0932\u093f\u090f Network Firewall \u092f\u093e WAF, \u0914\u0930 normal access \u0915\u0947 \u0932\u093f\u090f security groups use \u0915\u0930\u094b\u0964","k":["u-block","u-guard","u-iso","u-nfw"]},{"en":"A simple rule: security groups for access, NACLs for denies.","hi":"\u0938\u0940\u0927\u093e rule: access \u0915\u0947 \u0932\u093f\u090f security groups, denies \u0915\u0947 \u0932\u093f\u090f NACLs\u0964","k":[]}],"trouble":[{"en":"When security groups look right, suspect the NACL. Missing ephemeral port rules are the most common cause. Also check rule order and both subnets.","hi":"\u091c\u092c security groups \u0920\u0940\u0915 \u0926\u093f\u0916\u0947\u0902, \u0924\u094b NACL \u092a\u0930 \u0936\u0915 \u0915\u0930\u094b\u0964 Ephemeral port rules missing \u0939\u094b\u0928\u093e \u0938\u092c\u0938\u0947 common \u0915\u093e\u0930\u0923 \u0939\u0948\u0964 Rule order \u0914\u0930 \u0926\u094b\u0928\u094b\u0902 subnets \u092d\u0940 check \u0915\u0930\u094b\u0964","k":["x-eph","x-num","x-both","x-logs"]},{"en":"Reachability Analyzer can name the blocking component.","hi":"Reachability Analyzer \u092c\u0924\u093e \u0938\u0915\u0924\u093e \u0939\u0948 \u0915\u093f \u0915\u094c\u0928 \u0938\u093e component block \u0915\u0930 \u0930\u0939\u093e \u0939\u0948\u0964","k":[]}],"qa":[{"en":"These questions cover what NACLs are, stateless behaviour, rule evaluation, ephemeral ports, comparison with security groups, use cases and troubleshooting.","hi":"\u092f\u0947 questions cover \u0915\u0930\u0924\u0947 \u0939\u0948\u0902 \u0915\u093f NACLs \u0915\u094d\u092f\u093e \u0939\u0948\u0902, stateless behaviour, rule evaluation, ephemeral ports, security groups \u0938\u0947 \u0924\u0941\u0932\u0928\u093e, use cases \u0914\u0930 troubleshooting\u0964","k":[]},{"en":"Remember: stateless, ordered, allow and deny, subnet level.","hi":"\u092f\u093e\u0926 \u0930\u0916\u094b: stateless, ordered, allow \u0914\u0930 deny, subnet level\u0964","k":[]}],"cheat":[{"en":"This is a summary and a mind map of network ACLs. Revise it before interviews.","hi":"\u092f\u0947 network ACLs \u0915\u093e summary \u0914\u0930 mind map \u0939\u0948\u0964 Interviews \u0938\u0947 \u092a\u0939\u0932\u0947 \u0907\u0938\u0947 revise \u0915\u0930\u094b\u0964","k":[]},{"en":"Practise by writing a data tier NACL in Terraform.","hi":"Terraform \u092e\u0947\u0902 data tier NACL \u0932\u093f\u0916\u0915\u0930 practise \u0915\u0930\u094b\u0964","k":[]}]};
+
+  /* ---------- build lessons from the authored source ---------- */
+  var src = document.getElementById('src'), sections = [], lessons = [];
+  [].forEach.call(src.querySelectorAll(':scope > section'), function(secEl){
+    var sec = { id:'sec-' + (sections.length + 1), title:secEl.getAttribute('data-sec'), lessons:[] }; sections.push(sec);
+    [].forEach.call(secEl.querySelectorAll(':scope > article'), function(a){
+      var id = 'les-' + (lessons.length + 1), art = mk('article', 'lesson'); art.id = id;
+      var crumb = mk('div', 'lcrumb'); art.appendChild(crumb);
+      var card = mk('section', 'sn'); while (a.firstChild) card.appendChild(a.firstChild); art.appendChild(card);
+      var words = (card.textContent || '').split(/\s+/).length;
+      var L = { id:id, key:a.getAttribute('data-key'), title:a.getAttribute('data-title'), sec:sec, el:art, card:card, crumb:crumb, mins:Math.max(1, Math.round(words / 170)), idx:lessons.length };
+      lessons.push(L); sec.lessons.push(L);
+    });
+  });
+  src.remove();
+
+  /* ---------- skeleton ---------- */
+  document.body.classList.add('cms');
+  var cms = mk('div'); cms.id = 'cms';
+  var bar = mk('header'); bar.id = 'cmsbar';
+  bar.innerHTML = '<button type="button" class="menu" id="cmsMenu" aria-label="Show or hide course menu" aria-expanded="true">☰</button><div class="ttl" id="cmsTtl">AWS Network ACL – Complete Course</div><button type="button" id="animToggle" class="animbtn" aria-pressed="false">⏸ Pause animations</button><div class="prog"><span id="cmsProgTxt"></span><div class="bar"><i id="cmsProgBar"></i></div></div>';
+  var side = mk('aside'); side.id = 'cmsside'; side.setAttribute('aria-label', 'Course curriculum');
+  var main = mk('main'); main.id = 'cmsmain';
+  var scrim = mk('div'); scrim.id = 'cmsscrim';
+  lessons.forEach(function(L){ main.appendChild(L.el); });
+  var foot = mk('div', 'lfoot');
+  foot.innerHTML = '<button type="button" id="lfPrev" data-fit>◀ Previous</button><button type="button" id="lfDone" class="primary" data-fit>Mark as complete</button><button type="button" id="lfNext" data-fit>Next ▶</button>';
+  main.appendChild(foot);
+  cms.appendChild(bar); cms.appendChild(side); cms.appendChild(main); cms.appendChild(scrim);
+  document.body.insertBefore(cms, document.body.firstChild);
+
+  /* ---------- code blocks: wrapper + copy button ---------- */
+  [].forEach.call(main.querySelectorAll('pre'), function(pre){
+    var w = mk('div', 'codewrap'); pre.parentNode.insertBefore(w, pre); w.appendChild(pre);
+    var b = mk('button', 'copy'); b.type = 'button'; b.textContent = 'Copy'; b.setAttribute('aria-label', 'Copy code');
+    b.onclick = function(){
+      var t = pre.textContent;
+      var done = function(){ b.textContent = 'Copied ✓'; setTimeout(function(){ b.textContent = 'Copy'; }, 1500); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, function(){ b.textContent = 'Press Ctrl+C'; });
+      else { var ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch(e){} ta.remove(); }
+    };
+    w.appendChild(b);
+  });
+
+  /* ---------- interview practice mode (hide answers until tapped) ---------- */
+  lessons.forEach(function(L){
+    if (!L.card.querySelector('.qa-item')) return;
+    var b = mk('button', 'animbtn qa-practice'); b.type = 'button'; b.textContent = '🎯 Practice mode: hide answers';
+    var on = false;
+    b.onclick = function(){ on = !on; L.card.classList.toggle('practice', on); [].forEach.call(L.card.querySelectorAll('.qa-item'), function(i){ i.classList.remove('open'); }); b.textContent = on ? '👁 Show all answers' : '🎯 Practice mode: hide answers'; if (window.CMS) window.CMS.refresh(); };
+    var h2 = L.card.querySelector('h2'); var anchor = L.card.querySelector('.hx') || h2; L.card.insertBefore(b, anchor.nextSibling);
+    L.card.addEventListener('click', function(e){ var q = e.target.closest ? e.target.closest('.qq') : null; if (q && L.card.classList.contains('practice')) q.parentNode.classList.toggle('open'); });
+  });
+
+  /* ---------- sidebar ---------- */
+  var sh = mk('div', 'sbhead');
+  sh.innerHTML = '<h2>Course content</h2><input type="search" id="sbSearch" placeholder="Search lessons…" aria-label="Search lessons"><div class="sbtools"><button type="button" id="sbCollapse">Collapse all</button><button type="button" id="sbExpand">Expand all</button></div>';
+  side.appendChild(sh);
+  sections.forEach(function(sec, si){
+    var box = mk('div', 'sec'); box.id = sec.id;
+    var hd = mk('button', 'sechd'); hd.type = 'button'; hd.setAttribute('aria-expanded', 'true');
+    hd.innerHTML = '<span class="chev">▾</span><span class="t"></span><span class="cnt"></span>';
+    hd.querySelector('.t').textContent = 'Section ' + (si + 1) + ': ' + sec.title;
+    var list = mk('div', 'lessons');
+    sec.lessons.forEach(function(L){
+      var b = mk('button', 'lessonbtn'); b.type = 'button'; b.setAttribute('data-id', L.id);
+      b.innerHTML = '<span class="ck"></span><span class="lt"></span>';
+      b.querySelector('.lt').textContent = L.title;
+      var tm = mk('span', 'tm'); tm.textContent = '⏱ ' + L.mins + ' min'; b.querySelector('.lt').appendChild(tm);
+      b.onclick = function(){ show(L.id, true); closeDrawer(); };
+      L.btn = b; list.appendChild(b);
+    });
+    hd.onclick = function(){ var c = !box.classList.contains('collapsed'); box.classList.toggle('collapsed', c); store.collapsed[sec.id] = c; hd.setAttribute('aria-expanded', c ? 'false' : 'true'); save(); };
+    box.appendChild(hd); box.appendChild(list); side.appendChild(box);
+    sec.box = box; sec.hd = hd;
+    if (store.collapsed[sec.id]) { box.classList.add('collapsed'); hd.setAttribute('aria-expanded', 'false'); }
+  });
+  function setAllCollapsed(c){ sections.forEach(function(sec){ sec.box.classList.toggle('collapsed', c); sec.hd.setAttribute('aria-expanded', c ? 'false' : 'true'); store.collapsed[sec.id] = c; }); save(); }
+  document.getElementById('sbCollapse').onclick = function(){ setAllCollapsed(true); };
+  document.getElementById('sbExpand').onclick = function(){ setAllCollapsed(false); };
+  document.getElementById('sbSearch').oninput = function(){
+    var q = this.value.trim().toLowerCase();
+    sections.forEach(function(sec){
+      var any = false;
+      sec.lessons.forEach(function(L){ var hit = !q || L.title.toLowerCase().indexOf(q) >= 0 || (L.card.textContent || '').toLowerCase().indexOf(q) >= 0; L.btn.hidden = !hit; if (hit) any = true; });
+      sec.box.hidden = !any; if (q && any) sec.box.classList.remove('collapsed');
+    });
+  };
+
+  /* ---------- drawer / menu ---------- */
+  var isMobile = function(){ return window.matchMedia('(max-width: 900px)').matches; };
+  function closeDrawer(){ cms.classList.remove('sideopen'); }
+  document.getElementById('cmsMenu').onclick = function(){
+    if (isMobile()) cms.classList.toggle('sideopen'); else cms.classList.toggle('noside');
+    var open = isMobile() ? cms.classList.contains('sideopen') : !cms.classList.contains('noside');
+    this.setAttribute('aria-expanded', open ? 'true' : 'false'); setTimeout(refresh, 120);
+  };
+  scrim.onclick = closeDrawer;
+
+  /* ---------- progress + footer ---------- */
+  function updateProgress(){
+    var done = lessons.filter(function(L){ return store.done[L.id]; }).length, pct = Math.round(done / lessons.length * 100);
+    document.getElementById('cmsProgTxt').textContent = pct + '% complete · ' + done + ' of ' + lessons.length + ' lessons';
+    document.getElementById('cmsProgBar').style.width = pct + '%';
+    lessons.forEach(function(L){ var d = !!store.done[L.id]; L.btn.classList.toggle('done', d); L.btn.querySelector('.ck').textContent = d ? '✓' : (L.idx + 1); });
+    sections.forEach(function(sec){ var d = sec.lessons.filter(function(L){ return store.done[L.id]; }).length; sec.hd.querySelector('.cnt').textContent = d + '/' + sec.lessons.length; });
+  }
+  var current = null, bPrev = document.getElementById('lfPrev'), bDone = document.getElementById('lfDone'), bNext = document.getElementById('lfNext');
+  function byId(id){ for (var i = 0; i < lessons.length; i++) if (lessons[i].id === id) return lessons[i]; return null; }
+  function show(id){
+    var L = byId(id); if (!L) return;
+    if (current && current !== L && window.__hxStop) window.__hxStop();
+    lessons.forEach(function(x){ x.el.classList.toggle('active', x === L); x.btn.classList.toggle('active', x === L); });
+    current = L; store.last = id; save();
+    L.crumb.textContent = 'Section ' + (sections.indexOf(L.sec) + 1) + ': ' + L.sec.title + '  ›  Lesson ' + (L.idx + 1) + ' of ' + lessons.length;
+    L.sec.box.classList.remove('collapsed'); L.sec.hd.setAttribute('aria-expanded', 'true');
+    if (L.btn.scrollIntoView) { try { L.btn.scrollIntoView({ block:'nearest' }); } catch(e){} }
+    main.scrollTop = 0;
+    bPrev.disabled = L.idx === 0; bNext.disabled = L.idx === lessons.length - 1;
+    var d = !!store.done[id]; bDone.textContent = d ? '✓ Completed (tap to undo)' : 'Mark as complete'; bDone.classList.toggle('done', d); bDone.classList.toggle('primary', !d);
+    try { history.replaceState(null, '', '#' + id); } catch(e){}
+    updateProgress(); refresh(); if (window.__syncAnim) setTimeout(window.__syncAnim, 80);
+  }
+  bPrev.onclick = function(){ if (current && current.idx > 0) show(lessons[current.idx - 1].id); };
+  bNext.onclick = function(){ if (!current) return; store.done[current.id] = true; if (current.idx < lessons.length - 1) show(lessons[current.idx + 1].id); else show(current.id); };
+  bDone.onclick = function(){ if (!current) return; store.done[current.id] = !store.done[current.id]; save(); show(current.id); };
+
+  /* ---------- keep text inside boxes ---------- */
+  function fitSvgText(root){
+    [].forEach.call((root || document).querySelectorAll('svg'), function(svg){
+      var texts = [].slice.call(svg.querySelectorAll('text'));
+      texts.forEach(function(t){ t.style.fontSize = ''; });
+      var rects = [].slice.call(svg.querySelectorAll('rect.b, rect.y, rect.g, rect.r, rect.o')).map(function(r){ return { x:+r.getAttribute('x'), y:+r.getAttribute('y'), w:+r.getAttribute('width'), h:+r.getAttribute('height') }; }).filter(function(r){ return r.w > 0 && r.h > 0; });
+      texts.forEach(function(t){
+        var x = parseFloat(t.getAttribute('x')), y = parseFloat(t.getAttribute('y'));
+        if (isNaN(x) || isNaN(y) || t.classList.contains('t')) return;
+        var best = null;
+        rects.forEach(function(r){ if (x >= r.x && x <= r.x + r.w && y - 6 >= r.y && y - 6 <= r.y + r.h && (!best || r.w * r.h < best.w * best.h)) best = r; });
+        if (!best) return;
+        var bb; try { bb = t.getBBox(); } catch(e){ return; }
+        if (!bb || !bb.width) return;
+        var anchor = getComputedStyle(t).textAnchor, pad = 8, maxW;
+        if (anchor === 'middle') maxW = 2 * (Math.min(x - best.x, best.x + best.w - x) - pad);
+        else if (anchor === 'end') maxW = x - best.x - pad; else maxW = best.x + best.w - x - pad;
+        var fs = parseFloat(getComputedStyle(t).fontSize) || 20, g = 0;
+        while (bb.width > maxW && fs > 9 && g++ < 6) { fs = Math.max(9, fs * maxW / bb.width * 0.98); t.style.fontSize = fs + 'px'; try { bb = t.getBBox(); } catch(e){ break; } }
+      });
+    });
+  }
+  function fitHtml(){
+    [].forEach.call(document.querySelectorAll('[data-fit], #cmsTtl, .hx button'), function(e){
+      if (!e.offsetParent) return;
+      e.style.fontSize = ''; var fs = parseFloat(getComputedStyle(e).fontSize), g = 0;
+      while ((e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 2) && fs > 10 && g++ < 30) { fs -= 1; e.style.fontSize = fs + 'px'; }
+    });
+  }
+  var rt; function refresh(){ clearTimeout(rt); rt = setTimeout(function(){ if (current) fitSvgText(current.el); fitHtml(); }, 30); }
+  window.addEventListener('resize', function(){ refresh(); });
+  window.addEventListener('load', function(){ refresh(); setTimeout(refresh, 700); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(refresh);
+  ['themeSel', 'fontSel', 'sizeSel', 'resetBtn'].forEach(function(id){ var el = document.getElementById(id); if (!el) return; el.addEventListener('change', function(){ setTimeout(refresh, 350); setTimeout(refresh, 1300); }); el.addEventListener('click', function(){ setTimeout(refresh, 350); }); });
+  window.CMS = { show:show, lessons:lessons, refresh:refresh };
+
+  /* ---------- Explain in Hindi: every lesson (spoken Hindi, English captions) ---------- */
+  var synth = window.speechSynthesis, hx = { playing:false, paused:false, token:0, i:0, j:0, sents:[], comp:null, voice:null, segs:[] };
+  function hiVoice(){
+    var v = (synth && synth.getVoices && synth.getVoices()) || [], hi = v.filter(function(x){ return /^hi/i.test(x.lang); });
+    return hi.filter(function(x){ return /Google|Lekha|Hemant|Kalpana|Neerja|Swara|Madhur/i.test(x.name); })[0] || hi[0] || null;
+  }
+  function sentences(t){ return t.replace(/\u0964\s*/g, '\u0964\u0001').split('\u0001').map(function(s){ return s.trim(); }).filter(Boolean); }
+  function spot(keys){
+    [].forEach.call(document.querySelectorAll('svg .spot'), function(e){ e.classList.remove('spot'); });
+    if (!current || !keys || !keys.length) return; var first = null;
+    keys.forEach(function(k){ [].forEach.call(current.el.querySelectorAll('svg [data-k="' + k + '"]'), function(e){ e.classList.add('spot'); if (!first) first = e; }); });
+    if (first && first.scrollIntoView) { try { first.scrollIntoView({ block:'center', behavior:'smooth' }); } catch(e){} }
+  }
+  function ui(c){
+    var on = hx.playing || hx.paused;
+    c.querySelector('.hxbtn').hidden = on;
+    [].forEach.call(c.querySelectorAll('.hxctl'), function(b){ b.hidden = !on; });
+    c.querySelector('[data-act="pause"]').textContent = hx.paused ? '▶ Resume' : '⏸ Pause';
+    c.querySelector('.hxcap').hidden = !on;
+  }
+  function caption(c){
+    var s = hx.segs[hx.i]; if (!s) return;
+    c.querySelector('.hxcap').innerHTML = '<b>Simple explanation · step ' + (hx.i + 1) + ' of ' + hx.segs.length + '</b><span></span>';
+    c.querySelector('.hxcap span').textContent = s.en;
+    spot(s.k);
+  }
+  function speak(){
+    var c = hx.comp; if (!c || !hx.playing) return;
+    if (hx.i >= hx.segs.length) { stop(true); return; }
+    if (!hx.sents.length) { hx.sents = sentences(hx.segs[hx.i].hi); hx.j = 0; caption(c); }
+    if (hx.j >= hx.sents.length) { hx.i++; hx.sents = []; return speak(); }
+    var my = hx.token, u = new SpeechSynthesisUtterance(hx.sents[hx.j]);
+    if (hx.voice) { u.voice = hx.voice; u.lang = hx.voice.lang; } else u.lang = 'hi-IN';
+    var nr = document.getElementById('nRate'); u.rate = Math.min(1.3, Math.max(0.7, (nr ? parseFloat(nr.value) || 1 : 1) * 0.92));
+    u.onend = function(){ if (my !== hx.token) return; hx.j++; speak(); };
+    u.onerror = function(e){ if (my !== hx.token) return; if (e && (e.error === 'interrupted' || e.error === 'canceled')) return; hx.j++; speak(); };
+    synth.speak(u);
+  }
+  function stop(finished){
+    hx.token++; if (synth) synth.cancel(); var c = hx.comp;
+    hx.playing = false; hx.paused = false; hx.sents = []; hx.i = 0; hx.j = 0; spot([]);
+    if (c) { ui(c); if (finished) { var cap = c.querySelector('.hxcap'); cap.hidden = false; cap.innerHTML = '<b>Finished</b><span>That was the explanation. Press the button to listen again.</span>'; } }
+  }
+  window.__hxStop = function(){ if (hx.playing || hx.paused) stop(false); };
+  function begin(c, segs){
+    var msg = c.querySelector('.hxmsg');
+    if (!synth || !window.SpeechSynthesisUtterance) { msg.hidden = false; msg.textContent = 'Speech is not supported in this browser.'; return; }
+    var go = function(){
+      hx.voice = hiVoice();
+      if (!hx.voice) { msg.hidden = false; msg.textContent = 'No Hindi voice was found on this device. Install a Hindi (India) voice in your system speech settings (iPad: Settings > Accessibility > Spoken Content > Voices; Windows: Settings > Time & language > Speech), then press the button again.'; return; }
+      msg.hidden = true;
+      var ns = document.getElementById('nStop'); if (ns) ns.click();
+      if (hx.comp && hx.comp !== c) { hx.playing = false; hx.paused = false; ui(hx.comp); }
+      hx.token++; synth.cancel(); hx.comp = c; hx.segs = segs; hx.playing = true; hx.paused = false; hx.i = 0; hx.sents = []; hx.j = 0; ui(c); speak();
+    };
+    if (synth.getVoices().length) go(); else { var done = false; var t = setTimeout(function(){ if (!done) { done = true; go(); } }, 1500); synth.onvoiceschanged = function(){ if (!done) { done = true; clearTimeout(t); go(); } }; }
+  }
+  function build(L){
+    var segs = HX[L.key]; if (!segs || !segs.length) return;
+    var c = mk('div', 'hx');
+    c.innerHTML = '<button type="button" class="hxbtn">🗣️ Explain in Hindi</button><button type="button" class="hxctl" data-act="prev" hidden aria-label="Previous step">⏮</button><button type="button" class="hxctl" data-act="pause" hidden>⏸ Pause</button><button type="button" class="hxctl" data-act="stop" hidden>⏹ Stop</button><button type="button" class="hxctl" data-act="next" hidden aria-label="Next step">⏭</button>' +
+      '<span class="hxsub">Listen to this lesson explained in simple language (spoken in Hindi; captions are in English).</span><div class="hxcap" hidden></div><div class="hxmsg" hidden></div>';
+    var h2 = L.card.querySelector('h2'); if (h2 && h2.nextSibling) L.card.insertBefore(c, h2.nextSibling); else L.card.appendChild(c);
+    c.querySelector('.hxbtn').onclick = function(){ begin(c, segs); };
+    c.querySelector('[data-act="stop"]').onclick = function(){ stop(false); };
+    c.querySelector('[data-act="pause"]').onclick = function(){
+      if (hx.paused) { hx.paused = false; hx.playing = true; hx.token++; ui(c); speak(); } else { hx.paused = true; hx.playing = false; hx.token++; synth.cancel(); ui(c); }
+    };
+    c.querySelector('[data-act="next"]').onclick = function(){ if (hx.i < hx.segs.length - 1) { var was = hx.paused; hx.token++; synth.cancel(); hx.i++; hx.sents = []; hx.j = 0; if (was) caption(c); else { hx.playing = true; speak(); } } };
+    c.querySelector('[data-act="prev"]').onclick = function(){ var was = hx.paused; hx.token++; synth.cancel(); hx.i = Math.max(0, hx.i - 1); hx.sents = []; hx.j = 0; if (was) caption(c); else { hx.playing = true; speak(); } };
+  }
+  lessons.forEach(build);
+  window.addEventListener('pagehide', function(){ if (synth) synth.cancel(); });
+
+  /* ---------- start ---------- */
+  var startId = (location.hash || '').replace('#', '');
+  if (!byId(startId)) startId = byId(store.last) ? store.last : lessons[0].id;
+  window.addEventListener('hashchange', function(){ var id = (location.hash || '').replace('#', ''); if (byId(id) && (!current || current.id !== id)) show(id); });
+  show(startId); updateProgress();
+})();
+</script>
+<script>
+(function(){
+  var dock = document.getElementById('narrator');
+  if (!('speechSynthesis' in window) || !window.SpeechSynthesisUtterance) { dock.innerHTML = '<div class="row">🔇 Narration is not supported in this browser.</div>'; return; }
+  var synth = window.speechSynthesis, KEY = 'notes-narrator-v1';
+  var $ = function(id){ return document.getElementById(id); };
+  var bPlay=$('nPlay'), bStop=$('nStop'), bPrev=$('nPrev'), bNext=$('nNext'), bMin=$('nMin'), selRate=$('nRate'), selVoice=$('nVoice'), chkLabels=$('nLabels'), statusEl=$('nStatus'), bar=$('nBar');
+  var SEL = 'h1,h2,h3,p,li,tr,pre,svg';
+  var blocks = [], chunks = [], cur = 0, ci = 0, playing = false, token = 0, fresh = true, voices = [], marked = null;
+
+  var prefs = {}; try { prefs = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e){}
+  function savePrefs(){ try { localStorage.setItem(KEY, JSON.stringify({ rate:selRate.value, voice:selVoice.value, labels:chkLabels.checked })); } catch(e){} }
+  if (prefs.rate) selRate.value = prefs.rate;
+  chkLabels.checked = !!prefs.labels;
+
+  function buildBlocks(){
+    blocks = [];
+    document.querySelectorAll('.lesson').forEach(function(pg, pi){
+      pg.querySelectorAll(SEL).forEach(function(el){
+        var a = el.parentElement && el.parentElement.closest(SEL);
+        if (a && pg.contains(a)) return;
+        blocks.push({ el:el, page:pi+1, tag:el.tagName.toLowerCase() });
+      });
+    });
+  }
+
+  // add a "read from here" button to every main heading
+  function addSpeakButtons(){
+    document.querySelectorAll('.lesson h1, .lesson h2').forEach(function(h){
+      var b = document.createElement('button'); b.className = 'spk'; b.type = 'button'; b.textContent = '🔊'; b.setAttribute('aria-label','Read from here'); b.title = 'Read from here';
+      b.onclick = function(){ if (!blocks.length) buildBlocks(); var i = indexOfEl(h); if (i >= 0) start(i); };
+      h.appendChild(b);
+    });
+  }
+  function indexOfEl(el){ for (var i=0;i<blocks.length;i++){ if (blocks[i].el === el) return i; } return -1; }
+
+  var MAP = [[/\bK8s\b/g,'Kubernetes'],[/\bkubectl\b/gi,'kube control'],[/\betcd\b/gi,'et see dee'],[/\u03bb/g,'Lambda'],[/\bIAM\b/g,'I A M'],[/\bSQS\b/g,'S Q S'],[/\bSNS\b/g,'S N S'],
+    [/\bS3\b/g,'S three'],[/\bYAML\b/g,'yamul'],[/\bRBAC\b/g,'R back'],[/\bEKS\b/g,'E K S'],[/\bGKE\b/g,'G K E'],[/\bAKS\b/g,'A K S'],[/\bPVC\b/g,'P V C'],[/\bPV\b/g,'P V'],
+    [/\bHPA\b/g,'H P A'],[/\bVPA\b/g,'V P A'],[/\bCNI\b/g,'C N I'],[/\bDLQ\b/g,'D L Q'],[/\bVPC\b/g,'V P C'],[/\bARN\b/g,'A R N'],[/\bKMS\b/g,'K M S'],[/\bCLI\b/g,'C L I'],
+    [/\bCRDs?\b/g,'C R D'],[/\bCNCF\b/g,'C N C F'],[/\bSDK\b/g,'S D K'],[/\bGB-s(econds)?\b/gi,'gigabyte seconds'],[/\bp(95|99)\b/g,'P $1'],[/\bCI\/CD\b/g,'C I C D'],[/\bDB\b/g,'database'],
+    [/\bAZs?\b/g,'availability zone'],[/\bARM64\b/gi,'arm sixty four'],[/\bx86_64\b/g,'x eighty six'],[/\bMB\b/g,'megabytes'],[/\bGB\b/g,'gigabytes'],
+    [/[\u2192\u279c]/g,' to '],[/[\u21d2\u21e6]/g,' means '],[/\u2248/g,' about '],[/\u2265/g,' at least '],[/\u2264/g,' at most '],[/\u00d7/g,' times '],[/&/g,' and '],[/[\u2713\u2714\u2717\u2718\u2022\u00b7]/g,' ']];
+  function speakable(t){
+    t = t.replace(/[\p{Extended_Pictographic}\uFE0F\u200d]/gu, ' ');
+    for (var i=0;i<MAP.length;i++) t = t.replace(MAP[i][0], MAP[i][1]);
+    return t.replace(/\s+/g,' ').trim();
+  }
+  function textOf(b){
+    var el = b.el;
+    if (b.tag === 'pre') return 'Code example on screen.';
+    if (b.tag === 'svg') {
+      if (!chkLabels.checked) return 'There is a diagram here.';
+      var parts = [].map.call(el.querySelectorAll('text'), function(t){ return t.textContent.trim(); }).filter(Boolean);
+      return 'Diagram. ' + parts.join('. ') + '.';
+    }
+    if (b.tag === 'tr') return [].map.call(el.children, function(c){ return c.textContent.trim(); }).filter(Boolean).join('. ') + '.';
+    var c = el.cloneNode(true); [].forEach.call(c.querySelectorAll('.spk'), function(x){ x.remove(); });
+    var t = c.textContent;
+    return /^h[1-3]$/.test(b.tag) ? t + '.' : t;
+  }
+  function chunkText(t){
+    t = speakable(t); if (!t) return [];
+    var out = [];
+    t.replace(/([.!?])\s+/g, '$1\u0001').split('\u0001').forEach(function(x){
+      x = x.trim();
+      while (x.length > 180) { var i = x.lastIndexOf(',', 180); if (i < 60) i = x.lastIndexOf(' ', 180); if (i < 1) i = 180; out.push(x.slice(0, i+1)); x = x.slice(i+1).trim(); }
+      if (x) out.push(x);
+    });
+    return out;
+  }
+
+  function headingFor(i){ for (var k=i;k>=0;k--){ if (/^h[12]$/.test(blocks[k].tag)) { var c = blocks[k].el.cloneNode(true); [].forEach.call(c.querySelectorAll('.spk'), function(x){ x.remove(); }); return c.textContent.trim(); } } return ''; }
+  function mark(){
+    if (marked) marked.classList.remove('reading');
+    var b = blocks[cur]; if (!b) return;
+    var les = b.el.closest && b.el.closest('.lesson'); if (les && window.CMS && !les.classList.contains('active')) window.CMS.show(les.id);
+    marked = b.el; marked.classList.add('reading');
+    try { marked.scrollIntoView({ block:'center', behavior:'smooth' }); } catch(e){ marked.scrollIntoView(); }
+    statusEl.textContent = '🔊 Lesson ' + b.page + ' · ' + headingFor(cur);
+    bar.style.width = Math.round(cur / Math.max(1, blocks.length) * 100) + '%';
+  }
+  function ui(){ bPlay.textContent = playing ? '⏸' : '▶'; bPlay.setAttribute('aria-label', playing ? 'Pause narration' : 'Play narration'); }
+
+  function speakCurrent(){
+    if (!playing) return;
+    if (cur >= blocks.length) { finish(); return; }
+    if (!chunks.length && ci === 0) { chunks = chunkText(textOf(blocks[cur])); mark(); if (!chunks.length) { cur++; return speakCurrent(); } }
+    if (ci >= chunks.length) { cur++; ci = 0; chunks = []; return speakCurrent(); }
+    var my = token, u = new SpeechSynthesisUtterance(chunks[ci]);
+    u.rate = parseFloat(selRate.value) || 1;
+    var v = voices.filter(function(x){ return x.name === selVoice.value; })[0];
+    if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = 'en-US'; }
+    u.onend = function(){ if (my !== token) return; ci++; speakCurrent(); };
+    u.onerror = function(e){ if (my !== token) return; if (e && (e.error === 'interrupted' || e.error === 'canceled')) return; ci++; speakCurrent(); };
+    synth.speak(u);
+  }
+  function firstVisible(){
+    for (var i=0;i<blocks.length;i++){ var r = blocks[i].el.getBoundingClientRect(); if (r.top > 70 && r.height > 0) return i; }
+    return 0;
+  }
+  function start(i){
+    if (!blocks.length) buildBlocks();
+    token++; synth.cancel();
+    cur = Math.max(0, Math.min(i, blocks.length-1)); ci = 0; chunks = []; playing = true; fresh = false; ui(); speakCurrent();
+  }
+  function pause(){ playing = false; token++; synth.cancel(); ui(); statusEl.textContent = '⏸ Paused – ' + headingFor(cur); }
+  function resume(){ playing = true; token++; ui(); speakCurrent(); }
+  function stop(){ playing = false; token++; synth.cancel(); fresh = true; ci = 0; chunks = []; if (marked) { marked.classList.remove('reading'); marked = null; } bar.style.width = '0'; statusEl.textContent = '🎧 Narrator – tap ▶ to listen'; ui(); }
+  function finish(){ stop(); statusEl.textContent = '✅ Finished – tap ▶ to listen again'; }
+  function jump(dir){
+    if (!blocks.length) buildBlocks();
+    var base = fresh ? firstVisible() : cur, idx = -1, k;
+    if (dir > 0) { for (k=base+1;k<blocks.length;k++) if (/^h[12]$/.test(blocks[k].tag)) { idx = k; break; } }
+    else { for (k=base-1;k>=0;k--) if (/^h[12]$/.test(blocks[k].tag)) { idx = k; break; } }
+    if (idx >= 0) start(idx);
+  }
+  bPlay.onclick = function(){ if (playing) pause(); else if (fresh) { buildBlocks(); start(firstVisible()); } else resume(); };
+  bStop.onclick = stop; bPrev.onclick = function(){ jump(-1); }; bNext.onclick = function(){ jump(1); };
+  
+  selRate.onchange = function(){ savePrefs(); if (playing) { token++; synth.cancel(); speakCurrent(); } };
+  selVoice.onchange = function(){ savePrefs(); if (playing) { token++; synth.cancel(); speakCurrent(); } };
+  chkLabels.onchange = function(){ savePrefs(); };
+
+  function loadVoices(){
+    var all = synth.getVoices() || [];
+    voices = all.filter(function(v){ return /^en/i.test(v.lang); }); if (!voices.length) voices = all;
+    if (!voices.length) return;
+    selVoice.innerHTML = '';
+    voices.forEach(function(v){ var o = document.createElement('option'); o.value = v.name; o.textContent = v.name + ' (' + v.lang + ')'; selVoice.appendChild(o); });
+    var pick = prefs.voice && voices.filter(function(v){ return v.name === prefs.voice; })[0];
+    if (!pick) pick = voices.filter(function(v){ return /Samantha|Google US English|Natural|Aria|Jenny|Daniel|Karen|Rishi|Veena|Moira/i.test(v.name); })[0] || voices[0];
+    selVoice.value = pick.name;
+  }
+  loadVoices(); if ('onvoiceschanged' in synth) synth.onvoiceschanged = loadVoices;
+
+  
+  addSpeakButtons(); ui();
+  window.addEventListener('pagehide', function(){ synth.cancel(); });
+
+  // top bar hides while scrolling down, returns when scrolling up
+  var tb = document.getElementById('toolbar'), lastY = 0;
+  window.addEventListener('scroll', function(){ var y = window.pageYOffset; if (tb) tb.classList.toggle('hide', y > lastY && y > 140); lastY = y; }, { passive:true });
+})();
+</script>
+<script>
+(function(){
+  var btn = document.getElementById('settingsBtn'), panel = document.getElementById('settingsPanel'), scrim = document.getElementById('settingsScrim');
+  function setOpen(o){ panel.classList.toggle('open', o); scrim.classList.toggle('open', o); btn.setAttribute('aria-expanded', o ? 'true' : 'false'); btn.textContent = o ? '✕' : '⚙️'; }
+  btn.onclick = function(){ setOpen(!panel.classList.contains('open')); };
+  document.getElementById('settingsClose').onclick = function(){ setOpen(false); };
+  scrim.onclick = function(){ setOpen(false); };
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') setOpen(false); });
+  var nPlay = document.getElementById('nPlay');
+  function refreshBtn(){ var o = panel.classList.contains('open'), p = nPlay && nPlay.textContent === '\u23f8'; btn.textContent = o ? '\u2715' : (p ? '\ud83d\udd0a' : '\u2699\ufe0f'); btn.classList.toggle('playing', !o && p); }
+  var _setOpen = setOpen; setOpen = function(o){ _setOpen(o); refreshBtn(); };
+  if (nPlay) { nPlay.addEventListener('click', function(){ setTimeout(function(){ if (nPlay.textContent === '\u23f8') setOpen(false); else refreshBtn(); }, 0); });
+    new MutationObserver(refreshBtn).observe(nPlay, { childList:true, characterData:true, subtree:true }); }
+  var nMin = null;
+  if (nMin) { nMin.onclick = function(){ setOpen(!panel.classList.contains('open')); }; nMin.title = 'Settings'; nMin.setAttribute('aria-label','Open settings'); }
+})();
+</script>
+<script>
+(function(){
+  var btn = document.getElementById('animToggle'); if (!btn) return;
+  var svgs = [].slice.call(document.querySelectorAll('svg[aria-label^="Animated"]'));
+  var paused = false;
+  function apply(p){
+    paused = p; document.body.classList.toggle('anim-paused', p);
+    svgs.forEach(function(s){ try { if (p) s.pauseAnimations(); else s.unpauseAnimations(); } catch(e){} });
+    btn.textContent = p ? '\u25b6 Play animations' : '\u23f8 Pause animations'; btn.setAttribute('aria-pressed', p ? 'true' : 'false');
+  }
+  btn.onclick = function(){ apply(!paused); };
+  var rm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (rm && rm.matches) { svgs.forEach(function(s){ try { s.setCurrentTime(15.9); } catch(e){} }); apply(true); }
+})();
+</script>
+<script>
+(function(){
+  // keep CSS highlight animations and SVG (SMIL) animations on the same clock
+  function sync(){
+    var anims = document.getAnimations ? document.getAnimations() : [];
+    anims.forEach(function(a){
+      if (a.animationName !== 'act' && a.animationName !== 'actbg') return;
+      var el = a.effect && a.effect.target, pg = el && el.closest && el.closest('.lesson, .page');
+      var s = pg && pg.querySelector('svg[aria-label^="Animated"]');
+      if (!s || !s.getCurrentTime) return;
+      try { a.currentTime = s.getCurrentTime() * 1000; } catch (e) {}
+    });
+  }
+  window.__syncAnim = sync; window.addEventListener('load', function(){ sync(); setInterval(function(){ if (!document.body.classList.contains('anim-paused')) sync(); }, 6000); });
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden) sync(); });
+  var b = document.getElementById('animToggle'); if (b) b.addEventListener('click', function(){ setTimeout(sync, 50); });
+})();
+</script>
+<script>(function(){
+  var INFO = {"a-sub":{"icon":"🧱","title":"Subnet-level","type":"Anatomy","what":"A network ACL is associated with subnets and filters all traffic entering or leaving them.","role":"It is the outer firewall layer.","does":["Each subnet has exactly one NACL.","One NACL can serve many subnets."],"facts":[["Scope","Subnet boundary"],["Per subnet","Exactly one NACL"]],"diagram":"Anatomy tile.","qa":[["What does a NACL protect?","<p><b>Short answer:</b> Everything in the subnets it is associated with, because it filters at the subnet boundary.</p><p>Security groups protect individual interfaces.</p>"]],"related":["a-stateless"]},"a-stateless":{"icon":"↔️","title":"Stateless","type":"Anatomy","what":"NACLs do not remember connections, so return traffic needs its own explicit rule.","role":"The main source of NACL mistakes.","does":["Allow ephemeral ports 1024-65535 for replies.","Rules apply per direction."],"facts":[["Ephemeral ports","1024–65535"]],"diagram":"Anatomy tile.","qa":[["Why do NACLs need return rules?","<p><b>Short answer:</b> They are stateless and evaluate each packet independently.</p><p>Security groups are stateful.</p>"]],"related":["a-sub","a-order"]},"a-order":{"icon":"🔢","title":"Numbered rules","type":"Anatomy","what":"Rules are evaluated in ascending number order and the first match wins.","role":"Order determines the outcome.","does":["Rules 100, 110, 120 leave room to insert.","The final * rule denies everything."],"facts":[["Range","1–32766"]],"diagram":"Anatomy tile.","qa":[["How are NACL rules evaluated?","<p><b>Short answer:</b> In ascending rule-number order, stopping at the first match.</p><p>The default * rule denies anything unmatched.</p>"]],"related":["a-stateless","a-allowdeny"]},"a-allowdeny":{"icon":"⚖️","title":"Allow and deny","type":"Anatomy","what":"Unlike security groups, NACL rules can explicitly allow or deny.","role":"Lets you block specific addresses.","does":["Place deny rules before the allow they override.","Good for blocking abusive IPs."],"facts":[["Actions","ALLOW or DENY"]],"diagram":"Anatomy tile.","qa":[["How do you block a malicious IP?","<p><b>Short answer:</b> Add a DENY rule with a low rule number in the NACL.</p><p>A security group cannot deny.</p>"]],"related":["a-order"]},"r-in":{"icon":"📥","title":"Subnet entry","type":"Packet path","what":"Inbound traffic is checked against the NACL at the subnet boundary.","role":"The first check after the route.","does":["Applies to traffic from outside the subnet.","Not applied within the same subnet."],"facts":[["Direction","Inbound"]],"diagram":"Path step.","qa":[["Is traffic inside one subnet filtered by NACL?","<p><b>Short answer:</b> No, NACLs filter only traffic crossing the subnet boundary.</p><p>Security groups still apply.</p>"]],"related":["r-sg"]},"r-sg":{"icon":"🛡️","title":"Security group","type":"Packet path","what":"After the NACL allows it, the security group on the interface is evaluated.","role":"Second filter.","does":["Both must allow.","Stateful."],"facts":[["Order","NACL then SG inbound"]],"diagram":"Path step.","qa":[["Which is checked first inbound?","<p><b>Short answer:</b> The NACL, then the security group.</p><p>Outbound it is the security group then the NACL.</p>"]],"related":["r-in","r-app"]},"r-app":{"icon":"🖥️","title":"Instance","type":"Packet path","what":"The instance receives the packet and the application responds.","role":"The destination.","does":["The reply is evaluated outbound.","Return traffic crosses the NACL again."],"facts":[["Step","Reply starts"]],"diagram":"Path step.","qa":[["What happens to the reply?","<p><b>Short answer:</b> It passes the security group (auto-allowed) and then the subnet NACL outbound rules.</p><p>The NACL needs an ephemeral port rule.</p>"]],"related":["r-sg","r-out"]},"r-out":{"icon":"📤","title":"Subnet exit","type":"Packet path","what":"Outbound traffic is checked against the NACL outbound rules.","role":"Last check.","does":["Must allow ephemeral destination ports.","Rule numbers independent from inbound."],"facts":[["Direction","Outbound"]],"diagram":"Path step.","qa":[["Why does a request work but replies fail?","<p><b>Short answer:</b> The outbound NACL rule for the ephemeral port range is missing.</p><p>Check both directions.</p>"]],"related":["r-app"]},"d-default":{"icon":"🟢","title":"Default NACL","type":"Types","what":"Created with every VPC and allows all inbound and outbound traffic.","role":"Safe starting point.","does":["Cannot be deleted.","Subnets use it unless you assign another."],"facts":[["Rules","Allow all"]],"diagram":"Types tile.","qa":[["What does the default NACL do?","<p><b>Short answer:</b> It allows all traffic in both directions.</p><p>It is automatically associated with new subnets.</p>"]],"related":["d-custom"]},"d-custom":{"icon":"🔴","title":"Custom NACL","type":"Types","what":"A NACL you create; it denies everything until you add allow rules.","role":"Use for tight control.","does":["Add both directions.","Associate with subnets."],"facts":[["Default","Deny all"]],"diagram":"Types tile.","qa":[["What is the default for a custom NACL?","<p><b>Short answer:</b> It denies all traffic until you add rules.</p><p>Remember the return rules.</p>"]],"related":["d-default","d-assoc"]},"d-assoc":{"icon":"🔗","title":"Association","type":"Types","what":"Replacing a subnet's association takes effect immediately.","role":"Be careful with live traffic.","does":["A subnet cannot have no NACL.","Use change control."],"facts":[["Effect","Immediate"]],"diagram":"Types tile.","qa":[["What happens if you swap a subnet NACL?","<p><b>Short answer:</b> The new rules apply immediately, which can break live traffic.</p><p>Test in non-production first.</p>"]],"related":["d-custom","d-tier"]},"d-tier":{"icon":"🏗️","title":"Per-tier NACLs","type":"Types","what":"Give public, app and data subnets separate NACLs with matching rules.","role":"Layered control.","does":["Data subnets allow only app CIDRs.","Keep the rules simple."],"facts":[["Pattern","NACL per tier"]],"diagram":"Types tile.","qa":[["How do you use NACLs per tier?","<p><b>Short answer:</b> Create one per tier and allow only the neighbouring tiers' CIDR ranges and ports.</p><p>It adds defence in depth.</p>"]],"related":["d-assoc"]},"u-block":{"icon":"🚫","title":"Block bad IPs","type":"Use cases","what":"Add DENY rules with low numbers to block abusive addresses.","role":"The classic NACL use.","does":["Limited number of rules.","Consider WAF for scale."],"facts":[["Limit","20 rules by default"]],"diagram":"Use-case tile.","qa":[["Why use NACL to block an IP?","<p><b>Short answer:</b> Because security groups cannot deny and the block applies to the whole subnet.</p><p>For many IPs use WAF or Network Firewall.</p>"]],"related":["u-guard"]},"u-guard":{"icon":"🛑","title":"Guardrail","type":"Use cases","what":"A subnet-wide rule that overrides mistakes in security groups.","role":"Compliance control.","does":["Deny database ports from the internet.","Deny SSH from outside."],"facts":[["Purpose","Backstop"]],"diagram":"Use-case tile.","qa":[["How is a NACL a guardrail?","<p><b>Short answer:</b> It enforces subnet-wide denies even if a security group is accidentally too open.</p><p>Defence in depth.</p>"]],"related":["u-block","u-iso"]},"u-iso":{"icon":"🧊","title":"Isolate subnets","type":"Use cases","what":"Stop traffic between tiers or environments.","role":"Segmentation.","does":["Deny 10.0.0.0/16 between subnets.","Useful for compliance."],"facts":[["Pattern","Deny between subnet CIDRs"]],"diagram":"Use-case tile.","qa":[["How do NACLs segment subnets?","<p><b>Short answer:</b> Deny rules for other subnets' CIDR ranges isolate groups of resources.</p><p>Security groups do not need to change.</p>"]],"related":["u-guard","u-nfw"]},"u-nfw":{"icon":"🔥","title":"Beyond NACLs","type":"Use cases","what":"AWS Network Firewall, WAF and Gateway Load Balancer provide richer inspection.","role":"When rules are not enough.","does":["Deep packet inspection.","Domain filtering."],"facts":[["Better for","Layer 7 and scale"]],"diagram":"Use-case tile.","qa":[["When are NACLs not enough?","<p><b>Short answer:</b> When you need domain filtering, IPS or large block lists; use Network Firewall or WAF.</p><p>NACLs only see IPs, ports and protocols.</p>"]],"related":["u-iso"]},"x-eph":{"icon":"🔢","title":"Ephemeral ports","type":"Troubleshooting","what":"Replies use random high ports; missing allow rules break connections.","role":"The top NACL bug.","does":["Linux 32768-60999, Windows 49152-65535, NAT Gateway 1024-65535.","Allow 1024-65535 for simplicity."],"facts":[["Safe range","1024–65535"]],"diagram":"Troubleshooting tile.","qa":[["Common NACL mistake?","<p><b>Short answer:</b> Forgetting to allow ephemeral ports for return traffic.</p><p>Allow 1024-65535 for TCP replies.</p>"]],"related":["x-num"]},"x-num":{"icon":"🔢","title":"Rule order","type":"Troubleshooting","what":"A broad deny earlier in the list can block later allows.","role":"Order matters.","does":["List rules by number.","Leave gaps."],"facts":[["Tip","Number by 10 or 100"]],"diagram":"Troubleshooting tile.","qa":[["Allow rule exists but traffic is blocked. Why?","<p><b>Short answer:</b> A lower-numbered DENY matches first.</p><p>Review rule order.</p>"]],"related":["x-eph","x-both"]},"x-both":{"icon":"↕️","title":"Both subnets","type":"Troubleshooting","what":"Traffic between subnets is checked by both subnets' NACLs, outbound at the source and inbound at the destination.","role":"Each side needs rules.","does":["Check both NACLs.","Check return path too."],"facts":[["Checks","Four evaluations"]],"diagram":"Troubleshooting tile.","qa":[["Traffic between two subnets: how many NACL checks?","<p><b>Short answer:</b> Four for a round trip: outbound and inbound on the way there and on the reply.</p><p>Both subnets' NACLs matter.</p>"]],"related":["x-num","x-logs"]},"x-logs":{"icon":"📝","title":"Flow logs","type":"Troubleshooting","what":"VPC Flow Logs show ACCEPT and REJECT records for diagnosis.","role":"Evidence for debugging.","does":["REJECT may be from either SG or NACL.","Use Reachability Analyzer."],"facts":[["Tool","Flow Logs, Reachability Analyzer"]],"diagram":"Troubleshooting tile.","qa":[["How do you tell NACL from security group drops?","<p><b>Short answer:</b> Reachability Analyzer names the blocking component; flow logs show REJECT but not which layer.</p><p>Check both.</p>"]],"related":["x-both"]}};
+  var ORDERS = {"an":["a-sub","a-stateless","a-order","a-allowdeny"],"pa":["r-in","r-sg","r-app","r-out"],"ty":["d-default","d-custom","d-assoc","d-tier"],"us":["u-block","u-guard","u-iso","u-nfw"],"tb":["x-eph","x-num","x-both","x-logs"]};
+  var NAMES = {"an":"Anatomy","pa":"Packet path","ty":"Types","us":"Use cases","tb":"Troubleshooting"};
+  var modal = document.getElementById('kModal'); if (!modal) return;
+  var bodyEl = document.getElementById('kBody'), lastFocus = null, cur = null, curOrder = null;
+  function row(label, val){ return '<tr><td>' + label + '</td><td>' + val + '</td></tr>'; }
+  function render(k){
+    var d = INFO[k]; if (!d) return false; cur = k;
+    document.getElementById('kIcon').textContent = d.icon;
+    document.getElementById('kTitle').textContent = d.title;
+    document.getElementById('kMeta').innerHTML = '<span class="kpill red">' + d.type + '</span><span class="kpill">' + d.qa.length + ' interview Q&amp;As</span>';
+    function fx(s) { return String(s).replace(/<(?![/]?(?:p|b|i|ul|li|code|br|strong|em|pre|span)[^a-z])/g, '&lt;'); }
+    var h = '';
+    h += '<div class="ksec"><h4>What it is</h4><p>' + fx(d.what) + '</p></div>';
+    h += '<div class="ksec"><h4>Role</h4><p>' + fx(d.role) + '</p></div>';
+    h += '<div class="ksec"><h4>What it does</h4><ul>' + d.does.map(function(x){ return '<li>' + fx(x) + '</li>'; }).join('') + '</ul></div>';
+    h += '<div class="ksec"><h4>Where to see it in the diagram</h4><p class="kdiagram">' + fx(d.diagram) + '</p></div>';
+    h += '<div class="ksec"><h4>Key facts</h4><table class="kfacts">' + d.facts.map(function(f){ return row(fx(f[0]), fx(f[1])); }).join('') + '</table></div>';
+    h += '<div class="ksec"><div class="kqa-h"><h4>Interview questions &amp; answers</h4><button type="button" id="kExpand">Expand all</button></div>' +
+         d.qa.map(function(q, i){ return '<details class="kqa"' + (i === 0 ? ' open' : '') + '><summary>' + fx(q[0]) + '</summary><div class="ans">' + fx(q[1]) + '</div></details>'; }).join('') + '</div>';
+    if (d.related && d.related.length) h += '<div class="ksec"><h4>Related topics</h4><div class="krel">' + d.related.filter(function(r){ return INFO[r]; }).map(function(r){ return '<button type="button" class="kchip" data-k="' + r + '">' + INFO[r].icon + ' ' + fx(INFO[r].title) + '</button>'; }).join('') + '</div></div>';
+    bodyEl.innerHTML = h; bodyEl.scrollTop = 0;
+    var ord = ORDERS[curOrder] || [], i = ord.indexOf(k);
+    document.getElementById('kPos').textContent = i >= 0 ? (NAMES[curOrder] + ': topic ' + (i + 1) + ' of ' + ord.length) : '';
+    document.getElementById('kPrev').disabled = !ord.length; document.getElementById('kNext').disabled = !ord.length;
+    return true;
+  }
+  function open(k, order){
+    if (!INFO[k]) return;
+    if (order) curOrder = order;
+    if (!modal.classList.contains('open')) lastFocus = document.activeElement;
+    render(k);
+    modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.body.classList.add('kmodal-open');
+    document.getElementById('kClose').focus();
+  }
+  function close(){
+    modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); document.body.classList.remove('kmodal-open');
+    if (lastFocus && lastFocus.focus) { try { lastFocus.focus({ preventScroll:true }); } catch(e){} }
+  }
+  function step(d){
+    var ord = ORDERS[curOrder]; if (!ord || !ord.length) return;
+    var i = ord.indexOf(cur); if (i < 0) i = d > 0 ? -1 : 0;
+    open(ord[(i + d + ord.length) % ord.length]);
+  }
+  function orderOf(el){ var s = el && el.closest ? el.closest('svg[data-order]') : null; return s ? s.getAttribute('data-order') : null; }
+  document.addEventListener('click', function(e){
+    var st = e.target.closest ? e.target.closest('[data-study]') : null;
+    if (st) { var o = st.getAttribute('data-study'); if (ORDERS[o]) { curOrder = o; open(ORDERS[o][0], o); } return; }
+    var t = e.target.closest ? e.target.closest('[data-k]') : null;
+    if (t && INFO[t.getAttribute('data-k')]) { e.preventDefault(); open(t.getAttribute('data-k'), orderOf(t)); return; }
+    if (e.target === modal) close();
+    if (e.target.id === 'kExpand') {
+      var ds = bodyEl.querySelectorAll('details.kqa'), allOpen = [].every.call(ds, function(x){ return x.open; });
+      [].forEach.call(ds, function(x){ x.open = !allOpen; }); e.target.textContent = allOpen ? 'Expand all' : 'Collapse all';
+    }
+  });
+  document.getElementById('kClose').onclick = close;
+  document.getElementById('kPrev').onclick = function(){ step(-1); };
+  document.getElementById('kNext').onclick = function(){ step(1); };
+  document.addEventListener('keydown', function(e){
+    if (modal.classList.contains('open')) {
+      if (e.key === 'Escape') { close(); return; }
+      if (e.key === 'ArrowRight' && !/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) { step(1); return; }
+      if (e.key === 'ArrowLeft' && !/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) { step(-1); return; }
+      if (e.key === 'Tab') {
+        var f = modal.querySelectorAll('button, summary, [href], [tabindex]:not([tabindex="-1"])'); if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+      return;
+    }
+    var g = e.target && e.target.closest ? e.target.closest('.clk[data-k]') : null;
+    if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(g.getAttribute('data-k'), orderOf(g)); }
+  });
+})();
+</script>
+</body>
+</html>
