@@ -1,0 +1,1377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#fdfbf2">
+<title>AI, Agent and MCP Interview Questions and Solutions</title>
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@500;700&family=Indie+Flower&family=Inter:wght@400;600&family=Kalam:wght@400;700&family=Merriweather:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#e9e4d6; --paper:#fdfbf2; --line:#cfe0f1; --margin:#e58a8a; --ink:#1f3a8a; --hi:#fff176; --red:#c62828; --green:#2e7d32; --orange:#ef6c00;
+          --fb:#ffffff; --fy:#fff3a8; --fg:#d7f0d4; --fr:#fde0dc; --fo:#ffe0b2; --code:#eef3ff; --codesoft:#eef3ff88; --th:#dfe8ff; --note:#ffe9a8; --shadow:rgba(0,0,0,.25);
+          --body-font:'Patrick Hand','Caveat',cursive; --head-font:'Caveat',cursive; --code-font:'Caveat',cursive; --fs:20px; }
+  :root[data-theme="dark"] { --bg:#0e1015; --paper:#1d212a; --line:#2d3441; --margin:#b34a4a; --ink:#cfdcff; --hi:#6b5d00; --red:#ff8a80; --green:#81c784; --orange:#ffb74d;
+          --fb:#262b36; --fy:#4a4320; --fg:#1f3d27; --fr:#4a2323; --fo:#4a3216; --code:#2a3142; --codesoft:#2a314288; --th:#2a3350; --note:#5a4b1a; --shadow:rgba(0,0,0,.6); }
+  :root[data-theme="sepia"] { --bg:#cdbf9f; --paper:#f4ecd8; --line:#dccda6; --margin:#c98b6b; --ink:#4b3621; --hi:#f7d774; --red:#9c2f1f; --green:#4d6b2f; --orange:#b5651d;
+          --fb:#fbf6e8; --fy:#f2dd9b; --fg:#dfe6c3; --fr:#f1d2c4; --fo:#f3d9b0; --code:#ebdfc2; --codesoft:#ebdfc288; --th:#e6d6ae; --note:#f3d98c; }
+  :root[data-theme="blueprint"] { --bg:#071c33; --paper:#0f3a66; --line:#2b5d92; --margin:#8fc1ee; --ink:#e8f2ff; --hi:#1f6aa8; --red:#ffd166; --green:#8ff0b5; --orange:#ffb86b;
+          --fb:#144a80; --fy:#2a5f96; --fg:#14584f; --fr:#6a3a58; --fo:#6b5a2e; --code:#164b7d; --codesoft:#164b7d88; --th:#1d5a96; --note:#356fa6; --shadow:rgba(0,0,0,.6); }
+  :root[data-theme="mint"] { --bg:#c4e0d3; --paper:#f1faf5; --line:#c6e4d4; --margin:#7bbf9b; --ink:#14463a; --hi:#d4f58a; --red:#b3261e; --green:#1b6b3a; --orange:#c2670a;
+          --fb:#ffffff; --fy:#f3f2b4; --fg:#cdeed9; --fr:#fbd9d4; --fo:#fde3bd; --code:#e0f2ea; --codesoft:#e0f2ea88; --th:#cfeadc; --note:#e5f2a6; }
+  :root[data-theme="clean"] { --bg:#f1f3f5; --paper:#ffffff; --line:transparent; --margin:transparent; --ink:#1b2a41; --hi:#ffe98a; --red:#c0392b; --green:#2e7d32; --orange:#d35400;
+          --fb:#ffffff; --fy:#fff6c8; --fg:#e3f4e3; --fr:#fdeaea; --fo:#fff0dc; --code:#eef2f7; --codesoft:#eef2f788; --th:#e3ebf6; --note:#fff1b8; --shadow:rgba(0,0,0,.15); }
+  #toolbar { position:sticky; top:0; z-index:50; display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:center; padding:8px 14px;
+          background:var(--paper); color:var(--ink); border-bottom:3px solid var(--margin); box-shadow:0 3px 10px var(--shadow); font-family:system-ui,'Segoe UI',sans-serif; font-size:15px; line-height:1.2; }
+  #toolbar b { font-size:16px; } #toolbar label { display:flex; align-items:center; gap:6px; }
+  #toolbar select, #toolbar button { font:inherit; padding:5px 8px; border:2px solid var(--ink); border-radius:8px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  @media print { #toolbar { display:none; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); font-family:var(--body-font); color:var(--ink); font-size:var(--fs); }
+  .page { max-width:900px; margin:26px auto; padding:30px 30px 40px 84px; position:relative; box-shadow:0 6px 18px var(--shadow); line-height:32px;
+      background: linear-gradient(90deg, transparent calc(var(--mx,62px) - 2px), var(--margin) calc(var(--mx,62px) - 2px), var(--margin) var(--mx,62px), transparent var(--mx,62px)),
+      repeating-linear-gradient(transparent 0, transparent 31px, var(--line) 31px, var(--line) 32px), var(--paper); }
+  .page::after { content:attr(data-p); position:absolute; right:18px; bottom:8px; font-family:var(--head-font); font-size:22px; opacity:.6; }
+  h1 { font-family:var(--head-font); font-size:58px; margin:0 0 4px; line-height:64px; transform:rotate(-1deg); }
+  h1 span { border-bottom:4px double var(--red); }
+  h2 { font-family:var(--head-font); font-size:36px; margin:32px 0 0; line-height:32px; color:var(--red); transform:rotate(-.6deg); }
+  h2::after { content:""; display:block; height:3px; width:55%; background:var(--red); border-radius:50%; opacity:.6; margin-top:2px; }
+  h1 + h2, h1 + p + h2 { margin-top:16px; }
+  h3 { font-family:var(--head-font); font-size:28px; margin:16px 0 0; line-height:32px; color:var(--orange); }
+  p, ul, ol { margin:0; }
+  p.el { text-align:justify; margin:4px 0 6px; } .el b, li b { color:var(--red); }
+  ul, ol { padding-left:30px; }
+  ul { list-style:none; } ul li::before { content:"➜ "; color:var(--red); margin-left:-28px; display:inline-block; width:28px; }
+  .hi { background:linear-gradient(transparent 20%, var(--hi) 20%, var(--hi) 90%, transparent 90%); padding:0 3px; }
+  .note { display:inline-block; background:var(--note); padding:4px 14px; transform:rotate(-1deg); box-shadow:2px 3px 6px rgba(0,0,0,.2); line-height:28px; margin:8px 0; }
+  .green { color:var(--green); } .red { color:var(--red); }
+  code { font-family:var(--code-font); font-size:23px; background:var(--code); padding:0 5px; border:1px dashed var(--ink); border-radius:4px; }
+  pre { margin:4px 0; font-family:var(--code-font); font-size:22px; line-height:32px; background:var(--codesoft); border-left:4px solid var(--ink); padding:0 12px; overflow-x:auto; }
+  table { border-collapse:collapse; margin:8px 0; width:100%; line-height:27px; font-size:19px; }
+  th, td { border:2px solid var(--ink); padding:2px 9px; text-align:left; vertical-align:top; }
+  th { font-family:var(--head-font); font-size:25px; background:var(--th); }
+  svg { width:100%; height:auto; display:block; margin:10px 0; }
+  svg text { font-family:var(--head-font); font-size:22px; fill:var(--ink); text-anchor:middle; }
+  svg .b { fill:var(--fb); stroke:var(--ink); stroke-width:2.5; }
+  svg .y { fill:var(--fy); stroke:var(--ink); stroke-width:2.5; }
+  svg .g { fill:var(--fg); stroke:var(--green); stroke-width:2.5; }
+  svg .r { fill:var(--fr); stroke:var(--red); stroke-width:2.5; }
+  svg .o { fill:var(--fo); stroke:var(--orange); stroke-width:2.5; }
+  svg .zone { fill:none; stroke:var(--ink); stroke-width:2.5; stroke-dasharray:9 6; }
+  svg .l { stroke:var(--ink); stroke-width:2.5; fill:none; marker-end:url(#ar); }
+  svg .d { stroke:var(--red); stroke-width:2.5; fill:none; stroke-dasharray:6 5; marker-end:url(#ar); }
+  svg .s { font-size:17px; fill:var(--red); }
+  svg .t { font-size:28px; fill:var(--red); font-weight:700; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
+  @media (max-width:700px){ body{font-size:17px} .page{padding:20px 12px 30px 48px} .two{grid-template-columns:1fr} }
+  @media print { body{background:#fff} .page{box-shadow:none; margin:0; page-break-after:always} }
+
+  /* ===== iPad / touch friendly ===== */
+  html { -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-behavior:smooth; }
+  body { padding-bottom:calc(150px + env(safe-area-inset-bottom)); padding-left:env(safe-area-inset-left); padding-right:env(safe-area-inset-right); -webkit-tap-highlight-color:transparent; }
+  button, select { touch-action:manipulation; }
+  #toolbar { padding-top:calc(8px + env(safe-area-inset-top)); transition:transform .25s ease; }
+  #toolbar.hide { transform:translateY(-115%); }
+  #toolbar select, #toolbar button { min-height:44px; font-size:16px; }
+  .page { --mx:62px; }
+  @media (max-width:1100px) {
+    .page { margin:14px auto; max-width:calc(100% - 28px); padding:26px 26px 46px 80px; }
+    p.el, li, td { font-size:1em; }
+    table { font-size:18px; }
+    svg text { stroke:none; }
+  }
+  @media (max-width:820px) {
+    .page { --mx:40px; padding:22px 18px 44px 60px; max-width:calc(100% - 16px); margin:10px auto; }
+    h1 { font-size:46px; line-height:52px; } h2 { font-size:32px; }
+    table { display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .two { grid-template-columns:1fr; }
+  }
+  @media (orientation:landscape) and (min-width:1000px) and (max-width:1400px) { .page { max-width:900px; } }
+  /* read-from-here buttons */
+  .spk { display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; margin-left:10px; vertical-align:middle; padding:0; font-size:18px; line-height:1;
+         border:2px solid var(--ink); border-radius:50%; background:var(--fb); color:var(--ink); cursor:pointer; transform:rotate(.6deg); }
+  .spk:active { background:var(--hi); }
+  /* narrator dock */
+  #narrator { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(10px + env(safe-area-inset-bottom)); z-index:60; width:min(760px, calc(100% - 20px));
+              background:var(--paper); color:var(--ink); border:3px solid var(--ink); border-radius:20px; box-shadow:0 8px 24px var(--shadow); font-family:system-ui,'Segoe UI',sans-serif; font-size:16px; line-height:1.25; overflow:hidden; }
+  #narrator .prog { height:6px; background:var(--code); } #narrator .prog i { display:block; height:100%; width:0; background:var(--red); transition:width .3s; }
+  #narrator .row { display:flex; align-items:center; gap:8px 12px; padding:8px 12px; flex-wrap:wrap; }
+  #narrator .extra { border-top:1px dashed var(--ink); justify-content:space-between; }
+  #narrator.min .extra { display:none; }
+  #narrator button { min-width:48px; min-height:48px; font-size:22px; padding:0 10px; border:2px solid var(--ink); border-radius:14px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  #narrator button.main { background:var(--red); color:var(--paper); min-width:60px; font-size:26px; }
+  #narrator button:active { transform:scale(.95); }
+  #narrator #nStatus { flex:1 1 140px; min-width:0; font-size:15px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #narrator label { display:flex; align-items:center; gap:6px; font-size:15px; }
+  #narrator select { min-height:44px; font-size:16px; max-width:220px; padding:4px 8px; border:2px solid var(--ink); border-radius:10px; background:var(--fb); color:var(--ink); }
+  #narrator input[type=checkbox] { width:22px; height:22px; accent-color:var(--red); }
+  .reading { background:var(--hi) !important; box-shadow:0 0 0 4px var(--hi); border-radius:6px; transition:background .2s; }
+  svg.reading { box-shadow:none; outline:4px solid var(--hi); outline-offset:2px; background:transparent !important; }
+  @media print { #narrator, .spk { display:none !important; } }
+
+  /* ===== settings button + panel ===== */
+  #settingsBtn { position:fixed; top:calc(10px + env(safe-area-inset-top)); right:calc(12px + env(safe-area-inset-right)); z-index:70; width:52px; height:52px; padding:0; font-size:26px; line-height:1;
+                 border:3px solid var(--ink); border-radius:50%; background:var(--paper); color:var(--ink); box-shadow:0 4px 12px var(--shadow); cursor:pointer; touch-action:manipulation; }
+  #settingsBtn:active { transform:scale(.94); }
+  #settingsPanel { position:fixed; top:calc(72px + env(safe-area-inset-top)); right:calc(12px + env(safe-area-inset-right)); z-index:80; width:min(400px, calc(100% - 24px)); max-height:calc(100vh - 100px - env(safe-area-inset-top));
+                   overflow-y:auto; -webkit-overflow-scrolling:touch; display:none; padding:14px 16px 16px; background:var(--paper); color:var(--ink); border:3px solid var(--ink); border-radius:18px;
+                   box-shadow:0 12px 32px var(--shadow); font-family:system-ui,'Segoe UI',sans-serif; font-size:16px; line-height:1.3; }
+  #settingsPanel.open { display:block; overflow-x:hidden; }
+  #settingsPanel label select { min-width:0; max-width:62%; text-overflow:ellipsis; }
+  #settingsPanel { max-height:calc(100vh - 190px - env(safe-area-inset-top)); }
+  #settingsPanel .hd { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; font-size:19px; font-weight:700; }
+  #settingsPanel .hd button { width:44px; height:44px; font-size:20px; border:2px solid var(--ink); border-radius:12px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  #settingsPanel h4 { margin:14px 0 6px; padding-top:10px; border-top:2px dashed var(--ink); font-size:16px; }
+  #settingsPanel h4:first-of-type { border-top:0; padding-top:0; }
+  #settingsPanel label { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:8px 0; }
+  #settingsPanel label select { flex:0 0 62%; min-height:44px; font-size:16px; padding:4px 8px; border:2px solid var(--ink); border-radius:10px; background:var(--fb); color:var(--ink); }
+  #settingsPanel label.chk { justify-content:flex-start; min-height:44px; }
+  #settingsPanel input[type=checkbox] { width:24px; height:24px; accent-color:var(--red); }
+  #settingsPanel .reset { width:100%; min-height:46px; margin-top:8px; font-size:16px; border:2px solid var(--ink); border-radius:12px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  #settingsScrim { position:fixed; inset:0; z-index:75; display:none; background:rgba(0,0,0,.25); }
+  #settingsScrim.open { display:block; }
+  @media print { #settingsBtn, #settingsPanel, #settingsScrim { display:none !important; } }
+
+  /* ===== narrator controls now live inside the settings panel ===== */
+  body { padding-bottom:calc(40px + env(safe-area-inset-bottom)) !important; }
+  #settingsPanel { max-height:calc(100vh - 100px - env(safe-area-inset-top)); }
+  #settingsPanel #narrator { position:static; transform:none; width:auto; margin:6px 0 12px; border:2px solid var(--ink); border-radius:14px; box-shadow:none; background:var(--code); }
+  #settingsPanel #narrator .row { padding:8px; gap:8px; justify-content:center; }
+  #settingsPanel #narrator #nStatus { flex:1 1 100%; order:5; text-align:center; white-space:normal; font-size:15px; }
+  #settingsBtn.playing { background:var(--red); color:var(--paper); }
+
+  /* ===== animated architecture pages ===== */
+  .tag { font-family:var(--body-font); font-size:20px; color:var(--paper); background:var(--red); border-radius:12px; padding:0 10px; vertical-align:middle; }
+  .animbtn { min-height:46px; margin:6px 0 10px; padding:0 16px; font-size:16px; font-family:system-ui,'Segoe UI',sans-serif; border:2px solid var(--ink); border-radius:12px; background:var(--fb); color:var(--ink); cursor:pointer; touch-action:manipulation; }
+  .animbtn[aria-pressed="true"] { background:var(--hi); }
+  ol.steps { padding-left:34px; } ol.steps li { margin:2px 0; }
+  .stpli { border-radius:8px; animation:actbg 16s linear infinite; }
+  .stp { animation:act 16s linear infinite; }
+  @keyframes act { 0%,12.5% { opacity:1; } 12.6%,100% { opacity:.22; } }
+  @keyframes actbg { 0%,12.5% { background:var(--hi); } 12.6%,100% { background:transparent; } }
+  @keyframes dashmove { to { stroke-dashoffset:-28; } }
+  @keyframes blinkip { 0%,100% { opacity:1; } 50% { opacity:.25; } }
+  svg .flow { stroke-dasharray:8 6; animation:dashmove 1.1s linear infinite; }
+  svg .blink { animation:blinkip 2.4s ease-in-out infinite; }
+  svg .bus { stroke:var(--orange); stroke-width:3; fill:none; }
+  svg .soft { stroke:var(--ink); stroke-width:2; fill:none; opacity:.5; }
+  svg .m { font-size:17px; }
+  svg .pk1 { fill:var(--red); stroke:var(--ink); stroke-width:2; }
+  svg .pk2 { fill:var(--orange); stroke:var(--ink); stroke-width:2; }
+  svg .pk3 { fill:var(--green); stroke:var(--ink); stroke-width:2; }
+  svg .pkb { fill:var(--ink); stroke:var(--paper); stroke-width:2; }
+  svg .bdg { fill:var(--hi); stroke:var(--ink); stroke-width:2.5; }
+  svg .bt { font-size:16px; font-weight:700; }
+  .anim-paused .flow, .anim-paused .blink, .anim-paused .stp, .anim-paused .stpli { animation-play-state:paused !important; }
+  @media (prefers-reduced-motion:reduce) { .flow, .blink, .stp, .stpli { animation:none !important; } }
+  @media (max-width:820px) { .tag { display:none; } }
+
+  /* ===== full-width interactive architecture page (not notebook styled) ===== */
+  .archpage { margin:0; padding:22px clamp(10px, 2.4vw, 40px) 46px; background:var(--paper); color:var(--ink); font-family:var(--body-font); font-size:var(--fs); line-height:1.5;
+              border-top:8px solid var(--red); border-bottom:8px solid var(--red); box-shadow:0 6px 18px var(--shadow); }
+  .archpage h1 { font-size:clamp(34px, 4vw, 54px); line-height:1.15; margin:0 0 6px; transform:none; }
+  .archpage h1 span { border:0; }
+  .archpage h2 { font-size:28px; line-height:1.2; margin:0 0 8px; transform:none; }
+  .archpage h2::after { display:none; }
+  .archpage h3 { font-size:22px; margin:0 0 6px; line-height:1.2; }
+  .archpage p, .archpage ol, .archpage ul { margin:0; }
+  .archpage .lead { max-width:1100px; font-size:1.05em; margin-bottom:10px; }
+  .archpage .archtools { display:flex; flex-wrap:wrap; gap:10px; margin:8px 0 14px; }
+  .archpage .animbtn.primary { background:var(--red); color:var(--paper); border-color:var(--red); font-weight:700; }
+  .diagramwrap { background:var(--fb); border:3px solid var(--ink); border-radius:18px; padding:10px clamp(4px, 1vw, 14px); box-shadow:0 6px 16px var(--shadow); }
+  .diagramwrap svg { margin:0 auto; max-width:1700px; }
+  .clk { cursor:pointer; outline:none; }
+  .clk:hover rect, .clk:focus-visible rect { stroke-width:4.5; filter:brightness(1.07) drop-shadow(0 0 4px var(--red)); }
+  .clk:hover text, .clk:focus-visible text { font-weight:700; }
+  .clk.lnk:hover path:not(.hit), .clk.lnk:focus-visible path:not(.hit) { stroke-width:6; filter:drop-shadow(0 0 4px var(--red)); }
+  .clk:focus-visible { outline:3px solid var(--red); outline-offset:3px; }
+  svg .hit { stroke:transparent; stroke-width:20; fill:none; pointer-events:stroke; marker-end:none; }
+  svg circle { pointer-events:none; }
+  .archidx { margin:18px 0 8px; }
+  .archidx .cgrp { display:flex; flex-wrap:wrap; align-items:center; gap:6px 8px; margin:8px 0; }
+  .archidx .cgrp h3 { margin:0 8px 0 0; min-width:210px; color:var(--orange); }
+  .archidx .cgrp > div { display:flex; flex-wrap:wrap; gap:8px; }
+  .kchip { min-height:44px; padding:6px 14px; font:inherit; font-size:.9em; color:var(--ink); background:var(--fb); border:2px solid var(--ink); border-radius:22px; cursor:pointer; touch-action:manipulation; }
+  .kchip:hover, .kchip:focus-visible { background:var(--hi); }
+  .archgrid { display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:18px; margin-top:18px; }
+  .acard { background:var(--fb); border:2px solid var(--ink); border-radius:16px; padding:14px 18px 16px; }
+  .acard table { margin:4px 0; font-size:.88em; }
+  .acard .tip { margin-top:8px; background:var(--note); padding:6px 12px; border-radius:10px; }
+  @media (max-width:820px) { .archidx .cgrp h3 { min-width:100%; } }
+
+  /* ===== detail modal ===== */
+  body.kmodal-open { overflow:hidden; }
+  #kModal { position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center; padding:clamp(6px, 2vw, 24px); background:rgba(8,12,28,.62); -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px); }
+  #kModal.open { display:flex; }
+  #kModal .kcard { width:min(1040px, 100%); max-height:100%; display:flex; flex-direction:column; background:var(--paper); color:var(--ink); border:3px solid var(--ink); border-radius:22px; overflow:hidden;
+                   box-shadow:0 20px 60px rgba(0,0,0,.5); font-family:system-ui,'Segoe UI',Roboto,sans-serif; font-size:16px; line-height:1.55; animation:kpop .18s ease-out; }
+  @keyframes kpop { from { transform:translateY(14px) scale(.98); opacity:0; } to { transform:none; opacity:1; } }
+  .khead { display:flex; align-items:center; gap:14px; padding:14px 18px; background:var(--th); border-bottom:3px solid var(--ink); }
+  .khead .ico { font-size:34px; line-height:1; }
+  .khead h3 { font-family:inherit; color:var(--ink); transform:none; flex:1; margin:0; font-size:21px; line-height:1.25; }
+  .khead .meta { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+  .kpill { display:inline-block; padding:1px 10px; border-radius:12px; font-size:13px; font-weight:600; background:var(--hi); border:1.5px solid var(--ink); }
+  .kpill.red { background:var(--red); color:var(--paper); border-color:var(--red); }
+  .kclose { flex:none; width:48px; height:48px; font-size:22px; border:2px solid var(--ink); border-radius:14px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  .kbody { overflow:auto; -webkit-overflow-scrolling:touch; padding:6px 22px 18px; }
+  .ksec { margin-top:14px; }
+  .ksec h4 { margin:0 0 6px; font-size:15px; letter-spacing:.06em; text-transform:uppercase; color:var(--red); }
+  .ksec p, .ksec ul { margin:0; } .ksec ul { padding-left:22px; } .ksec li { margin:3px 0; }
+  .ksec code, .kqa code { font-family:Consolas,'Courier New',monospace; font-size:.92em; background:var(--code); border:1px solid var(--ink); border-radius:4px; padding:0 4px; }
+  .kdiagram { background:var(--note); border-left:5px solid var(--red); border-radius:8px; padding:8px 12px; }
+  .kfacts { width:100%; border-collapse:collapse; font-size:15px; } .kfacts td { border:1.5px solid var(--ink); padding:5px 10px; vertical-align:top; } .kfacts td:first-child { width:30%; font-weight:700; background:var(--th); }
+  .kqa-h { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .kqa-h button { min-height:38px; padding:0 12px; font:inherit; font-size:14px; border:2px solid var(--ink); border-radius:10px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  .kqa { border:2px solid var(--ink); border-radius:12px; margin:8px 0; background:var(--fb); }
+  .kqa summary { cursor:pointer; padding:10px 14px; font-weight:700; list-style:none; display:flex; gap:10px; min-height:44px; align-items:center; }
+  .kqa summary::-webkit-details-marker { display:none; }
+  .kqa summary::before { content:'Q'; flex:none; width:26px; height:26px; border-radius:50%; background:var(--red); color:var(--paper); display:inline-flex; align-items:center; justify-content:center; font-size:13px; }
+  .kqa[open] summary { background:var(--th); border-bottom:2px solid var(--ink); }
+  .kqa .ans { padding:10px 14px 12px 50px; }
+  .krel { display:flex; flex-wrap:wrap; gap:8px; }
+  .krel .kchip { font-size:14px; }
+  .kfoot { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 14px; border-top:3px solid var(--ink); background:var(--th); }
+  .kfoot button { min-height:46px; padding:0 18px; font:inherit; font-weight:700; border:2px solid var(--ink); border-radius:12px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  .kfoot button.primary { background:var(--red); color:var(--paper); border-color:var(--red); }
+  .kfoot .pos { font-size:14px; opacity:.85; text-align:center; }
+  @media print { #kModal { display:none !important; } }
+  @media (prefers-reduced-motion:reduce) { #kModal .kcard { animation:none; } }
+
+  /* ===== course layout (left curriculum, right lesson panel) ===== */
+  html, body { height:100%; }
+  body.cms { margin:0; padding:0 !important; overflow:hidden; background:var(--paper); }
+  #cms { display:grid; grid-template-columns:minmax(250px, 340px) minmax(0, 1fr); grid-template-rows:58px minmax(0, 1fr); height:100vh; height:100dvh; }
+  #cms.noside { grid-template-columns:0 minmax(0, 1fr); }
+  #cms.noside #cmsside { display:none; }
+  #cmsbar { grid-column:1 / -1; display:flex; align-items:center; gap:12px; min-width:0; padding:0 80px 0 10px; background:var(--th); border-bottom:3px solid var(--red); }
+  #cmsbar .menu { flex:none; width:46px; height:46px; font-size:24px; line-height:1; border:2px solid var(--ink); border-radius:12px; background:var(--fb); color:var(--ink); cursor:pointer; touch-action:manipulation; }
+  #cmsbar .ttl { flex:1 1 auto; min-width:0; white-space:nowrap; overflow:hidden; font-family:var(--head-font); font-size:28px; line-height:1.2; color:var(--ink); }
+  #cmsbar .prog { flex:0 1 340px; min-width:110px; font:600 13px/1.2 system-ui,'Segoe UI',sans-serif; color:var(--ink); }
+  #cmsbar .prog .bar { height:9px; margin-top:4px; border:2px solid var(--ink); border-radius:6px; background:var(--fb); overflow:hidden; }
+  #cmsbar .prog .bar i { display:block; height:100%; width:0; background:var(--green); transition:width .3s; }
+  #cmsbar .prog span { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #cmsside { overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; min-width:0; background:var(--fb); border-right:3px solid var(--ink); font-size:calc(var(--fs) - 2px); }
+  .sbhead { padding:12px 14px; border-bottom:2px dashed var(--ink); position:sticky; top:0; z-index:2; background:var(--fb); }
+  .sbhead h2 { margin:0 0 8px; font-size:24px; line-height:1.2; transform:none; color:var(--red); }
+  .sbhead h2::after { display:none; }
+  .sbhead input { width:100%; min-height:44px; padding:6px 12px; font:16px system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--paper); border:2px solid var(--ink); border-radius:12px; }
+  .sbtools { display:flex; gap:8px; margin-top:8px; }
+  .sbtools button { flex:1; min-height:40px; font:14px system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--fb); border:2px solid var(--ink); border-radius:10px; cursor:pointer; }
+  .sec { border-bottom:2px solid var(--ink); }
+  .sechd { display:flex; align-items:center; gap:8px; width:100%; min-height:50px; padding:8px 14px; text-align:left; font:inherit; font-weight:700; color:var(--ink); background:var(--th); border:0; cursor:pointer; touch-action:manipulation; }
+  .sechd .t { flex:1; min-width:0; overflow-wrap:anywhere; line-height:1.25; }
+  .sechd .cnt { flex:none; font:600 12px system-ui,'Segoe UI',sans-serif; opacity:.8; }
+  .sechd .chev { flex:none; transition:transform .2s; }
+  .sec.collapsed .chev { transform:rotate(-90deg); }
+  .sec.collapsed .lessons { display:none; }
+  .lessonbtn { display:flex; align-items:flex-start; gap:10px; width:100%; min-height:48px; padding:9px 12px 9px 16px; text-align:left; font:inherit; color:var(--ink); background:transparent; border:0; border-left:6px solid transparent; cursor:pointer; touch-action:manipulation; }
+  .lessonbtn:hover { background:var(--code); }
+  .lessonbtn.active { background:var(--hi); border-left-color:var(--red); font-weight:700; }
+  .lessonbtn .ck { flex:none; width:24px; height:24px; margin-top:1px; border:2px solid var(--ink); border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font:700 12px system-ui,'Segoe UI',sans-serif; }
+  .lessonbtn.done .ck { background:var(--green); border-color:var(--green); color:#fff; }
+  .lessonbtn .lt { flex:1; min-width:0; overflow-wrap:anywhere; line-height:1.25; }
+  .lessonbtn .tm { display:block; margin-top:2px; font:12px system-ui,'Segoe UI',sans-serif; opacity:.7; font-weight:400; }
+  .lessonbtn[hidden], .sec[hidden] { display:none; }
+  #cmsmain { overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; min-width:0; position:relative; padding:16px clamp(12px, 2.4vw, 40px) 0; }
+  .lesson { display:none; max-width:1200px; margin:0 auto; padding-bottom:22px; }
+  .lesson.active { display:block; }
+  .lcrumb { margin:0 0 10px; font:14px/1.3 system-ui,'Segoe UI',sans-serif; opacity:.85; overflow-wrap:anywhere; }
+  .lesson .hero { margin:0 0 12px; }
+  .lesson .hero h1 { font-size:clamp(32px, 4vw, 50px); line-height:1.15; margin:0 0 4px; transform:none; }
+  .lesson .hero p { margin:0; }
+  .sn { background:var(--fb); border:2px solid var(--ink); border-radius:16px; padding:14px 20px 18px; margin:0; box-shadow:0 4px 12px var(--shadow); line-height:1.55; }
+  .sn > h2 { margin:0 0 8px; font-size:clamp(28px, 3vw, 36px); line-height:1.2; color:var(--red); transform:none; }
+  .sn > h2::after { width:55%; }
+  .sn > h1 { font-size:clamp(30px, 3.4vw, 46px); line-height:1.15; margin:0 0 6px; transform:none; }
+  .sn h3 { line-height:1.25; }
+  .sn svg { max-width:1500px; margin:12px auto; }
+  .sn li, .sn p, .sn td, .sn th, .sn code, .sn .note, .sn h1, .sn h2, .sn h3 { overflow-wrap:break-word; }
+  .sn code { overflow-wrap:anywhere; }
+  .sn pre { white-space:pre; overflow-x:auto; max-width:100%; }
+  .sn table { width:100%; max-width:100%; table-layout:auto; }
+  .sn td, .sn th { min-width:5em; word-break:normal; }
+  .sn p.el { text-align:left; }
+  .sn .two { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:0 28px; }
+  .lesson .archpage { margin:0; padding:0; border:0; box-shadow:none; background:transparent; }
+  .lesson .archpage > .archhead { margin-bottom:12px; }
+  .lfoot { position:sticky; bottom:0; z-index:5; display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr); gap:10px; max-width:1200px; margin:0 auto; padding:10px 0 12px; background:var(--paper); border-top:3px solid var(--ink); }
+  .lfoot button { min-width:0; min-height:50px; padding:0 14px; white-space:nowrap; overflow:hidden; font:700 16px system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--fb); border:2px solid var(--ink); border-radius:14px; cursor:pointer; touch-action:manipulation; }
+  .lfoot button.primary { background:var(--red); border-color:var(--red); color:var(--paper); }
+  .lfoot button.done { background:var(--green); border-color:var(--green); color:#fff; }
+  .lfoot button:disabled { opacity:.4; cursor:default; }
+  #cmsscrim { display:none; }
+  /* Explain in Hindi */
+  .hx { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:2px 0 14px; }
+  .hx button { min-height:48px; padding:0 18px; white-space:nowrap; overflow:hidden; max-width:100%; font:700 16px system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--fb); border:2px solid var(--ink); border-radius:24px; cursor:pointer; touch-action:manipulation; }
+  .hx button.hxbtn { background:var(--red); border-color:var(--red); color:var(--paper); }
+  .hx .hxsub { flex:1 1 220px; min-width:0; font:14px/1.35 system-ui,'Segoe UI',sans-serif; opacity:.85; }
+  .hx .hxcap { flex:1 1 100%; min-width:0; padding:10px 14px; background:var(--note); border-left:6px solid var(--red); border-radius:10px; font:16px/1.5 system-ui,'Segoe UI',sans-serif; }
+  .hx .hxcap b { display:block; margin-bottom:2px; font-size:13px; letter-spacing:.05em; text-transform:uppercase; color:var(--red); }
+  .hx .hxmsg { flex:1 1 100%; padding:8px 12px; border:2px dashed var(--red); border-radius:10px; font:15px/1.4 system-ui,'Segoe UI',sans-serif; }
+  .hx [hidden] { display:none !important; }
+  svg .spot > rect { stroke:var(--red) !important; stroke-width:6 !important; filter:drop-shadow(0 0 10px var(--red)); }
+  svg .spot.lnk path:not(.hit) { stroke:var(--red) !important; stroke-width:7 !important; filter:drop-shadow(0 0 8px var(--red)); }
+  svg .spot text { font-weight:700; }
+  @media (max-width:900px) {
+    #cms { grid-template-columns:minmax(0, 1fr); }
+    #cmsside { position:fixed; top:58px; bottom:0; left:0; width:min(340px, 88vw); z-index:90; transform:translateX(-105%); transition:transform .25s; box-shadow:6px 0 18px var(--shadow); }
+    #cms.sideopen #cmsside { transform:none; }
+    #cms.noside { grid-template-columns:minmax(0, 1fr); }
+    #cms.noside #cmsside { display:block; }
+    #cms.sideopen #cmsscrim { display:block; position:fixed; top:58px; left:0; right:0; bottom:0; z-index:80; background:rgba(0,0,0,.4); }
+    #cmsbar .prog { display:none; }
+    .lfoot { grid-template-columns:minmax(0,1fr) minmax(0,1.5fr) minmax(0,1fr); gap:6px; padding:8px 0 10px; } .lfoot button { min-height:46px; padding:0 8px; font-size:14px; }
+  }
+  @media print { #cmsbar, #cmsside, .lfoot, .hx { display:none !important; } body.cms { overflow:visible; } #cms { display:block; height:auto; } #cmsmain { overflow:visible; } .lesson { display:block !important; page-break-after:always; } }
+
+  /* diagram-highlight-v2 */
+  .diagramwrap svg { overflow: visible; }
+  .stp { transform-box: fill-box; transform-origin: center; }
+  @keyframes act {
+    0%, 12.5% { opacity: 1; transform: scale(1.05); filter: drop-shadow(0 5px 7px rgba(0,0,0,.35)); }
+    13.5%, 100% { opacity: 1; transform: none; filter: none; }
+  }
+  /*UIX-CSS-START*/
+  /* ui-extras-v3: home button, editor-style code colours, rounded modal tables */
+  .homebtn { flex:none; display:inline-flex; align-items:center; gap:2px; min-height:40px; padding:0 12px; margin:0 6px 0 0; font:600 14px/1 system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--fb,#fff); border:2px solid var(--ink); border-radius:10px; text-decoration:none; white-space:nowrap; cursor:pointer; }
+  .homebtn:hover, .homebtn:focus-visible { background:var(--hi); }
+  .homebtn .hbi { font-size:18px; line-height:1; }
+  @media (max-width:640px) { .homebtn { padding:0 10px; min-width:40px; justify-content:center; } .homebtn .hbl { display:none; } }
+  .homefloat { position:fixed; top:10px; left:10px; z-index:60; box-shadow:2px 3px 0 rgba(0,0,0,.2); }
+
+  :root { --tk-kw:#0000ff; --tk-ct:#af00db; --tk-str:#a31515; --tk-com:#008000; --tk-num:#098658; --tk-ty:#267f99; --tk-fn:#795e26; --tk-var:#001080; }
+  :root[data-theme="dark"], :root[data-theme="blueprint"] { --tk-kw:#7cc4ff; --tk-ct:#e3a6ff; --tk-str:#ffb08a; --tk-com:#8fd18f; --tk-num:#c8e8a8; --tk-ty:#5ee6cf; --tk-fn:#ffe39a; --tk-var:#b8e4ff; }
+  /* iPad / iOS Safari: lock the page itself so only #cmsmain and #cmsside scroll. Without this the whole window can scroll
+     (rubber-band, URL-bar resize, orientation change) and the top bar plus breadcrumb row slide out of view. */
+  html { overscroll-behavior: none; background: var(--paper); }
+  /* no explicit width/height here: iOS keeps the old size after a rotation; four insets always follow the real viewport */
+  body.cms { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: auto; height: auto; overflow: hidden; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
+  body.cms #cms { position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: auto; height: auto; }
+  /* hide/show the course menu: with the menu display:none the lesson area used to fall into the 0px grid column and collapse to a sliver.
+     Give both areas explicit cells and let the lesson area take the full row when the menu is hidden. */
+  #cmsside { grid-column: 1; grid-row: 2; }
+  #cmsmain { grid-column: 2; grid-row: 2; }
+  #cms.noside { grid-template-columns: minmax(0, 1fr); }
+  #cms.noside #cmsmain { grid-column: 1 / -1; }
+  @media (max-width: 900px) { #cmsmain { grid-column: 1 / -1; } #cms.noside { grid-template-columns: minmax(0, 1fr); } }
+  /* safe areas (notch / home indicator / rounded corners in landscape) */
+  #cmsbar { padding-left: max(10px, env(safe-area-inset-left)); }
+  #cmsmain { padding-left: max(clamp(12px, 2.4vw, 40px), env(safe-area-inset-left)); padding-right: max(clamp(12px, 2.4vw, 40px), env(safe-area-inset-right)); }
+  .lfoot { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+
+  /* tablets and iPad in landscape: use the whole width (slimmer course menu, no 1200px cap on the lesson) */
+  @media (min-width: 901px) and (max-width: 1500px) {
+    #cms { grid-template-columns: minmax(220px, 290px) minmax(0, 1fr); }
+    .lesson, .lfoot { max-width: none; }
+    #cmsmain { padding-left: max(clamp(12px, 1.6vw, 24px), env(safe-area-inset-left)); padding-right: max(clamp(12px, 1.6vw, 24px), env(safe-area-inset-right)); }
+    .sn { padding-left: 18px; padding-right: 18px; }
+    .sn svg, .diagramwrap svg { max-width: 100%; }
+    #cmsbar .ttl { font-size: 24px; }
+  }
+  /* short landscape screens (iPad 768 to 834 px high): tighter vertical spacing so more lesson shows */
+  @media (orientation: landscape) and (max-height: 860px) and (min-width: 901px) {
+    .lesson .hero h1 { font-size: clamp(26px, 3vw, 38px); }
+    .sn { padding-top: 10px; padding-bottom: 14px; }
+    .lfoot { padding-top: 6px; }
+    .lfoot button { min-height: 44px; }
+    #kModal { padding: 8px; }
+    #kModal .kcard { max-height: calc(100% - 2px); }
+  }
+  #cmsmain { overflow-x: hidden; }
+  #cmsmain, #cmsside { overscroll-behavior: contain; }
+  #cmsbar { position: relative; z-index: 30; }
+
+  /* copy button: icon only */
+  .codewrap .copy { display:inline-flex; align-items:center; justify-content:center; width:34px; min-width:34px; height:34px; min-height:34px; padding:0; line-height:1; font-size:0; color:var(--ink); }
+  .codewrap .copy svg { width:18px; height:18px; display:block; pointer-events:none; }
+  .codewrap .copy:hover, .codewrap .copy:focus-visible { background:var(--hi); }
+  .codewrap .copy.done { color:var(--green); border-color:var(--green); }
+
+  /* code editor background: off-white (not the theme's blue tint); dark editor for the Dark theme; Blueprint keeps its own tone */
+  :root { --codebg:#fbfaf5; }
+  :root[data-theme="dark"] { --codebg:#1e1e1e; }
+  :root[data-theme="blueprint"] { --codebg:#0f3358; }
+  pre, .sn pre, .codewrap pre { background:var(--codebg) !important; }
+  pre .t-kw { color:var(--tk-kw); } pre .t-ct { color:var(--tk-ct); } pre .t-str { color:var(--tk-str); } pre .t-num { color:var(--tk-num); }
+  pre .t-ty { color:var(--tk-ty); } pre .t-fn { color:var(--tk-fn); } pre .t-var { color:var(--tk-var); }
+  pre .t-com { color:var(--tk-com); font-style:italic; }
+
+  .kqa, #kModal .kqa { overflow:hidden; }
+  .kqa[open] summary, #kModal .kqa[open] summary { border-radius:10px 10px 0 0; }
+  .kqa:not([open]) summary, #kModal .kqa:not([open]) summary { border-radius:10px; }
+  .kfacts, #kModal .kfacts { border-collapse:separate; border-spacing:0; border:2px solid var(--ink); border-radius:12px; overflow:hidden; }
+  .kfacts td, #kModal .kfacts td { border:0; border-bottom:1.5px solid var(--ink); }
+  .kfacts td:first-child, #kModal .kfacts td:first-child { border-right:1.5px solid var(--ink); }
+  .kfacts tr:last-child td, #kModal .kfacts tr:last-child td { border-bottom:0; }
+  /*UIX-CSS-END*/
+
+  /* ===== DotNet course additions ===== */
+  .sn pre { font-family:Consolas,'Courier New',monospace; font-size:14.5px; line-height:1.55; background:var(--code); border:1.5px solid var(--ink); border-left:6px solid var(--red); border-radius:10px; padding:12px 14px; margin:8px 0; overflow-x:auto; max-width:100%; white-space:pre; }
+  .sn pre code { font-family:inherit; font-size:inherit; background:none; border:0; padding:0; overflow-wrap:normal; }
+  .codewrap { position:relative; margin:8px 0; }
+  .codewrap pre { margin:0; padding-top:26px; }
+  .codewrap pre[data-lang]::before { content:attr(data-lang); position:absolute; top:5px; left:14px; font:700 11px system-ui,'Segoe UI',sans-serif; letter-spacing:.08em; text-transform:uppercase; opacity:.65; color:var(--ink); }
+  .codewrap .copy { position:absolute; top:4px; right:6px; min-height:30px; padding:0 12px; font:12px system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--fb); border:1.5px solid var(--ink); border-radius:8px; cursor:pointer; }
+  .qa-item { border:2px solid var(--ink); border-radius:12px; margin:10px 0; overflow:hidden; background:var(--paper); }
+  .qa-item .qq { margin:0; padding:8px 14px; background:var(--th); line-height:1.4; }
+  .qa-item .aa { margin:0; padding:8px 14px 10px; line-height:1.5; }
+  .qa-item .aa p { margin:0 0 7px; } .qa-item .aa ul { margin:3px 0 8px; } .qa-item .aa .codewrap { margin:6px 0 10px; }
+  .qa-item .aa .tip { background:var(--note); border-left:5px solid var(--red); border-radius:8px; padding:6px 12px; }
+  .qa-item .qq { cursor:default; } .qa-practice { margin:2px 0 12px; }
+  .practice .qa-item .qq { cursor:pointer; } .practice .qa-item .qq::after { content:'  ▸ tap to reveal'; font:12px system-ui,sans-serif; opacity:.6; }
+  .practice .qa-item.open .qq::after { content:'  ▾'; }
+  .practice .qa-item:not(.open) .aa { display:none; }
+  .qa-item code { font-family:Consolas,'Courier New',monospace; font-size:.9em; }
+  #cmsbar .animbtn { flex:none; min-height:40px; margin:0; padding:0 12px; font-size:13px; white-space:nowrap; }
+  .sn .archtools { margin:6px 0 10px; }
+  .sn .diagramwrap { margin:8px 0 12px; }
+  @media (max-width:900px) { #cmsbar .animbtn { display:none; } }
+</style>
+</head>
+<body>
+
+<button id="settingsBtn" type="button" aria-label="Open settings" aria-expanded="false" aria-controls="settingsPanel" title="Settings">⚙️</button>
+<div id="settingsScrim"></div>
+<div id="settingsPanel" role="dialog" aria-label="Settings">
+  <div class="hd"><span>⚙️ Settings</span><button id="settingsClose" type="button" aria-label="Close settings">✕</button></div>
+  <h4>🎨 Appearance</h4>
+  <label>Theme
+    <select id="themeSel">
+      <option value="classic">📒 Classic notebook</option>
+      <option value="dark">🌙 Dark</option>
+      <option value="sepia">📜 Sepia</option>
+      <option value="blueprint">📘 Blueprint</option>
+      <option value="mint">🌿 Mint</option>
+      <option value="clean">⬜ Clean (no lines)</option>
+    </select></label>
+  <label>Font
+    <select id="fontSel">
+      <option value="patrick">✍️ Patrick Hand</option>
+      <option value="caveat">Caveat – cursive</option>
+      <option value="kalam">Kalam – natural</option>
+      <option value="indie">Indie Flower – playful</option>
+      <option value="architect">Architects Daughter – neat</option>
+      <option value="serif">Merriweather – serif (default)</option>
+      <option value="sans">Inter – clean sans</option>
+      <option value="mono">Monospace – code style</option>
+    </select></label>
+  <label>Text size
+    <select id="sizeSel"><option value="17px">Small</option><option value="20px" selected>Medium</option><option value="23px">Large</option><option value="26px">Extra large</option></select></label>
+  <button id="resetBtn" class="reset" type="button">↺ Reset appearance</button>
+  <h4>🎧 Narrator</h4>
+<div id="narrator">
+  <div class="prog"><i id="nBar"></i></div>
+  <div class="row">
+    <button id="nPrev" aria-label="Previous section" title="Previous section">⏮</button>
+    <button id="nPlay" class="main" aria-label="Play narration" title="Play / pause">▶</button>
+    <button id="nStop" aria-label="Stop" title="Stop">⏹</button>
+    <button id="nNext" aria-label="Next section" title="Next section">⏭</button>
+    <div id="nStatus">🎧 Narrator – tap ▶ to listen</div>
+    </div>
+  </div>
+
+  <label>Speed
+    <select id="nRate"><option value="0.75">0.75×</option><option value="0.9">0.9×</option><option value="1" selected>1×</option><option value="1.15">1.15×</option><option value="1.3">1.3×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option></select></label>
+  <label>Voice <select id="nVoice"><option value="">Default voice</option></select></label>
+  <label class="chk"><input type="checkbox" id="nLabels"> Read diagram labels aloud</label>
+</div>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--ink)"/></marker>
+</defs></svg>
+
+<div id="src" hidden><section data-sec="How to Approach These Interviews"><article data-key="approach" data-title="1. What AI and Agent Interviews Look Like and How to Answer"><h2>1. What AI and Agent Interviews Look Like and How to Answer</h2><p class="el">Interviews for AI engineering and agent roles usually combine five kinds of questions: <b>fundamentals</b> (how models, context and retrieval work), <b>agent and MCP concepts</b> (loops, tools, protocols), <b>system design</b> (design an agent or an integration platform), <b>coding</b> (implement a loop, a registry, a retry wrapper) and <b>behavioural or experience</b> questions (tell me about a system you built). Strong candidates answer in a <b>repeatable structure</b> and always bring up <b>safety, evaluation and cost</b> without being asked.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="fr">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated a framework for AI design answers" data-order="fr"><circle r="8" class="pk1"><animateMotion dur="7.5s" begin="0s" repeatCount="indefinite" path="M100.5,82 L299.5,82 L498.5,82 L697.5,82 L896.5,82"/></circle><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="fr-clar" tabindex="0" role="button" aria-label="Clarify the problem"><title>Clarify the problem – click for details</title><rect class="y" x="20" y="30" width="161" height="104" rx="10"/><text x="100.5" y="78.7" style="font-size:19px">Clarify</text><text x="100.5" y="98.9" class="m" style="font-size:13px">users · risk · scale</text></g></g>
+<path class="l" d="M181,82 H219"/>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="fr-arch" tabindex="0" role="button" aria-label="Choose the architecture"><title>Choose the architecture – click for details</title><rect class="o" x="219" y="30" width="161" height="104" rx="10"/><text x="299.5" y="78.1" style="font-size:19px">Architecture</text><text x="299.5" y="99.6" class="m" style="font-size:14px">least autonomy</text></g></g>
+<path class="l" d="M380,82 H418"/>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="fr-tools" tabindex="0" role="button" aria-label="Tools, data and integration"><title>Tools, data and integration – click for details</title><rect class="g" x="418" y="30" width="161" height="104" rx="10"/><text x="498.5" y="78.1" style="font-size:19px">Tools + data</text><text x="498.5" y="99.6" class="m" style="font-size:14px">MCP · schemas</text></g></g>
+<path class="l" d="M579,82 H617"/>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="fr-safe" tabindex="0" role="button" aria-label="Safety, quality and operations"><title>Safety, quality and operations – click for details</title><rect class="r" x="617" y="30" width="161" height="104" rx="10"/><text x="697.5" y="67.4" style="font-size:19px">Safety +</text><text x="697.5" y="88.7" style="font-size:19px">evals</text><text x="697.5" y="110.2" class="m" style="font-size:14px">guardrails</text></g></g>
+<path class="l" d="M778,82 H816"/>
+<g class="stp" style="animation-delay:-8s"><g class="clk" data-k="fr-trade" tabindex="0" role="button" aria-label="Trade-offs and evolution"><title>Trade-offs and evolution – click for details</title><rect class="b" x="816" y="30" width="161" height="104" rx="10"/><text x="896.5" y="78.1" style="font-size:19px">Trade-offs</text><text x="896.5" y="99.6" class="m" style="font-size:14px">evolve</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><h3>A five-step answer framework</h3><p class="el">First <b>clarify</b> the problem: users, goals, scale, how costly a wrong answer is and which data and tools are involved. Second, choose the <b>architecture</b> with the <b>least autonomy that works</b> (single call, retrieval, workflow, agent, multi-agent) and justify each piece. Third, define the <b>tools, data and integration</b>, including schemas, permissions and how MCP or APIs connect them. Fourth, cover <b>safety, quality and operations</b>: guardrails, human approval, injection defence, evals, tracing and cost controls. Fifth, close with <b>trade-offs and evolution</b>: alternatives, remaining risks and how you would measure and improve.</p><table><tr><th>Round</th><th>What is tested</th><th>How to prepare</th></tr><tr><td>Fundamentals</td><td>Tokens, context, RAG, prompting, hallucination</td><td>Explain each concept in two sentences and give one example</td></tr><tr><td>Agents and MCP</td><td>Loop, tools, memory, protocols, security</td><td>Build a small agent and a small MCP server yourself</td></tr><tr><td>System design</td><td>End-to-end design with trade-offs</td><td>Practise the five-step framework on 5 problems</td></tr><tr><td>Coding</td><td>Loop, registry, retries, policy, evals</td><td>Write them from scratch without a framework</td></tr><tr><td>Behavioural</td><td>Real experience and judgement</td><td>Prepare 3 stories with situation, action, result, and one failure</td></tr></table><span class="note">Never claim experience you cannot explain in detail. Interviewers probe with "why that choice?" and "what went wrong?", and honest, specific answers score higher than polished but vague ones.</span></article><article data-key="fundamentals" data-title="2. LLM Fundamentals Interviewers Check"><h2>2. LLM Fundamentals Interviewers Check</h2><p class="el">Even agent-focused interviews begin with fundamentals, because every agent design decision rests on them. The <b>context window</b> limits the tokens per request and drives cost and latency, so everything an agent needs must fit and be managed. <b>Sampling parameters</b> such as temperature control randomness, and low values suit tool use and extraction. <b>RAG</b> retrieves relevant content at query time to ground answers in current, private data. <b>Fine-tuning</b> changes weights for consistent style or specialised behaviour; try prompting and RAG first. <b>Hallucination</b> is confident but wrong output, reduced by grounding, citations, schemas and verification.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="fd">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated LLM fundamentals" data-order="fd"><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="fd-ctx" tabindex="0" role="button" aria-label="Tokens and context window"><title>Tokens and context window – click for details</title><rect class="y" x="20" y="30" width="174" height="104" rx="10"/><text x="107" y="78.1" style="font-size:19px">Context window</text><text x="107" y="99.6" class="m" style="font-size:14px">tokens</text></g></g>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="fd-sample" tabindex="0" role="button" aria-label="Sampling parameters"><title>Sampling parameters – click for details</title><rect class="o" x="216" y="30" width="174" height="104" rx="10"/><text x="303" y="78.1" style="font-size:19px">Sampling</text><text x="303" y="99.6" class="m" style="font-size:14px">temperature</text></g></g>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="fd-rag" tabindex="0" role="button" aria-label="RAG"><title>RAG – click for details</title><rect class="g" x="412" y="30" width="174" height="104" rx="10"/><text x="499" y="78.1" style="font-size:19px">RAG</text><text x="499" y="99.6" class="m" style="font-size:14px">ground answers</text></g></g>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="fd-ft" tabindex="0" role="button" aria-label="Fine-tuning vs prompting"><title>Fine-tuning vs prompting – click for details</title><rect class="b" x="608" y="30" width="174" height="104" rx="10"/><text x="695" y="78.1" style="font-size:19px">Fine-tuning</text><text x="695" y="99.6" class="m" style="font-size:14px">when to use</text></g></g>
+<g class="stp" style="animation-delay:-8s"><g class="clk" data-k="fd-hall" tabindex="0" role="button" aria-label="Hallucination"><title>Hallucination – click for details</title><rect class="r" x="804" y="30" width="174" height="104" rx="10"/><text x="891" y="78.1" style="font-size:19px">Hallucination</text><text x="891" y="99.6" class="m" style="font-size:14px">mitigate</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><table><tr><th>Concept</th><th>One-line answer</th><th>Follow-up they may ask</th></tr><tr><td>Token</td><td>A chunk of text the model reads or writes; cost and limits are measured in tokens</td><td>Why are non-English texts often more tokens?</td></tr><tr><td>Context window</td><td>Maximum input plus output tokens per request</td><td>What happens when you exceed it?</td></tr><tr><td>Embedding</td><td>A vector representing meaning, used for similarity search</td><td>How do you choose chunk size?</td></tr><tr><td>RAG</td><td>Retrieve, then generate with the retrieved context</td><td>How do you evaluate retrieval quality?</td></tr><tr><td>Fine-tuning</td><td>Training on examples to change behaviour</td><td>When is it better than RAG?</td></tr><tr><td>Function calling</td><td>Model returns structured tool requests that your code executes</td><td>Who runs the function?</td></tr><tr><td>Hallucination</td><td>Plausible but false output</td><td>How do you measure and reduce it?</td></tr></table><pre data-lang="python"><code># RAG in 12 lines: embed, retrieve, generate (vector_store and embed() are placeholders for your stack)
+def answer(question, k=4):
+    qvec = embed(question)
+    hits = vector_store.search(qvec, top_k=k, filter={"tenant": current_tenant()})     # permissions applied at retrieval
+    context = "\n\n".join(f"[{h.id}] {h.text}" for h in hits)
+    prompt = f"Answer using ONLY the context. Cite ids in brackets. If the context is insufficient say so.\n\nContext:\n{context}\n\nQuestion: {question}"
+    return ask(prompt)</code></pre></article></section><section data-sec="Design, Code and Debug"><article data-key="design" data-title="3. System Design Problems with Solutions"><h2>3. System Design Problems with Solutions</h2><p class="el">System design questions ask you to design an agent or an integration platform end to end. Use the five-step framework and keep the design as simple as the problem allows. Here are five frequent problems with a solution outline for each; open the diagram popups for follow-up questions.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="sd">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated system design problems" data-order="sd"><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="sd-support" tabindex="0" role="button" aria-label="Design a customer support agent"><title>Design a customer support agent – click for details</title><rect class="y" x="20" y="30" width="174" height="104" rx="10"/><text x="107" y="78.1" style="font-size:19px">Support agent</text><text x="107" y="99.6" class="m" style="font-size:14px">policy in code</text></g></g>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="sd-code" tabindex="0" role="button" aria-label="Design a coding agent"><title>Design a coding agent – click for details</title><rect class="g" x="216" y="30" width="174" height="104" rx="10"/><text x="303" y="78.1" style="font-size:19px">Coding agent</text><text x="303" y="99.6" class="m" style="font-size:14px">tests verify</text></g></g>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="sd-know" tabindex="0" role="button" aria-label="Design an enterprise knowledge assistant"><title>Design an enterprise knowledge assistant – click for details</title><rect class="o" x="412" y="30" width="174" height="104" rx="10"/><text x="499" y="67.4" style="font-size:19px">Knowledge</text><text x="499" y="88.7" style="font-size:19px">assistant</text><text x="499" y="110.2" class="m" style="font-size:14px">permissions</text></g></g>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="sd-gw" tabindex="0" role="button" aria-label="Design a multi-tenant MCP gateway"><title>Design a multi-tenant MCP gateway – click for details</title><rect class="b" x="608" y="30" width="174" height="104" rx="10"/><text x="695" y="78.1" style="font-size:19px">MCP gateway</text><text x="695" y="99.6" class="m" style="font-size:14px">multi-tenant</text></g></g>
+<g class="stp" style="animation-delay:-8s"><g class="clk" data-k="sd-research" tabindex="0" role="button" aria-label="Design a research agent"><title>Design a research agent – click for details</title><rect class="r" x="804" y="30" width="174" height="104" rx="10"/><text x="891" y="78.1" style="font-size:19px">Research agent</text><text x="891" y="99.6" class="m" style="font-size:14px">parallel + cite</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><h3>Problem 1: customer support agent</h3><p class="el"><b>Requirements:</b> answer order questions, handle small refunds, escalate the rest, respect privacy. <b>Solution:</b> a router classifies intent; an agent with <b>narrow read tools</b> and a <b>refund tool behind a policy layer</b> (ownership check, amount limit, per-conversation cap); an approval step above the threshold; conversation state in a database; tracing; evals with wrong-user and injection cases; escalation with a summary. <b>Key point:</b> limits live in code, not in the prompt.</p><h3>Problem 2: coding agent</h3><p class="el"><b>Solution:</b> sandboxed tools for search, read, edit and run tests on a scratch branch; loop until tests pass or a limit is reached; <b>tests and linters as the objective verifier</b>; repository roots to limit scope; context management for large repos (search first, read only what is needed); human review before merge.</p><h3>Problem 3: enterprise knowledge assistant</h3><p class="el"><b>Solution:</b> MCP servers per system (documents, tickets, wiki) behind a gateway; <b>user identity propagated</b> to every retrieval and tool call; results filtered by the user permissions <b>at the source</b>; retrieval with reranking and citations; audit logs. <b>Key point:</b> never rely on the prompt for access control.</p><h3>Problem 4: multi-tenant MCP gateway</h3><p class="el"><b>Solution:</b> OAuth authentication, tenant and user mapped to policy, a <b>registry</b> of approved and versioned servers, routing, per-tenant rate limits and quotas, approval rules for write tools, audit logging, isolation between tenants, health checks and metrics. <b>Never pass tokens through</b> to downstream systems; use token exchange.</p><h3>Problem 5: research agent</h3><p class="el"><b>Solution:</b> an orchestrator plans sub-questions, worker agents search and read in <b>parallel</b> with a small tool set, a verifier checks claims against the sources, and a writer produces a cited report; budgets for steps, tokens and time; source-quality checks.</p><table><tr><th>Problem</th><th>Architecture</th><th>Top risk</th><th>Key control</th></tr><tr><td>Support agent</td><td>Router + agent + policy layer</td><td>Unauthorised refunds, injection</td><td>Policy in code, approvals</td></tr><tr><td>Coding agent</td><td>Sandboxed tools + test loop</td><td>Destructive commands</td><td>Sandbox, branch isolation, review</td></tr><tr><td>Knowledge assistant</td><td>MCP servers + RAG + gateway</td><td>Data leakage across users</td><td>Per-user filtering at source</td></tr><tr><td>MCP gateway</td><td>OAuth + registry + policy</td><td>Confused deputy, shadow servers</td><td>Audience-bound tokens, registry</td></tr><tr><td>Research agent</td><td>Orchestrator + parallel workers</td><td>Unreliable sources, cost</td><td>Verifier, citations, budgets</td></tr></table></article><article data-key="coding" data-title="4. Coding Exercises with Solutions"><h2>4. Coding Exercises with Solutions</h2><p class="el">Coding rounds usually ask you to implement small, realistic pieces without a framework. Practise these five until you can write them cleanly and explain every choice.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="cd">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated coding exercises" data-order="cd"><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="cd-loop" tabindex="0" role="button" aria-label="Implement the agent loop"><title>Implement the agent loop – click for details</title><rect class="g" x="20" y="30" width="174" height="104" rx="10"/><text x="107" y="78.1" style="font-size:19px">Agent loop</text><text x="107" y="99.6" class="m" style="font-size:14px">limits</text></g></g>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="cd-reg" tabindex="0" role="button" aria-label="Tool registry with validation"><title>Tool registry with validation – click for details</title><rect class="o" x="216" y="30" width="174" height="104" rx="10"/><text x="303" y="78.1" style="font-size:19px">Tool registry</text><text x="303" y="99.6" class="m" style="font-size:14px">validation</text></g></g>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="cd-retry" tabindex="0" role="button" aria-label="Retry with backoff and timeout"><title>Retry with backoff and timeout – click for details</title><rect class="b" x="412" y="30" width="174" height="104" rx="10"/><text x="499" y="77.7" style="font-size:18px">Retry + timeout</text><text x="499" y="99.2" class="m" style="font-size:14px">backoff</text></g></g>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="cd-compact" tabindex="0" role="button" aria-label="Context compaction"><title>Context compaction – click for details</title><rect class="y" x="608" y="30" width="174" height="104" rx="10"/><text x="695" y="78.1" style="font-size:19px">Compaction</text><text x="695" y="99.6" class="m" style="font-size:14px">summarise</text></g></g>
+<g class="stp" style="animation-delay:-8s"><g class="clk" data-k="cd-policy" tabindex="0" role="button" aria-label="Policy gate"><title>Policy gate – click for details</title><rect class="r" x="804" y="30" width="174" height="104" rx="10"/><text x="891" y="78.1" style="font-size:19px">Policy gate</text><text x="891" y="99.6" class="m" style="font-size:14px">default deny</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><h3>Exercise 1: agent loop with limits</h3><p class="el"><b>What they look for:</b> correct message history, executing every tool call, returning errors to the model, a step limit, repeat detection and clean termination.</p><pre data-lang="python"><code>def run_agent(goal, llm, registry, max_steps=10, max_repeats=2):
+    messages, seen = [{"role": "user", "content": goal}], {}
+    for step in range(max_steps):
+        resp = llm(messages, registry.schemas())
+        if not resp.tool_calls:
+            return {"status": "done", "answer": resp.text}
+        messages.append(resp.as_message())
+        results = []
+        for call in resp.tool_calls:
+            key = (call.name, json.dumps(call.args, sort_keys=True))
+            seen[key] = seen.get(key, 0) + 1
+            if seen[key] &gt; max_repeats:
+                return {"status": "stuck", "reason": f"repeated call to {call.name}"}
+            results.append(registry.execute(call))               # never raises: returns an error result instead
+        messages.append({"role": "user", "content": results})
+    return {"status": "limit"}</code></pre><h3>Exercise 2: tool registry with validation</h3><pre data-lang="python"><code>import jsonschema, inspect
+class Registry:
+    def __init__(self): self.tools = {}
+    def register(self, fn, schema, description):
+        self.tools[fn.__name__] = {"fn": fn, "schema": schema, "description": description}
+        return fn
+    def schemas(self):
+        return [{"name": n, "description": t["description"], "input_schema": t["schema"]} for n, t in self.tools.items()]
+    def execute(self, call):
+        tool = self.tools.get(call.name)
+        if not tool:
+            return {"type": "tool_result", "tool_use_id": call.id, "content": f"Unknown tool {call.name}", "is_error": True}
+        try:
+            jsonschema.validate(call.args, tool["schema"])                      # validate BEFORE running
+            return {"type": "tool_result", "tool_use_id": call.id, "content": str(tool["fn"](**call.args))}
+        except Exception as err:
+            return {"type": "tool_result", "tool_use_id": call.id, "content": f"Error: {err}", "is_error": True}</code></pre><h3>Exercise 3: retry with exponential backoff, jitter and a deadline</h3><pre data-lang="python"><code>import time, random
+def retry(fn, attempts=5, base=0.4, deadline_s=20, transient=(TimeoutError, ConnectionError)):
+    start = time.monotonic()
+    for i in range(attempts):
+        try:
+            return fn()
+        except transient:
+            delay = base * (2 ** i) + random.uniform(0, base)
+            if i == attempts - 1 or time.monotonic() - start + delay &gt; deadline_s:
+                raise                                          # out of attempts or time
+            time.sleep(delay)
+# Discussion: retry only transient errors; writes need idempotency keys; honour Retry-After headers.</code></pre><h3>Exercise 4: context compaction</h3><pre data-lang="python"><code>def compact(messages, summarise, keep_last=6):
+    if len(messages) &lt;= keep_last + 1:
+        return messages
+    cut = len(messages) - keep_last
+    while cut &lt; len(messages) and has_tool_result(messages[cut]):      # never split a tool_use / tool_result pair
+        cut -= 1
+    old, recent = messages[1:cut], messages[cut:]
+    summary = summarise(old, keep=["goal", "decisions", "constraints", "open questions"])
+    return [messages[0], {"role": "user", "content": "Summary of earlier work:\n" + summary}] + recent</code></pre><h3>Exercise 5: policy gate (default deny)</h3><pre data-lang="python"><code>def decide(call, user):
+    rule = POLICY.get(call.name)
+    if rule is None:                                   return ("deny", "unknown tool")
+    if user.role not in rule.get("roles", [user.role]): return ("deny", "role not allowed")
+    if call.name == "issue_refund" and call.args["amount"] &gt; rule["max_amount"]:
+                                                        return ("approve", "over limit: human approval needed")
+    return ("allow", "")
+# Always log (user, tool, args, decision). Unknown tools are denied by default.</code></pre></article><article data-key="debug" data-title="5. Debugging and Troubleshooting Scenarios"><h2>5. Debugging and Troubleshooting Scenarios</h2><p class="el">Scenario questions test judgement under realistic problems. A good answer follows a method: <b>look at the trace first</b>, form a hypothesis, make one change, and verify with evals. Here are five common scenarios and how to handle them.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="db">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated debugging scenarios" data-order="db"><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="db-loop" tabindex="0" role="button" aria-label="Agent keeps looping"><title>Agent keeps looping – click for details</title><rect class="o" x="20" y="30" width="174" height="104" rx="10"/><text x="107" y="78.1" style="font-size:19px">Looping</text><text x="107" y="99.6" class="m" style="font-size:14px">stop it</text></g></g>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="db-tool" tabindex="0" role="button" aria-label="Wrong tool chosen"><title>Wrong tool chosen – click for details</title><rect class="g" x="216" y="30" width="174" height="104" rx="10"/><text x="303" y="78.1" style="font-size:19px">Wrong tool</text><text x="303" y="99.6" class="m" style="font-size:14px">clearer tools</text></g></g>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="db-cost" tabindex="0" role="button" aria-label="Cost doubled overnight"><title>Cost doubled overnight – click for details</title><rect class="y" x="412" y="30" width="174" height="104" rx="10"/><text x="499" y="78.1" style="font-size:19px">Cost spike</text><text x="499" y="99.6" class="m" style="font-size:14px">trace it</text></g></g>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="db-inj" tabindex="0" role="button" aria-label="Injection found in a document"><title>Injection found in a document – click for details</title><rect class="r" x="608" y="30" width="174" height="104" rx="10"/><text x="695" y="78.1" style="font-size:19px">Injection</text><text x="695" y="99.6" class="m" style="font-size:14px">contain</text></g></g>
+<g class="stp" style="animation-delay:-8s"><g class="clk" data-k="db-hall" tabindex="0" role="button" aria-label="Wrong arguments or invented data"><title>Wrong arguments or invented data – click for details</title><rect class="b" x="804" y="30" width="174" height="104" rx="10"/><text x="891" y="78.1" style="font-size:19px">Invented args</text><text x="891" y="99.6" class="m" style="font-size:14px">validate</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><table><tr><th>Scenario</th><th>Likely causes</th><th>What you do</th></tr><tr><td>Agent loops forever</td><td>Tool results do not help, unclear stop condition, no limits</td><td>Read the trace, return useful errors, clarify done, add step limits and repeat detection, escalate</td></tr><tr><td>Picks the wrong tool</td><td>Overlapping or vague tools, too many tools</td><td>Rewrite descriptions with when and when-not, merge tools, add examples, re-run evals</td></tr><tr><td>Cost doubled overnight</td><td>Longer contexts, loops, retries, model change, caching off</td><td>Compare traces by step, fix the cause, add budgets and alerts</td></tr><tr><td>Injection found in a document</td><td>Untrusted content treated as instructions</td><td>Contain, review logs, rotate credentials, isolate untrusted content from powerful tools, add eval case</td></tr><tr><td>Invented ids or arguments</td><td>Loose schemas, no lookup step</td><td>Strict schemas, validate against the database, error tells model how to look up valid ids</td></tr></table><pre data-lang="python"><code># Fast triage from traces: which step is expensive or repeated?
+runs = traces.query(last="24h", agent="support")
+by_tool = collections.Counter(c.tool for r in runs for c in r.tool_calls)
+repeats = [r.id for r in runs if any(n &gt; 2 for n in collections.Counter((c.tool, c.args_hash) for c in r.tool_calls).values())]
+print("calls by tool:", by_tool.most_common(5))
+print("runs with repeated identical calls:", len(repeats), "of", len(runs))
+print("avg tokens/run:", sum(r.total_tokens for r in runs) / len(runs), "avg steps:", sum(r.steps for r in runs) / len(runs))</code></pre></article></section><section data-sec="Questions and Answers"><article data-key="behavioural" data-title="6. Behavioural and Experience Questions with Sample Answers"><h2>6. Behavioural and Experience Questions with Sample Answers</h2><p class="el">Experience questions probe whether you have really built and operated these systems. Prepare <b>three stories</b> with a situation, your actions and measurable results, plus <b>one failure</b> with what you learned. Below are common prompts and the points a strong answer includes.</p><table><tr><th>Question</th><th>What a strong answer includes</th></tr><tr><td>Tell me about an agent or LLM system you built</td><td>Goal and users, architecture, tools and data, guardrails, evals, results with numbers, what you would change</td></tr><tr><td>Describe your experience with MCP or tool integration standards</td><td>Servers you wrote, tool design decisions, auth and security choices, testing with Inspector and evals, how you compared alternatives</td></tr><tr><td>What was the hardest bug in an LLM system?</td><td>Symptom, how traces led to the cause (for example vague tool description), the fix and the new eval that prevents regression</td></tr><tr><td>How did you keep it safe?</td><td>Least privilege, approvals, injection defences, sandboxing, audit logs, incident handling</td></tr><tr><td>How did you measure quality?</td><td>Eval suite, graders, trajectory checks, production sampling, metrics such as success rate and cost per task</td></tr><tr><td>Tell me about a time you pushed back on using an agent</td><td>You chose a workflow because the steps were known, with cost and reliability numbers</td></tr></table><h3>Sample answer outline: experience with MCP</h3><p class="el"><i>Situation:</i> several teams had each built their own integrations for internal copilots, which duplicated work and had inconsistent security. <i>Actions:</i> I designed a small set of task-oriented MCP servers on top of a shared service layer, added a gateway with OAuth, per-user identity, approvals for write tools and audit logging, tested tools with the Inspector and an eval suite for tool selection and injection cases, and documented tool design guidelines. <i>Results:</i> fewer duplicate integrations, higher tool-selection accuracy after rewriting descriptions, and a complete audit trail. <i>Lesson:</i> an early version exposed too many fine-grained tools and the model chose poorly, so we merged them into workflow-level tools.</p><span class="note">Replace this outline with your own real project. Specific numbers, failures and trade-offs you can explain are far more convincing than a generic story.</span></article><article data-key="qa" data-title="7. Interview Q&amp;A: Agentic AI, Agents and MCP (Questions with Solutions)"><h2>7. Interview Q&A: Agentic AI, Agents and MCP (Questions with Solutions)</h2><div class="qa-item"><p class="qq"><b>Q1. [Concepts] What is an AI agent and how does it differ from a chatbot?</b></p><div class="aa"><p><b>Short answer:</b> An agent pursues a goal over several steps by choosing actions, calling tools and using the results, while a chatbot only replies to messages.</p><p>Autonomy and tool use are the difference, not the underlying model.</p></div></div><div class="qa-item"><p class="qq"><b>Q2. [Concepts] Workflow or agent: how do you decide?</b></p><div class="aa"><p><b>Short answer:</b> Use a workflow when the steps are known in advance because it is cheaper, faster and easier to test; use an agent when the path cannot be predicted.</p><p>Start simple and add autonomy only when measurements justify it.</p></div></div><div class="qa-item"><p class="qq"><b>Q3. [Concepts] Explain the agent loop.</b></p><div class="aa"><p><b>Short answer:</b> Goal and context, reason and plan, act with a tool, observe the result, reflect, then stop or repeat, bounded by limits.</p><p>The harness executes tools and enforces step, token and time limits.</p></div></div><div class="qa-item"><p class="qq"><b>Q4. [Concepts] What is ReAct?</b></p><div class="aa"><p><b>Short answer:</b> Interleaving short reasoning with tool actions so each decision uses the latest observation.</p><p>Plan-and-execute is the alternative that writes a plan first.</p></div></div><div class="qa-item"><p class="qq"><b>Q5. [Concepts] What are the common workflow patterns?</b></p><div class="aa"><p><b>Short answer:</b> Prompt chaining, routing, parallelisation, orchestrator-workers and evaluator-optimizer.</p><p>Name one use case for each.</p></div></div><div class="qa-item"><p class="qq"><b>Q6. [Concepts] When would you use multiple agents?</b></p><div class="aa"><p><b>Short answer:</b> For specialised roles, parallel work, separation of duties or when one context cannot hold the task, accepting extra cost and coordination risk.</p><p>Start with one agent and split only with evidence.</p></div></div><div class="qa-item"><p class="qq"><b>Q7. [Tools] How does tool calling work?</b></p><div class="aa"><p><b>Short answer:</b> You send tool schemas, the model returns a structured request, your code validates and runs it, and you send the result back until the model finishes.</p><p>The model never executes anything itself.</p></div></div><div class="qa-item"><p class="qq"><b>Q8. [Tools] How do you design a good tool?</b></p><div class="aa"><p><b>Short answer:</b> Task-oriented, one clear purpose, precise schema, compact output, instructive errors, idempotent behaviour and confirmation for destructive actions.</p><p>Treat the description like a prompt.</p></div></div><div class="qa-item"><p class="qq"><b>Q9. [Tools] Why should you validate tool arguments?</b></p><div class="aa"><p><b>Short answer:</b> Model output is untrusted and can be wrong or malicious, so arguments must match the schema and policy before execution.</p><p>Return clear errors so the model can correct itself.</p></div></div><div class="qa-item"><p class="qq"><b>Q10. [Memory] How do you handle memory and context?</b></p><div class="aa"><p><b>Short answer:</b> Short-term in the context window, long-term in an external store, retrieval for knowledge, explicit state for progress, with summarisation and trimming to keep context useful.</p><p>More context is not always better.</p></div></div><div class="qa-item"><p class="qq"><b>Q11. [Memory] How do you resume a long-running agent after a crash?</b></p><div class="aa"><p><b>Short answer:</b> Checkpoint messages and state in a durable database after each step, keep workers stateless and make side effects idempotent.</p><p>Use idempotency keys for writes.</p></div></div><div class="qa-item"><p class="qq"><b>Q12. [MCP] What is MCP and what problem does it solve?</b></p><div class="aa"><p><b>Short answer:</b> An open protocol connecting AI apps to tools, data and prompts, replacing N by M custom integrations with reusable servers.</p><p>It standardises discovery and invocation, not agent behaviour.</p></div></div><div class="qa-item"><p class="qq"><b>Q13. [MCP] Explain host, client and server.</b></p><div class="aa"><p><b>Short answer:</b> The host owns the model and policy, creates one client per server, and each client keeps a stateful session with one server exposing capabilities.</p><p>Consent and security decisions live in the host.</p></div></div><div class="qa-item"><p class="qq"><b>Q14. [MCP] Tools vs resources vs prompts?</b></p><div class="aa"><p><b>Short answer:</b> Tools are model-controlled functions, resources are application-controlled read-only data by URI, prompts are user-controlled templates.</p><p>Who controls each one is the key distinction.</p></div></div><div class="qa-item"><p class="qq"><b>Q15. [MCP] Which transports exist and when do you use each?</b></p><div class="aa"><p><b>Short answer:</b> stdio for local subprocess servers and Streamable HTTP for remote servers needing authentication and scaling.</p><p>Both carry JSON-RPC 2.0 messages.</p></div></div><div class="qa-item"><p class="qq"><b>Q16. [MCP] How would you secure a remote MCP server?</b></p><div class="aa"><p><b>Short answer:</b> OAuth-based authorization with token validation, audience and scope checks on every request, no token passthrough, rate limits, audit logs and approvals for sensitive tools.</p><p>Follow the authorization section of the current specification.</p></div></div><div class="qa-item"><p class="qq"><b>Q17. [MCP] What is tool poisoning and how do you defend against it?</b></p><div class="aa"><p><b>Short answer:</b> Malicious instructions hidden in tool metadata, or definitions changed after approval; defend by trusting only reviewed servers, pinning versions and alerting on definition changes.</p><p>Treat tool descriptions as untrusted input.</p></div></div><div class="qa-item"><p class="qq"><b>Q18. [MCP] MCP versus function calling versus OpenAPI?</b></p><div class="aa"><p><b>Short answer:</b> Function calling is the model API mechanism, OpenAPI describes REST APIs, and MCP is a protocol for exposing reusable tools, resources and prompts to many clients.</p><p>Keep logic in a service with thin adapters for each.</p></div></div><div class="qa-item"><p class="qq"><b>Q19. [MCP] MCP versus A2A?</b></p><div class="aa"><p><b>Short answer:</b> MCP connects an agent to tools and data; A2A lets independent agents discover each other and exchange tasks.</p><p>They are complementary.</p></div></div><div class="qa-item"><p class="qq"><b>Q20. [MCP] Why use a gateway and a registry?</b></p><div class="aa"><p><b>Short answer:</b> Central authentication, policy, rate limits, routing and audit, plus a catalogue of approved, versioned servers.</p><p>They prevent shadow integrations and give governance.</p></div></div><div class="qa-item"><p class="qq"><b>Q21. [Safety] What is prompt injection and how do you mitigate it?</b></p><div class="aa"><p><b>Short answer:</b> Untrusted content carrying instructions that try to steer the agent; mitigate with least privilege, treating output as data, isolation, approvals, egress control and monitoring.</p><p>No single filter is enough.</p></div></div><div class="qa-item"><p class="qq"><b>Q22. [Safety] What is excessive agency?</b></p><div class="aa"><p><b>Short answer:</b> Giving an agent more tools, permissions or autonomy than the task needs so mistakes or attacks cause large harm.</p><p>Use minimal tools, scoped credentials and human approval.</p></div></div><div class="qa-item"><p class="qq"><b>Q23. [Safety] Where should humans approve actions?</b></p><div class="aa"><p><b>Short answer:</b> At irreversible, costly or externally visible steps such as payments, deletions and outbound messages.</p><p>Show the exact action and arguments.</p></div></div><div class="qa-item"><p class="qq"><b>Q24. [Safety] How do you enforce access control in a RAG or agent system?</b></p><div class="aa"><p><b>Short answer:</b> Propagate user identity to every retrieval and tool call and filter results at the source, never relying on the prompt.</p><p>Audit access.</p></div></div><div class="qa-item"><p class="qq"><b>Q25. [Quality] How do you evaluate an agent?</b></p><div class="aa"><p><b>Short answer:</b> A suite of representative tasks with graders for outcome and trajectory, plus safety and injection cases, run on every change.</p><p>Add production failures as new tests.</p></div></div><div class="qa-item"><p class="qq"><b>Q26. [Quality] How do you reduce hallucinations?</b></p><div class="aa"><p><b>Short answer:</b> Ground with retrieval and tools, require citations, use schemas, verify programmatically and allow the system to say it does not know.</p><p>Measure with evals.</p></div></div><div class="qa-item"><p class="qq"><b>Q27. [Ops] How do you control cost and latency?</b></p><div class="aa"><p><b>Short answer:</b> Cap steps and tokens, route easy steps to cheaper models, cache prompts, shorten context, parallelise independent work and stop early.</p><p>Track cost per successful task.</p></div></div><div class="qa-item"><p class="qq"><b>Q28. [Ops] How do you make agents reliable in production?</b></p><div class="aa"><p><b>Short answer:</b> Retries with backoff for transient errors, timeouts and budgets, schema validation, idempotency, checkpoints, escalation and observability.</p><p>Design for failure.</p></div></div><div class="qa-item"><p class="qq"><b>Q29. [Design] Design a customer-support agent.</b></p><div class="aa"><p><b>Short answer:</b> Router, narrow read and write tools behind a policy layer with ownership and limits, approval above thresholds, state, tracing, evals and escalation.</p><p>Limits live in code, not in the prompt.</p></div></div><div class="qa-item"><p class="qq"><b>Q30. [Design] Design an enterprise assistant that respects permissions.</b></p><div class="aa"><p><b>Short answer:</b> MCP servers per system behind a gateway, user identity propagated to every call, permission filtering at the source, citations and audit.</p><p>The model must never see data the user could not.</p></div></div><div class="qa-item"><p class="qq"><b>Q31. [Debug] The agent keeps repeating the same tool call. What do you do?</b></p><div class="aa"><p><b>Short answer:</b> Read the trace, make tool results more informative, clarify the stop condition, add step limits and repeat detection, and escalate.</p><p>Add the case to the evals.</p></div></div><div class="qa-item"><p class="qq"><b>Q32. [Experience] How do you present your experience with MCP or orchestration standards?</b></p><div class="aa"><p><b>Short answer:</b> Describe a real project with design decisions, security and evals, using situation, action and result, with trade-offs and failures, claiming only what you can defend.</p><p>Concrete details build credibility.</p></div></div></article><article data-key="cheat" data-title="8. Cheat Sheet and Mind Map"><h2>8. Cheat Sheet and Mind Map</h2><table><tr><th>Topic</th><th>Remember</th></tr><tr><td>Answer framework</td><td>Clarify, least autonomy, tools and data, safety and evals, trade-offs</td></tr><tr><td>Fundamentals</td><td>Context window, temperature, RAG vs fine-tune, hallucination mitigation</td></tr><tr><td>Agent</td><td>Loop with limits; harness runs tools; validate, log, escalate</td></tr><tr><td>MCP</td><td>Host, client, server; tools, resources, prompts; JSON-RPC; stdio or Streamable HTTP; OAuth</td></tr><tr><td>Security</td><td>Untrusted output, least privilege, approvals, no token passthrough, sandbox</td></tr><tr><td>Design</td><td>Support agent, coding agent, knowledge assistant, MCP gateway, research agent</td></tr><tr><td>Coding</td><td>Loop, registry, retry, compaction, policy gate</td></tr><tr><td>Debug</td><td>Trace first; one change at a time; verify with evals</td></tr><tr><td>Behavioural</td><td>Situation, action, result, plus one failure</td></tr></table><div class="diagramwrap"><svg viewBox="0 0 1000 600" role="img" aria-label="Animated AI interview mind map"><ellipse class="g" cx="500" cy="300" rx="125" ry="62"/>
+<text x="500" y="296" class="t" style="font-size:24px">AI Interviews</text>
+<text x="500" y="324" class="m">think · build · protect</text>
+<path class="soft flow" d="M500,300 L500,65"/>
+<rect class="g" x="385" y="13" width="230" height="104" rx="14"/><text x="500" y="43" style="font-weight:700;fill:var(--red);font-size:18px">Fundamentals</text>
+<text x="500" y="67" class="m" style="font-size:15px">tokens · context</text>
+<text x="500" y="86" class="m" style="font-size:15px">RAG vs fine-tune</text>
+<text x="500" y="105" class="m" style="font-size:15px">hallucination</text>
+<path class="soft flow" d="M500,300 L820,183"/>
+<rect class="y" x="705" y="131" width="230" height="104" rx="14"/><text x="820" y="161" style="font-weight:700;fill:var(--red);font-size:18px">Agents</text>
+<text x="820" y="185" class="m" style="font-size:15px">loop</text>
+<text x="820" y="204" class="m" style="font-size:15px">tools</text>
+<text x="820" y="223" class="m" style="font-size:15px">memory</text>
+<path class="soft flow" d="M500,300 L820,417"/>
+<rect class="o" x="705" y="365" width="230" height="104" rx="14"/><text x="820" y="395" style="font-weight:700;fill:var(--red);font-size:18px">MCP</text>
+<text x="820" y="419" class="m" style="font-size:15px">host · client · server</text>
+<text x="820" y="438" class="m" style="font-size:15px">primitives</text>
+<text x="820" y="457" class="m" style="font-size:15px">auth</text>
+<path class="soft flow" d="M500,300 L500,535"/>
+<rect class="b" x="385" y="483" width="230" height="104" rx="14"/><text x="500" y="513" style="font-weight:700;fill:var(--red);font-size:18px">Design</text>
+<text x="500" y="537" class="m" style="font-size:15px">support agent</text>
+<text x="500" y="556" class="m" style="font-size:15px">coding agent</text>
+<text x="500" y="575" class="m" style="font-size:15px">MCP gateway</text>
+<path class="soft flow" d="M500,300 L180,418"/>
+<rect class="r" x="65" y="366" width="230" height="104" rx="14"/><text x="180" y="396" style="font-weight:700;fill:var(--red);font-size:18px">Safety</text>
+<text x="180" y="420" class="m" style="font-size:15px">injection</text>
+<text x="180" y="439" class="m" style="font-size:15px">least privilege</text>
+<text x="180" y="458" class="m" style="font-size:15px">approvals</text>
+<path class="soft flow" d="M500,300 L180,182"/>
+<rect class="y" x="65" y="130" width="230" height="104" rx="14"/><text x="180" y="160" style="font-weight:700;fill:var(--red);font-size:18px">Ops</text>
+<text x="180" y="184" class="m" style="font-size:15px">evals</text>
+<text x="180" y="203" class="m" style="font-size:15px">tracing</text>
+<text x="180" y="222" class="m" style="font-size:15px">cost</text></svg></div></article></section></div>
+<div id="kModal" role="dialog" aria-modal="true" aria-labelledby="kTitle" aria-hidden="true">
+  <div class="kcard">
+    <div class="khead"><span class="ico" id="kIcon"></span><div style="flex:1;min-width:0"><h3 id="kTitle"></h3><div class="meta" id="kMeta"></div></div><button type="button" class="kclose" id="kClose" aria-label="Close">✕</button></div>
+    <div class="kbody" id="kBody"></div>
+    <div class="kfoot"><button type="button" id="kPrev">◀ Prev</button><span class="pos" id="kPos"></span><button type="button" id="kNext" class="primary">Next ▶</button></div>
+  </div>
+</div>
+<script>
+(function(){
+  var FONTS = {
+    patrick:  ["'Patrick Hand','Caveat',cursive", "'Caveat',cursive", "'Caveat',cursive"],
+    caveat:   ["'Caveat',cursive", "'Caveat',cursive", "'Caveat',cursive"],
+    kalam:    ["'Kalam',cursive", "'Kalam',cursive", "'Kalam',cursive"],
+    indie:    ["'Indie Flower',cursive", "'Indie Flower',cursive", "'Indie Flower',cursive"],
+    architect:["'Architects Daughter',cursive", "'Architects Daughter',cursive", "'Architects Daughter',cursive"],
+    serif:    ["'Merriweather',Georgia,serif", "'Merriweather',Georgia,serif", "Consolas,'Courier New',monospace"],
+    sans:     ["'Inter',system-ui,'Segoe UI',sans-serif", "'Inter',system-ui,'Segoe UI',sans-serif", "Consolas,'Courier New',monospace"],
+    mono:     ["Consolas,'Courier New',monospace", "Consolas,'Courier New',monospace", "Consolas,'Courier New',monospace"]
+  };
+  var root = document.documentElement, KEY = 'notes-appearance-v1';
+  var themeSel = document.getElementById('themeSel'), fontSel = document.getElementById('fontSel'), sizeSel = document.getElementById('sizeSel');
+  var DEF = { theme:'classic', font:'serif', size:'20px' };
+  function load(){ try { return Object.assign({}, DEF, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch(e){ return Object.assign({}, DEF); } }
+  function save(s){ try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e){} }
+  function apply(s){
+    if (s.theme === 'classic') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', s.theme);
+    var f = FONTS[s.font] || FONTS.patrick;
+    root.style.setProperty('--body-font', f[0]); root.style.setProperty('--head-font', f[1]); root.style.setProperty('--code-font', f[2]);
+    root.style.setProperty('--fs', s.size);
+    themeSel.value = s.theme; fontSel.value = s.font; sizeSel.value = s.size;
+  }
+  var state = load(); apply(state);
+  function change(){ state = { theme:themeSel.value, font:fontSel.value, size:sizeSel.value }; apply(state); save(state); }
+  themeSel.onchange = fontSel.onchange = sizeSel.onchange = change;
+  document.getElementById('resetBtn').onclick = function(){ state = Object.assign({}, DEF); apply(state); save(state); };
+})();
+</script>
+<script>(function(){
+  var COURSE_KEY = 'ai-interview-v1', store = { done:{}, last:null, collapsed:{} };
+  try { var s0 = JSON.parse(localStorage.getItem(COURSE_KEY) || '{}'); for (var k0 in s0) store[k0] = s0[k0]; } catch(e){}
+  function save(){ try { localStorage.setItem(COURSE_KEY, JSON.stringify(store)); } catch(e){} }
+  function mk(tag, cls, html){ var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  var HX = {"approach":[{"en":"Interviews cover fundamentals, agent and MCP concepts, system design, coding and experience. Answer in five steps: clarify, choose the least autonomy, define tools and data, cover safety and evals, and close with trade offs.","hi":"Interviews \u092e\u0947\u0902 fundamentals, agent \u0914\u0930 MCP concepts, system design, coding \u0914\u0930 experience \u0906\u0924\u0947 \u0939\u0948\u0902\u0964 \u092a\u093e\u0901\u091a steps \u092e\u0947\u0902 \u091c\u0935\u093e\u092c \u0926\u094b: clarify \u0915\u0930\u094b, \u0915\u092e \u0938\u0947 \u0915\u092e autonomy \u091a\u0941\u0928\u094b, tools \u0914\u0930 data define \u0915\u0930\u094b, safety \u0914\u0930 evals cover \u0915\u0930\u094b, \u0914\u0930 trade offs \u092a\u0930 \u0916\u0924\u094d\u092e \u0915\u0930\u094b\u0964","k":["fr-clar","fr-arch","fr-tools","fr-safe","fr-trade"]},{"en":"Always bring up safety, evaluation and cost without being asked.","hi":"Safety, evaluation \u0914\u0930 cost \u0915\u093e \u091c\u093c\u093f\u0915\u094d\u0930 \u092c\u093f\u0928\u093e \u092a\u0942\u091b\u0947 \u0939\u092e\u0947\u0936\u093e \u0915\u0930\u094b\u0964","k":[]}],"fundamentals":[{"en":"Know the fundamentals: the context window limits tokens and drives cost, temperature controls randomness, RAG grounds answers in your data, fine tuning changes behaviour, and hallucinations are reduced by grounding, citations, schemas and verification.","hi":"Fundamentals \u091c\u093e\u0928\u094b: context window tokens \u0938\u0940\u092e\u093f\u0924 \u0915\u0930\u0924\u0940 \u0939\u0948 \u0914\u0930 cost \u0924\u092f \u0915\u0930\u0924\u0940 \u0939\u0948, temperature randomness control \u0915\u0930\u0924\u093e \u0939\u0948, RAG \u0906\u092a\u0915\u0947 data \u0938\u0947 answers \u0915\u094b grounded \u0915\u0930\u0924\u093e \u0939\u0948, fine tuning behaviour \u092c\u0926\u0932\u0924\u0940 \u0939\u0948, \u0914\u0930 hallucinations grounding, citations, schemas \u0914\u0930 verification \u0938\u0947 \u0918\u091f\u0924\u0947 \u0939\u0948\u0902\u0964","k":["fd-ctx","fd-sample","fd-rag","fd-ft","fd-hall"]},{"en":"Try prompting and RAG before fine tuning.","hi":"Fine tuning \u0938\u0947 \u092a\u0939\u0932\u0947 prompting \u0914\u0930 RAG \u0906\u091c\u093c\u092e\u093e\u0913\u0964","k":[]}],"design":[{"en":"For design problems use the five step framework. Support agent: router, narrow tools, policy layer and approvals. Coding agent: sandbox with tests as the verifier. Knowledge assistant: permissions enforced at the source. Gateway: OAuth, registry and audit. Research agent: parallel workers with a verifier.","hi":"Design problems \u0915\u0947 \u0932\u093f\u090f \u092a\u093e\u0901\u091a step framework use \u0915\u0930\u094b\u0964 Support agent: router, narrow tools, policy layer \u0914\u0930 approvals\u0964 Coding agent: sandbox \u0914\u0930 verifier \u0915\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 tests\u0964 Knowledge assistant: permissions source \u092a\u0930 enforce\u0964 Gateway: OAuth, registry \u0914\u0930 audit\u0964 Research agent: verifier \u0915\u0947 \u0938\u093e\u0925 parallel workers\u0964","k":["sd-support","sd-code","sd-know","sd-gw","sd-research"]},{"en":"Never rely on the prompt for access control.","hi":"Access control \u0915\u0947 \u0932\u093f\u090f prompt \u092a\u0930 \u092d\u0930\u094b\u0938\u093e \u092e\u0924 \u0915\u0930\u094b\u0964","k":[]}],"coding":[{"en":"Practise five exercises without a framework: an agent loop with step limits and repeat detection, a tool registry with schema validation, retry with backoff jitter and a deadline, context compaction that keeps tool pairs together, and a default deny policy gate.","hi":"\u092c\u093f\u0928\u093e framework \u0915\u0947 \u092a\u093e\u0901\u091a exercises practise \u0915\u0930\u094b: step limits \u0914\u0930 repeat detection \u0935\u093e\u0932\u093e agent loop, schema validation \u0935\u093e\u0932\u093e tool registry, backoff jitter \u0914\u0930 deadline \u0915\u0947 \u0938\u093e\u0925 retry, tool pairs \u0915\u094b \u0938\u093e\u0925 \u0930\u0916\u0928\u0947 \u0935\u093e\u0932\u093e context compaction, \u0914\u0930 default deny policy gate\u0964","k":["cd-loop","cd-reg","cd-retry","cd-compact","cd-policy"]},{"en":"Explain every choice as you code.","hi":"Code \u0915\u0930\u0924\u0947 \u0938\u092e\u092f \u0939\u0930 choice \u0938\u092e\u091d\u093e\u0913\u0964","k":[]}],"debug":[{"en":"For debugging scenarios look at the trace first, form a hypothesis, change one thing and verify with evals. Loops need useful errors and limits, wrong tools need clearer descriptions, cost spikes need trace comparison, injection needs containment and isolation, and invented ids need strict schemas.","hi":"Debugging scenarios \u092e\u0947\u0902 \u092a\u0939\u0932\u0947 trace \u0926\u0947\u0916\u094b, hypothesis \u092c\u0928\u093e\u0913, \u090f\u0915 \u091a\u0940\u091c\u093c \u092c\u0926\u0932\u094b \u0914\u0930 evals \u0938\u0947 verify \u0915\u0930\u094b\u0964 Loops \u0915\u094b useful errors \u0914\u0930 limits \u091a\u093e\u0939\u093f\u090f, wrong tools \u0915\u094b \u0938\u093e\u092b\u093c descriptions, cost spikes \u0915\u094b traces \u0915\u0940 \u0924\u0941\u0932\u0928\u093e, injection \u0915\u094b containment \u0914\u0930 isolation, \u0914\u0930 invented ids \u0915\u094b strict schemas\u0964","k":["db-loop","db-tool","db-cost","db-inj","db-hall"]},{"en":"Change one thing at a time and verify.","hi":"\u090f\u0915 \u092c\u093e\u0930 \u092e\u0947\u0902 \u090f\u0915 \u091a\u0940\u091c\u093c \u092c\u0926\u0932\u094b \u0914\u0930 verify \u0915\u0930\u094b\u0964","k":[]}],"behavioural":[{"en":"Prepare three real stories with situation, action and results, plus one failure and what you learned. For MCP experience, describe the servers, tool design decisions, security choices and evals, and be honest about trade offs.","hi":"\u0924\u0940\u0928 \u0905\u0938\u0932\u0940 stories \u0924\u0948\u092f\u093e\u0930 \u0930\u0916\u094b: situation, action \u0914\u0930 results \u0915\u0947 \u0938\u093e\u0925, \u0914\u0930 \u090f\u0915 failure \u0935 \u0909\u0938\u0938\u0947 \u0938\u0940\u0916\u093e \u0939\u0941\u0906\u0964 MCP experience \u0915\u0947 \u0932\u093f\u090f servers, tool design decisions, security choices \u0914\u0930 evals \u092c\u0924\u093e\u0913, \u0914\u0930 trade offs \u0915\u0947 \u092c\u093e\u0930\u0947 \u092e\u0947\u0902 \u0908\u092e\u093e\u0928\u0926\u093e\u0930 \u0930\u0939\u094b\u0964","k":[]},{"en":"Only claim what you can explain in detail.","hi":"\u0938\u093f\u0930\u094d\u092b \u0935\u0939\u0940 \u0926\u093e\u0935\u093e \u0915\u0930\u094b \u091c\u093f\u0938\u0947 \u0906\u092a detail \u092e\u0947\u0902 \u0938\u092e\u091d\u093e \u0938\u0915\u094b\u0964","k":[]}],"qa":[{"en":"These are the main interview questions with solutions: concepts, tools, memory, MCP, safety, quality, operations, design, debugging and experience. Practise answering each in two or three sentences, then go deeper.","hi":"\u092f\u0947 solutions \u0915\u0947 \u0938\u093e\u0925 \u092e\u0941\u0916\u094d\u092f interview questions \u0939\u0948\u0902: concepts, tools, memory, MCP, safety, quality, operations, design, debugging \u0914\u0930 experience\u0964 \u0939\u0930 \u090f\u0915 \u0915\u093e \u091c\u0935\u093e\u092c \u0926\u094b \u092f\u093e \u0924\u0940\u0928 sentences \u092e\u0947\u0902 \u0926\u0947\u0928\u0947 \u0915\u0940 practise \u0915\u0930\u094b, \u092b\u093f\u0930 \u0917\u0939\u0930\u093e\u0908 \u092e\u0947\u0902 \u091c\u093e\u0913\u0964","k":[]},{"en":"Practise out loud with a timer.","hi":"Timer \u0932\u0917\u093e\u0915\u0930 \u091c\u093c\u094b\u0930 \u0938\u0947 \u092c\u094b\u0932\u0915\u0930 practise \u0915\u0930\u094b\u0964","k":[]}],"cheat":[{"en":"This is a summary and a mind map for AI interviews. Revise it before interviews.","hi":"\u092f\u0947 AI interviews \u0915\u093e summary \u0914\u0930 mind map \u0939\u0948\u0964 Interviews \u0938\u0947 \u092a\u0939\u0932\u0947 \u0907\u0938\u0947 revise \u0915\u0930\u094b\u0964","k":[]},{"en":"Build a small agent and an MCP server yourself so you can speak from experience.","hi":"\u090f\u0915 \u091b\u094b\u091f\u093e agent \u0914\u0930 MCP server \u0916\u0941\u0926 \u092c\u0928\u093e\u0913 \u0924\u093e\u0915\u093f \u0906\u092a \u0905\u0928\u0941\u092d\u0935 \u0938\u0947 \u092c\u094b\u0932 \u0938\u0915\u094b\u0964","k":[]}]};
+
+  /* ---------- build lessons from the authored source ---------- */
+  var src = document.getElementById('src'), sections = [], lessons = [];
+  [].forEach.call(src.querySelectorAll(':scope > section'), function(secEl){
+    var sec = { id:'sec-' + (sections.length + 1), title:secEl.getAttribute('data-sec'), lessons:[] }; sections.push(sec);
+    [].forEach.call(secEl.querySelectorAll(':scope > article'), function(a){
+      var id = 'les-' + (lessons.length + 1), art = mk('article', 'lesson'); art.id = id;
+      var crumb = mk('div', 'lcrumb'); art.appendChild(crumb);
+      var card = mk('section', 'sn'); while (a.firstChild) card.appendChild(a.firstChild); art.appendChild(card);
+      var words = (card.textContent || '').split(/\s+/).length;
+      var L = { id:id, key:a.getAttribute('data-key'), title:a.getAttribute('data-title'), sec:sec, el:art, card:card, crumb:crumb, mins:Math.max(1, Math.round(words / 170)), idx:lessons.length };
+      lessons.push(L); sec.lessons.push(L);
+    });
+  });
+  src.remove();
+
+  /* ---------- skeleton ---------- */
+  document.body.classList.add('cms');
+  var cms = mk('div'); cms.id = 'cms';
+  var bar = mk('header'); bar.id = 'cmsbar';
+  bar.innerHTML = '<button type="button" class="menu" id="cmsMenu" aria-label="Show or hide course menu" aria-expanded="true">☰</button><div class="ttl" id="cmsTtl">AI, Agent and MCP Interview Questions and Solutions</div><button type="button" id="animToggle" class="animbtn" aria-pressed="false">⏸ Pause animations</button><div class="prog"><span id="cmsProgTxt"></span><div class="bar"><i id="cmsProgBar"></i></div></div>';
+  var side = mk('aside'); side.id = 'cmsside'; side.setAttribute('aria-label', 'Course curriculum');
+  var main = mk('main'); main.id = 'cmsmain';
+  var scrim = mk('div'); scrim.id = 'cmsscrim';
+  lessons.forEach(function(L){ main.appendChild(L.el); });
+  var foot = mk('div', 'lfoot');
+  foot.innerHTML = '<button type="button" id="lfPrev" data-fit>◀ Previous</button><button type="button" id="lfDone" class="primary" data-fit>Mark as complete</button><button type="button" id="lfNext" data-fit>Next ▶</button>';
+  main.appendChild(foot);
+  cms.appendChild(bar); cms.appendChild(side); cms.appendChild(main); cms.appendChild(scrim);
+  document.body.insertBefore(cms, document.body.firstChild);
+
+  /* ---------- code blocks: wrapper + copy button ---------- */
+  [].forEach.call(main.querySelectorAll('pre'), function(pre){
+    var w = mk('div', 'codewrap'); pre.parentNode.insertBefore(w, pre); w.appendChild(pre);
+    var b = mk('button', 'copy'); b.type = 'button'; b.textContent = 'Copy'; b.setAttribute('aria-label', 'Copy code');
+    b.onclick = function(){
+      var t = pre.textContent;
+      var done = function(){ b.textContent = 'Copied ✓'; setTimeout(function(){ b.textContent = 'Copy'; }, 1500); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, function(){ b.textContent = 'Press Ctrl+C'; });
+      else { var ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch(e){} ta.remove(); }
+    };
+    w.appendChild(b);
+  });
+
+  /* ---------- interview practice mode (hide answers until tapped) ---------- */
+  lessons.forEach(function(L){
+    if (!L.card.querySelector('.qa-item')) return;
+    var b = mk('button', 'animbtn qa-practice'); b.type = 'button'; b.textContent = '🎯 Practice mode: hide answers';
+    var on = false;
+    b.onclick = function(){ on = !on; L.card.classList.toggle('practice', on); [].forEach.call(L.card.querySelectorAll('.qa-item'), function(i){ i.classList.remove('open'); }); b.textContent = on ? '👁 Show all answers' : '🎯 Practice mode: hide answers'; if (window.CMS) window.CMS.refresh(); };
+    var h2 = L.card.querySelector('h2'); var anchor = L.card.querySelector('.hx') || h2; L.card.insertBefore(b, anchor.nextSibling);
+    L.card.addEventListener('click', function(e){ var q = e.target.closest ? e.target.closest('.qq') : null; if (q && L.card.classList.contains('practice')) q.parentNode.classList.toggle('open'); });
+  });
+
+  /* ---------- sidebar ---------- */
+  var sh = mk('div', 'sbhead');
+  sh.innerHTML = '<h2>Course content</h2><input type="search" id="sbSearch" placeholder="Search lessons…" aria-label="Search lessons"><div class="sbtools"><button type="button" id="sbCollapse">Collapse all</button><button type="button" id="sbExpand">Expand all</button></div>';
+  side.appendChild(sh);
+  sections.forEach(function(sec, si){
+    var box = mk('div', 'sec'); box.id = sec.id;
+    var hd = mk('button', 'sechd'); hd.type = 'button'; hd.setAttribute('aria-expanded', 'true');
+    hd.innerHTML = '<span class="chev">▾</span><span class="t"></span><span class="cnt"></span>';
+    hd.querySelector('.t').textContent = 'Section ' + (si + 1) + ': ' + sec.title;
+    var list = mk('div', 'lessons');
+    sec.lessons.forEach(function(L){
+      var b = mk('button', 'lessonbtn'); b.type = 'button'; b.setAttribute('data-id', L.id);
+      b.innerHTML = '<span class="ck"></span><span class="lt"></span>';
+      b.querySelector('.lt').textContent = L.title;
+      var tm = mk('span', 'tm'); tm.textContent = '⏱ ' + L.mins + ' min'; b.querySelector('.lt').appendChild(tm);
+      b.onclick = function(){ show(L.id, true); closeDrawer(); };
+      L.btn = b; list.appendChild(b);
+    });
+    hd.onclick = function(){ var c = !box.classList.contains('collapsed'); box.classList.toggle('collapsed', c); store.collapsed[sec.id] = c; hd.setAttribute('aria-expanded', c ? 'false' : 'true'); save(); };
+    box.appendChild(hd); box.appendChild(list); side.appendChild(box);
+    sec.box = box; sec.hd = hd;
+    if (store.collapsed[sec.id]) { box.classList.add('collapsed'); hd.setAttribute('aria-expanded', 'false'); }
+  });
+  function setAllCollapsed(c){ sections.forEach(function(sec){ sec.box.classList.toggle('collapsed', c); sec.hd.setAttribute('aria-expanded', c ? 'false' : 'true'); store.collapsed[sec.id] = c; }); save(); }
+  document.getElementById('sbCollapse').onclick = function(){ setAllCollapsed(true); };
+  document.getElementById('sbExpand').onclick = function(){ setAllCollapsed(false); };
+  document.getElementById('sbSearch').oninput = function(){
+    var q = this.value.trim().toLowerCase();
+    sections.forEach(function(sec){
+      var any = false;
+      sec.lessons.forEach(function(L){ var hit = !q || L.title.toLowerCase().indexOf(q) >= 0 || (L.card.textContent || '').toLowerCase().indexOf(q) >= 0; L.btn.hidden = !hit; if (hit) any = true; });
+      sec.box.hidden = !any; if (q && any) sec.box.classList.remove('collapsed');
+    });
+  };
+
+  /* ---------- drawer / menu ---------- */
+  var isMobile = function(){ return window.matchMedia('(max-width: 900px)').matches; };
+  function closeDrawer(){ cms.classList.remove('sideopen'); }
+  document.getElementById('cmsMenu').onclick = function(){
+    if (isMobile()) cms.classList.toggle('sideopen'); else cms.classList.toggle('noside');
+    var open = isMobile() ? cms.classList.contains('sideopen') : !cms.classList.contains('noside');
+    this.setAttribute('aria-expanded', open ? 'true' : 'false'); setTimeout(refresh, 120);
+  };
+  scrim.onclick = closeDrawer;
+
+  /* ---------- progress + footer ---------- */
+  function updateProgress(){
+    var done = lessons.filter(function(L){ return store.done[L.id]; }).length, pct = Math.round(done / lessons.length * 100);
+    document.getElementById('cmsProgTxt').textContent = pct + '% complete · ' + done + ' of ' + lessons.length + ' lessons';
+    document.getElementById('cmsProgBar').style.width = pct + '%';
+    lessons.forEach(function(L){ var d = !!store.done[L.id]; L.btn.classList.toggle('done', d); L.btn.querySelector('.ck').textContent = d ? '✓' : (L.idx + 1); });
+    sections.forEach(function(sec){ var d = sec.lessons.filter(function(L){ return store.done[L.id]; }).length; sec.hd.querySelector('.cnt').textContent = d + '/' + sec.lessons.length; });
+  }
+  var current = null, bPrev = document.getElementById('lfPrev'), bDone = document.getElementById('lfDone'), bNext = document.getElementById('lfNext');
+  function byId(id){ for (var i = 0; i < lessons.length; i++) if (lessons[i].id === id) return lessons[i]; return null; }
+  function show(id){
+    var L = byId(id); if (!L) return;
+    if (current && current !== L && window.__hxStop) window.__hxStop();
+    lessons.forEach(function(x){ x.el.classList.toggle('active', x === L); x.btn.classList.toggle('active', x === L); });
+    current = L; store.last = id; save();
+    L.crumb.textContent = 'Section ' + (sections.indexOf(L.sec) + 1) + ': ' + L.sec.title + '  ›  Lesson ' + (L.idx + 1) + ' of ' + lessons.length;
+    L.sec.box.classList.remove('collapsed'); L.sec.hd.setAttribute('aria-expanded', 'true');
+    if (L.btn.scrollIntoView) { try { L.btn.scrollIntoView({ block:'nearest' }); } catch(e){} }
+    main.scrollTop = 0;
+    bPrev.disabled = L.idx === 0; bNext.disabled = L.idx === lessons.length - 1;
+    var d = !!store.done[id]; bDone.textContent = d ? '✓ Completed (tap to undo)' : 'Mark as complete'; bDone.classList.toggle('done', d); bDone.classList.toggle('primary', !d);
+    try { history.replaceState(null, '', '#' + id); } catch(e){}
+    updateProgress(); refresh(); if (window.__syncAnim) setTimeout(window.__syncAnim, 80);
+  }
+  bPrev.onclick = function(){ if (current && current.idx > 0) show(lessons[current.idx - 1].id); };
+  bNext.onclick = function(){ if (!current) return; store.done[current.id] = true; if (current.idx < lessons.length - 1) show(lessons[current.idx + 1].id); else show(current.id); };
+  bDone.onclick = function(){ if (!current) return; store.done[current.id] = !store.done[current.id]; save(); show(current.id); };
+
+  /* ---------- keep text inside boxes ---------- */
+  function fitSvgText(root){
+    [].forEach.call((root || document).querySelectorAll('svg'), function(svg){
+      var texts = [].slice.call(svg.querySelectorAll('text'));
+      texts.forEach(function(t){ t.style.fontSize = ''; });
+      var rects = [].slice.call(svg.querySelectorAll('rect.b, rect.y, rect.g, rect.r, rect.o')).map(function(r){ return { x:+r.getAttribute('x'), y:+r.getAttribute('y'), w:+r.getAttribute('width'), h:+r.getAttribute('height') }; }).filter(function(r){ return r.w > 0 && r.h > 0; });
+      texts.forEach(function(t){
+        var x = parseFloat(t.getAttribute('x')), y = parseFloat(t.getAttribute('y'));
+        if (isNaN(x) || isNaN(y) || t.classList.contains('t')) return;
+        var best = null;
+        rects.forEach(function(r){ if (x >= r.x && x <= r.x + r.w && y - 6 >= r.y && y - 6 <= r.y + r.h && (!best || r.w * r.h < best.w * best.h)) best = r; });
+        if (!best) return;
+        var bb; try { bb = t.getBBox(); } catch(e){ return; }
+        if (!bb || !bb.width) return;
+        var anchor = getComputedStyle(t).textAnchor, pad = 8, maxW;
+        if (anchor === 'middle') maxW = 2 * (Math.min(x - best.x, best.x + best.w - x) - pad);
+        else if (anchor === 'end') maxW = x - best.x - pad; else maxW = best.x + best.w - x - pad;
+        var fs = parseFloat(getComputedStyle(t).fontSize) || 20, g = 0;
+        while (bb.width > maxW && fs > 9 && g++ < 6) { fs = Math.max(9, fs * maxW / bb.width * 0.98); t.style.fontSize = fs + 'px'; try { bb = t.getBBox(); } catch(e){ break; } }
+      });
+    });
+  }
+  function fitHtml(){
+    [].forEach.call(document.querySelectorAll('[data-fit], #cmsTtl, .hx button'), function(e){
+      if (!e.offsetParent) return;
+      e.style.fontSize = ''; var fs = parseFloat(getComputedStyle(e).fontSize), g = 0;
+      while ((e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 2) && fs > 10 && g++ < 30) { fs -= 1; e.style.fontSize = fs + 'px'; }
+    });
+  }
+  var rt; function refresh(){ clearTimeout(rt); rt = setTimeout(function(){ if (current) fitSvgText(current.el); fitHtml(); }, 30); }
+  window.addEventListener('resize', function(){ refresh(); });
+  window.addEventListener('load', function(){ refresh(); setTimeout(refresh, 700); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(refresh);
+  ['themeSel', 'fontSel', 'sizeSel', 'resetBtn'].forEach(function(id){ var el = document.getElementById(id); if (!el) return; el.addEventListener('change', function(){ setTimeout(refresh, 350); setTimeout(refresh, 1300); }); el.addEventListener('click', function(){ setTimeout(refresh, 350); }); });
+  window.CMS = { show:show, lessons:lessons, refresh:refresh };
+
+  /* ---------- Explain in Hindi: every lesson (spoken Hindi, English captions) ---------- */
+  var synth = window.speechSynthesis, hx = { playing:false, paused:false, token:0, i:0, j:0, sents:[], comp:null, voice:null, segs:[] };
+  function hiVoice(){
+    var v = (synth && synth.getVoices && synth.getVoices()) || [], hi = v.filter(function(x){ return /^hi/i.test(x.lang); });
+    return hi.filter(function(x){ return /Google|Lekha|Hemant|Kalpana|Neerja|Swara|Madhur/i.test(x.name); })[0] || hi[0] || null;
+  }
+  function sentences(t){ return t.replace(/\u0964\s*/g, '\u0964\u0001').split('\u0001').map(function(s){ return s.trim(); }).filter(Boolean); }
+  function spot(keys){
+    [].forEach.call(document.querySelectorAll('svg .spot'), function(e){ e.classList.remove('spot'); });
+    if (!current || !keys || !keys.length) return; var first = null;
+    keys.forEach(function(k){ [].forEach.call(current.el.querySelectorAll('svg [data-k="' + k + '"]'), function(e){ e.classList.add('spot'); if (!first) first = e; }); });
+    if (first && first.scrollIntoView) { try { first.scrollIntoView({ block:'center', behavior:'smooth' }); } catch(e){} }
+  }
+  function ui(c){
+    var on = hx.playing || hx.paused;
+    c.querySelector('.hxbtn').hidden = on;
+    [].forEach.call(c.querySelectorAll('.hxctl'), function(b){ b.hidden = !on; });
+    c.querySelector('[data-act="pause"]').textContent = hx.paused ? '▶ Resume' : '⏸ Pause';
+    c.querySelector('.hxcap').hidden = !on;
+  }
+  function caption(c){
+    var s = hx.segs[hx.i]; if (!s) return;
+    c.querySelector('.hxcap').innerHTML = '<b>Simple explanation · step ' + (hx.i + 1) + ' of ' + hx.segs.length + '</b><span></span>';
+    c.querySelector('.hxcap span').textContent = s.en;
+    spot(s.k);
+  }
+  function speak(){
+    var c = hx.comp; if (!c || !hx.playing) return;
+    if (hx.i >= hx.segs.length) { stop(true); return; }
+    if (!hx.sents.length) { hx.sents = sentences(hx.segs[hx.i].hi); hx.j = 0; caption(c); }
+    if (hx.j >= hx.sents.length) { hx.i++; hx.sents = []; return speak(); }
+    var my = hx.token, u = new SpeechSynthesisUtterance(hx.sents[hx.j]);
+    if (hx.voice) { u.voice = hx.voice; u.lang = hx.voice.lang; } else u.lang = 'hi-IN';
+    var nr = document.getElementById('nRate'); u.rate = Math.min(1.3, Math.max(0.7, (nr ? parseFloat(nr.value) || 1 : 1) * 0.92));
+    u.onend = function(){ if (my !== hx.token) return; hx.j++; speak(); };
+    u.onerror = function(e){ if (my !== hx.token) return; if (e && (e.error === 'interrupted' || e.error === 'canceled')) return; hx.j++; speak(); };
+    synth.speak(u);
+  }
+  function stop(finished){
+    hx.token++; if (synth) synth.cancel(); var c = hx.comp;
+    hx.playing = false; hx.paused = false; hx.sents = []; hx.i = 0; hx.j = 0; spot([]);
+    if (c) { ui(c); if (finished) { var cap = c.querySelector('.hxcap'); cap.hidden = false; cap.innerHTML = '<b>Finished</b><span>That was the explanation. Press the button to listen again.</span>'; } }
+  }
+  window.__hxStop = function(){ if (hx.playing || hx.paused) stop(false); };
+  function begin(c, segs){
+    var msg = c.querySelector('.hxmsg');
+    if (!synth || !window.SpeechSynthesisUtterance) { msg.hidden = false; msg.textContent = 'Speech is not supported in this browser.'; return; }
+    var go = function(){
+      hx.voice = hiVoice();
+      if (!hx.voice) { msg.hidden = false; msg.textContent = 'No Hindi voice was found on this device. Install a Hindi (India) voice in your system speech settings (iPad: Settings > Accessibility > Spoken Content > Voices; Windows: Settings > Time & language > Speech), then press the button again.'; return; }
+      msg.hidden = true;
+      var ns = document.getElementById('nStop'); if (ns) ns.click();
+      if (hx.comp && hx.comp !== c) { hx.playing = false; hx.paused = false; ui(hx.comp); }
+      hx.token++; synth.cancel(); hx.comp = c; hx.segs = segs; hx.playing = true; hx.paused = false; hx.i = 0; hx.sents = []; hx.j = 0; ui(c); speak();
+    };
+    if (synth.getVoices().length) go(); else { var done = false; var t = setTimeout(function(){ if (!done) { done = true; go(); } }, 1500); synth.onvoiceschanged = function(){ if (!done) { done = true; clearTimeout(t); go(); } }; }
+  }
+  function build(L){
+    var segs = HX[L.key]; if (!segs || !segs.length) return;
+    var c = mk('div', 'hx');
+    c.innerHTML = '<button type="button" class="hxbtn">🗣️ Explain in Hindi</button><button type="button" class="hxctl" data-act="prev" hidden aria-label="Previous step">⏮</button><button type="button" class="hxctl" data-act="pause" hidden>⏸ Pause</button><button type="button" class="hxctl" data-act="stop" hidden>⏹ Stop</button><button type="button" class="hxctl" data-act="next" hidden aria-label="Next step">⏭</button>' +
+      '<span class="hxsub">Listen to this lesson explained in simple language (spoken in Hindi; captions are in English).</span><div class="hxcap" hidden></div><div class="hxmsg" hidden></div>';
+    var h2 = L.card.querySelector('h2'); if (h2 && h2.nextSibling) L.card.insertBefore(c, h2.nextSibling); else L.card.appendChild(c);
+    c.querySelector('.hxbtn').onclick = function(){ begin(c, segs); };
+    c.querySelector('[data-act="stop"]').onclick = function(){ stop(false); };
+    c.querySelector('[data-act="pause"]').onclick = function(){
+      if (hx.paused) { hx.paused = false; hx.playing = true; hx.token++; ui(c); speak(); } else { hx.paused = true; hx.playing = false; hx.token++; synth.cancel(); ui(c); }
+    };
+    c.querySelector('[data-act="next"]').onclick = function(){ if (hx.i < hx.segs.length - 1) { var was = hx.paused; hx.token++; synth.cancel(); hx.i++; hx.sents = []; hx.j = 0; if (was) caption(c); else { hx.playing = true; speak(); } } };
+    c.querySelector('[data-act="prev"]').onclick = function(){ var was = hx.paused; hx.token++; synth.cancel(); hx.i = Math.max(0, hx.i - 1); hx.sents = []; hx.j = 0; if (was) caption(c); else { hx.playing = true; speak(); } };
+  }
+  lessons.forEach(build);
+  window.addEventListener('pagehide', function(){ if (synth) synth.cancel(); });
+
+  /* ---------- start ---------- */
+  var startId = (location.hash || '').replace('#', '');
+  if (!byId(startId)) startId = byId(store.last) ? store.last : lessons[0].id;
+  window.addEventListener('hashchange', function(){ var id = (location.hash || '').replace('#', ''); if (byId(id) && (!current || current.id !== id)) show(id); });
+  show(startId); updateProgress();
+})();
+</script>
+<script>
+(function(){
+  var dock = document.getElementById('narrator');
+  if (!('speechSynthesis' in window) || !window.SpeechSynthesisUtterance) { dock.innerHTML = '<div class="row">🔇 Narration is not supported in this browser.</div>'; return; }
+  var synth = window.speechSynthesis, KEY = 'notes-narrator-v1';
+  var $ = function(id){ return document.getElementById(id); };
+  var bPlay=$('nPlay'), bStop=$('nStop'), bPrev=$('nPrev'), bNext=$('nNext'), bMin=$('nMin'), selRate=$('nRate'), selVoice=$('nVoice'), chkLabels=$('nLabels'), statusEl=$('nStatus'), bar=$('nBar');
+  var SEL = 'h1,h2,h3,p,li,tr,pre,svg';
+  var blocks = [], chunks = [], cur = 0, ci = 0, playing = false, token = 0, fresh = true, voices = [], marked = null;
+
+  var prefs = {}; try { prefs = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e){}
+  function savePrefs(){ try { localStorage.setItem(KEY, JSON.stringify({ rate:selRate.value, voice:selVoice.value, labels:chkLabels.checked })); } catch(e){} }
+  if (prefs.rate) selRate.value = prefs.rate;
+  chkLabels.checked = !!prefs.labels;
+
+  function buildBlocks(){
+    blocks = [];
+    document.querySelectorAll('.lesson').forEach(function(pg, pi){
+      pg.querySelectorAll(SEL).forEach(function(el){
+        var a = el.parentElement && el.parentElement.closest(SEL);
+        if (a && pg.contains(a)) return;
+        blocks.push({ el:el, page:pi+1, tag:el.tagName.toLowerCase() });
+      });
+    });
+  }
+
+  // add a "read from here" button to every main heading
+  function addSpeakButtons(){
+    document.querySelectorAll('.lesson h1, .lesson h2').forEach(function(h){
+      var b = document.createElement('button'); b.className = 'spk'; b.type = 'button'; b.textContent = '🔊'; b.setAttribute('aria-label','Read from here'); b.title = 'Read from here';
+      b.onclick = function(){ if (!blocks.length) buildBlocks(); var i = indexOfEl(h); if (i >= 0) start(i); };
+      h.appendChild(b);
+    });
+  }
+  function indexOfEl(el){ for (var i=0;i<blocks.length;i++){ if (blocks[i].el === el) return i; } return -1; }
+
+  var MAP = [[/\bK8s\b/g,'Kubernetes'],[/\bkubectl\b/gi,'kube control'],[/\betcd\b/gi,'et see dee'],[/\u03bb/g,'Lambda'],[/\bIAM\b/g,'I A M'],[/\bSQS\b/g,'S Q S'],[/\bSNS\b/g,'S N S'],
+    [/\bS3\b/g,'S three'],[/\bYAML\b/g,'yamul'],[/\bRBAC\b/g,'R back'],[/\bEKS\b/g,'E K S'],[/\bGKE\b/g,'G K E'],[/\bAKS\b/g,'A K S'],[/\bPVC\b/g,'P V C'],[/\bPV\b/g,'P V'],
+    [/\bHPA\b/g,'H P A'],[/\bVPA\b/g,'V P A'],[/\bCNI\b/g,'C N I'],[/\bDLQ\b/g,'D L Q'],[/\bVPC\b/g,'V P C'],[/\bARN\b/g,'A R N'],[/\bKMS\b/g,'K M S'],[/\bCLI\b/g,'C L I'],
+    [/\bCRDs?\b/g,'C R D'],[/\bCNCF\b/g,'C N C F'],[/\bSDK\b/g,'S D K'],[/\bGB-s(econds)?\b/gi,'gigabyte seconds'],[/\bp(95|99)\b/g,'P $1'],[/\bCI\/CD\b/g,'C I C D'],[/\bDB\b/g,'database'],
+    [/\bAZs?\b/g,'availability zone'],[/\bARM64\b/gi,'arm sixty four'],[/\bx86_64\b/g,'x eighty six'],[/\bMB\b/g,'megabytes'],[/\bGB\b/g,'gigabytes'],
+    [/[\u2192\u279c]/g,' to '],[/[\u21d2\u21e6]/g,' means '],[/\u2248/g,' about '],[/\u2265/g,' at least '],[/\u2264/g,' at most '],[/\u00d7/g,' times '],[/&/g,' and '],[/[\u2713\u2714\u2717\u2718\u2022\u00b7]/g,' ']];
+  function speakable(t){
+    t = t.replace(/[\p{Extended_Pictographic}\uFE0F\u200d]/gu, ' ');
+    for (var i=0;i<MAP.length;i++) t = t.replace(MAP[i][0], MAP[i][1]);
+    return t.replace(/\s+/g,' ').trim();
+  }
+  function textOf(b){
+    var el = b.el;
+    if (b.tag === 'pre') return 'Code example on screen.';
+    if (b.tag === 'svg') {
+      if (!chkLabels.checked) return 'There is a diagram here.';
+      var parts = [].map.call(el.querySelectorAll('text'), function(t){ return t.textContent.trim(); }).filter(Boolean);
+      return 'Diagram. ' + parts.join('. ') + '.';
+    }
+    if (b.tag === 'tr') return [].map.call(el.children, function(c){ return c.textContent.trim(); }).filter(Boolean).join('. ') + '.';
+    var c = el.cloneNode(true); [].forEach.call(c.querySelectorAll('.spk'), function(x){ x.remove(); });
+    var t = c.textContent;
+    return /^h[1-3]$/.test(b.tag) ? t + '.' : t;
+  }
+  function chunkText(t){
+    t = speakable(t); if (!t) return [];
+    var out = [];
+    t.replace(/([.!?])\s+/g, '$1\u0001').split('\u0001').forEach(function(x){
+      x = x.trim();
+      while (x.length > 180) { var i = x.lastIndexOf(',', 180); if (i < 60) i = x.lastIndexOf(' ', 180); if (i < 1) i = 180; out.push(x.slice(0, i+1)); x = x.slice(i+1).trim(); }
+      if (x) out.push(x);
+    });
+    return out;
+  }
+
+  function headingFor(i){ for (var k=i;k>=0;k--){ if (/^h[12]$/.test(blocks[k].tag)) { var c = blocks[k].el.cloneNode(true); [].forEach.call(c.querySelectorAll('.spk'), function(x){ x.remove(); }); return c.textContent.trim(); } } return ''; }
+  function mark(){
+    if (marked) marked.classList.remove('reading');
+    var b = blocks[cur]; if (!b) return;
+    var les = b.el.closest && b.el.closest('.lesson'); if (les && window.CMS && !les.classList.contains('active')) window.CMS.show(les.id);
+    marked = b.el; marked.classList.add('reading');
+    try { marked.scrollIntoView({ block:'center', behavior:'smooth' }); } catch(e){ marked.scrollIntoView(); }
+    statusEl.textContent = '🔊 Lesson ' + b.page + ' · ' + headingFor(cur);
+    bar.style.width = Math.round(cur / Math.max(1, blocks.length) * 100) + '%';
+  }
+  function ui(){ bPlay.textContent = playing ? '⏸' : '▶'; bPlay.setAttribute('aria-label', playing ? 'Pause narration' : 'Play narration'); }
+
+  function speakCurrent(){
+    if (!playing) return;
+    if (cur >= blocks.length) { finish(); return; }
+    if (!chunks.length && ci === 0) { chunks = chunkText(textOf(blocks[cur])); mark(); if (!chunks.length) { cur++; return speakCurrent(); } }
+    if (ci >= chunks.length) { cur++; ci = 0; chunks = []; return speakCurrent(); }
+    var my = token, u = new SpeechSynthesisUtterance(chunks[ci]);
+    u.rate = parseFloat(selRate.value) || 1;
+    var v = voices.filter(function(x){ return x.name === selVoice.value; })[0];
+    if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = 'en-US'; }
+    u.onend = function(){ if (my !== token) return; ci++; speakCurrent(); };
+    u.onerror = function(e){ if (my !== token) return; if (e && (e.error === 'interrupted' || e.error === 'canceled')) return; ci++; speakCurrent(); };
+    synth.speak(u);
+  }
+  function firstVisible(){
+    for (var i=0;i<blocks.length;i++){ var r = blocks[i].el.getBoundingClientRect(); if (r.top > 70 && r.height > 0) return i; }
+    return 0;
+  }
+  function start(i){
+    if (!blocks.length) buildBlocks();
+    token++; synth.cancel();
+    cur = Math.max(0, Math.min(i, blocks.length-1)); ci = 0; chunks = []; playing = true; fresh = false; ui(); speakCurrent();
+  }
+  function pause(){ playing = false; token++; synth.cancel(); ui(); statusEl.textContent = '⏸ Paused – ' + headingFor(cur); }
+  function resume(){ playing = true; token++; ui(); speakCurrent(); }
+  function stop(){ playing = false; token++; synth.cancel(); fresh = true; ci = 0; chunks = []; if (marked) { marked.classList.remove('reading'); marked = null; } bar.style.width = '0'; statusEl.textContent = '🎧 Narrator – tap ▶ to listen'; ui(); }
+  function finish(){ stop(); statusEl.textContent = '✅ Finished – tap ▶ to listen again'; }
+  function jump(dir){
+    if (!blocks.length) buildBlocks();
+    var base = fresh ? firstVisible() : cur, idx = -1, k;
+    if (dir > 0) { for (k=base+1;k<blocks.length;k++) if (/^h[12]$/.test(blocks[k].tag)) { idx = k; break; } }
+    else { for (k=base-1;k>=0;k--) if (/^h[12]$/.test(blocks[k].tag)) { idx = k; break; } }
+    if (idx >= 0) start(idx);
+  }
+  bPlay.onclick = function(){ if (playing) pause(); else if (fresh) { buildBlocks(); start(firstVisible()); } else resume(); };
+  bStop.onclick = stop; bPrev.onclick = function(){ jump(-1); }; bNext.onclick = function(){ jump(1); };
+  
+  selRate.onchange = function(){ savePrefs(); if (playing) { token++; synth.cancel(); speakCurrent(); } };
+  selVoice.onchange = function(){ savePrefs(); if (playing) { token++; synth.cancel(); speakCurrent(); } };
+  chkLabels.onchange = function(){ savePrefs(); };
+
+  function loadVoices(){
+    var all = synth.getVoices() || [];
+    voices = all.filter(function(v){ return /^en/i.test(v.lang); }); if (!voices.length) voices = all;
+    if (!voices.length) return;
+    selVoice.innerHTML = '';
+    voices.forEach(function(v){ var o = document.createElement('option'); o.value = v.name; o.textContent = v.name + ' (' + v.lang + ')'; selVoice.appendChild(o); });
+    var pick = prefs.voice && voices.filter(function(v){ return v.name === prefs.voice; })[0];
+    if (!pick) pick = voices.filter(function(v){ return /Samantha|Google US English|Natural|Aria|Jenny|Daniel|Karen|Rishi|Veena|Moira/i.test(v.name); })[0] || voices[0];
+    selVoice.value = pick.name;
+  }
+  loadVoices(); if ('onvoiceschanged' in synth) synth.onvoiceschanged = loadVoices;
+
+  
+  addSpeakButtons(); ui();
+  window.addEventListener('pagehide', function(){ synth.cancel(); });
+
+  // top bar hides while scrolling down, returns when scrolling up
+  var tb = document.getElementById('toolbar'), lastY = 0;
+  window.addEventListener('scroll', function(){ var y = window.pageYOffset; if (tb) tb.classList.toggle('hide', y > lastY && y > 140); lastY = y; }, { passive:true });
+})();
+</script>
+<script>
+(function(){
+  var btn = document.getElementById('settingsBtn'), panel = document.getElementById('settingsPanel'), scrim = document.getElementById('settingsScrim');
+  function setOpen(o){ panel.classList.toggle('open', o); scrim.classList.toggle('open', o); btn.setAttribute('aria-expanded', o ? 'true' : 'false'); btn.textContent = o ? '✕' : '⚙️'; }
+  btn.onclick = function(){ setOpen(!panel.classList.contains('open')); };
+  document.getElementById('settingsClose').onclick = function(){ setOpen(false); };
+  scrim.onclick = function(){ setOpen(false); };
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') setOpen(false); });
+  var nPlay = document.getElementById('nPlay');
+  function refreshBtn(){ var o = panel.classList.contains('open'), p = nPlay && nPlay.textContent === '\u23f8'; btn.textContent = o ? '\u2715' : (p ? '\ud83d\udd0a' : '\u2699\ufe0f'); btn.classList.toggle('playing', !o && p); }
+  var _setOpen = setOpen; setOpen = function(o){ _setOpen(o); refreshBtn(); };
+  if (nPlay) { nPlay.addEventListener('click', function(){ setTimeout(function(){ if (nPlay.textContent === '\u23f8') setOpen(false); else refreshBtn(); }, 0); });
+    new MutationObserver(refreshBtn).observe(nPlay, { childList:true, characterData:true, subtree:true }); }
+  var nMin = null;
+  if (nMin) { nMin.onclick = function(){ setOpen(!panel.classList.contains('open')); }; nMin.title = 'Settings'; nMin.setAttribute('aria-label','Open settings'); }
+})();
+</script>
+<script>
+(function(){
+  var btn = document.getElementById('animToggle'); if (!btn) return;
+  var svgs = [].slice.call(document.querySelectorAll('svg[aria-label^="Animated"]'));
+  var paused = false;
+  function apply(p){
+    paused = p; document.body.classList.toggle('anim-paused', p);
+    svgs.forEach(function(s){ try { if (p) s.pauseAnimations(); else s.unpauseAnimations(); } catch(e){} });
+    btn.textContent = p ? '\u25b6 Play animations' : '\u23f8 Pause animations'; btn.setAttribute('aria-pressed', p ? 'true' : 'false');
+  }
+  btn.onclick = function(){ apply(!paused); };
+  var rm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (rm && rm.matches) { svgs.forEach(function(s){ try { s.setCurrentTime(15.9); } catch(e){} }); apply(true); }
+})();
+</script>
+<script>
+(function(){
+  // keep CSS highlight animations and SVG (SMIL) animations on the same clock
+  function sync(){
+    var anims = document.getAnimations ? document.getAnimations() : [];
+    anims.forEach(function(a){
+      if (a.animationName !== 'act' && a.animationName !== 'actbg') return;
+      var el = a.effect && a.effect.target, pg = el && el.closest && el.closest('.lesson, .page');
+      var s = pg && pg.querySelector('svg[aria-label^="Animated"]');
+      if (!s || !s.getCurrentTime) return;
+      try { a.currentTime = s.getCurrentTime() * 1000; } catch (e) {}
+    });
+  }
+  window.__syncAnim = sync; window.addEventListener('load', function(){ sync(); setInterval(function(){ if (!document.body.classList.contains('anim-paused')) sync(); }, 6000); });
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden) sync(); });
+  var b = document.getElementById('animToggle'); if (b) b.addEventListener('click', function(){ setTimeout(sync, 50); });
+})();
+</script>
+<script>(function(){
+  var INFO = {"fr-clar":{"icon":"❓","title":"Clarify the problem","type":"Answer framework","what":"Ask about users, goals, scale, data sensitivity, risk of wrong answers and success metrics.","role":"Step 1.","does":["Decide whether an agent is even needed.","State assumptions out loud."],"facts":[["Habit","Ask before designing"]],"diagram":"Tile.","qa":[["How do you start an AI system design question?","<p><b>Short answer:</b> Clarify who the users are, what success means, how costly mistakes are, scale and latency needs and what data and tools are involved, then state your assumptions.</p><p>Good questions show senior thinking.</p>"]],"related":["fr-arch"]},"fr-arch":{"icon":"🏗️","title":"Choose the architecture","type":"Answer framework","what":"Pick the least autonomy that works: single call, retrieval, workflow, agent or multi-agent.","role":"Step 2.","does":["Justify each added piece.","Draw the data and control flow."],"facts":[["Rule","Simplest thing that works"]],"diagram":"Tile.","qa":[["How do you choose between workflow and agent?","<p><b>Short answer:</b> Prefer a workflow when steps are known; use an agent only for open-ended tasks, and explain the cost, latency and risk trade-offs.</p><p>Show a simple version first, then evolve.</p>"]],"related":["fr-clar","fr-tools"]},"fr-tools":{"icon":"🧰","title":"Tools, data and integration","type":"Answer framework","what":"Define the tools, their schemas, the data sources and how MCP or APIs connect them.","role":"Step 3.","does":["Narrow task-oriented tools.","Idempotency and permissions per tool."],"facts":[["Mention","MCP, schemas, permissions"]],"diagram":"Tile.","qa":[["What do you cover when describing tools?","<p><b>Short answer:</b> The tool set and schemas, who owns each system, authentication, idempotency, error handling and how the agent discovers and calls them, for example through MCP.</p><p>Keep the tool list short.</p>"]],"related":["fr-arch","fr-safe"]},"fr-safe":{"icon":"🛡️","title":"Safety, quality and operations","type":"Answer framework","what":"Cover guardrails, human approval, injection defence, evaluation, observability and cost control.","role":"Step 4.","does":["Name the top three risks and mitigations.","Describe the eval set."],"facts":[["Mention","Evals, tracing, limits"]],"diagram":"Tile.","qa":[["What do interviewers expect on safety?","<p><b>Short answer:</b> A threat list (injection, excessive agency, data leakage), concrete controls, human approval for risky actions, and an evaluation and monitoring plan.</p><p>This often separates strong answers from average ones.</p>"]],"related":["fr-tools","fr-trade"]},"fr-trade":{"icon":"⚖️","title":"Trade-offs and evolution","type":"Answer framework","what":"Explain alternatives, costs, failure modes and how the design grows.","role":"Step 5.","does":["Admit limits and unknowns.","Describe how you would measure and iterate."],"facts":[["Habit","Say what you would measure"]],"diagram":"Tile.","qa":[["How do you close a design answer?","<p><b>Short answer:</b> Summarise the trade-offs you made, the main risks that remain, how you would measure success and what you would build next.</p><p>Show you can iterate with evidence.</p>"]],"related":["fr-safe"]},"fd-ctx":{"icon":"🔤","title":"Tokens and context window","type":"LLM fundamentals","what":"Models read and write tokens, and the context window is the limit on tokens per request.","role":"Core constraint.","does":["Cost and latency scale with tokens.","Long contexts can hide important facts."],"facts":[["Remember","Input + output tokens"]],"diagram":"Tile.","qa":[["What is a context window?","<p><b>Short answer:</b> The maximum number of tokens, input plus output, a model can handle in one request; everything the agent must know has to fit inside it.</p><p>Manage it with summarisation, retrieval and caching.</p>"]],"related":["fd-sample"]},"fd-sample":{"icon":"🎛️","title":"Sampling parameters","type":"LLM fundamentals","what":"Temperature and top-p control randomness; lower values give more deterministic output.","role":"Behaviour tuning.","does":["Use low temperature for tool use and extraction.","Some models restrict or ignore these settings."],"facts":[["Tip","Low for deterministic tasks"]],"diagram":"Tile.","qa":[["What does temperature do?","<p><b>Short answer:</b> It scales randomness in token choice: low values make output more predictable, higher values more varied and creative.</p><p>Use low values for structured tasks.</p>"]],"related":["fd-ctx","fd-rag"]},"fd-rag":{"icon":"📚","title":"RAG","type":"LLM fundamentals","what":"Retrieve relevant documents and add them to the prompt so the model answers from your data.","role":"Grounding.","does":["Chunk, embed, index, retrieve, rerank.","Quality depends on retrieval, not only the model."],"facts":[["Pipeline","Embed, retrieve, generate"]],"diagram":"Tile.","qa":[["What is RAG and why use it?","<p><b>Short answer:</b> Retrieval-augmented generation fetches relevant content at query time so answers are grounded in current, private data without retraining the model.</p><p>It reduces hallucination but does not eliminate it.</p>"]],"related":["fd-sample","fd-ft"]},"fd-ft":{"icon":"🎓","title":"Fine-tuning vs prompting","type":"LLM fundamentals","what":"Fine-tuning changes model weights for style or narrow tasks; prompting and RAG change inputs.","role":"Choose the cheapest lever.","does":["Try prompting and RAG first.","Fine-tune for consistent format or domain behaviour at scale."],"facts":[["Order","Prompt, RAG, then fine-tune"]],"diagram":"Tile.","qa":[["RAG or fine-tuning?","<p><b>Short answer:</b> Use RAG for knowledge that changes or is private, and fine-tuning for consistent style, format or specialised behaviour; try prompting first.</p><p>They can be combined.</p>"]],"related":["fd-rag","fd-hall"]},"fd-hall":{"icon":"🌀","title":"Hallucination","type":"LLM fundamentals","what":"The model produces confident but wrong or invented content.","role":"Reliability risk.","does":["Ground with retrieval and tools, require citations.","Verify with code or tests when possible."],"facts":[["Mitigation","Ground, verify, constrain"]],"diagram":"Tile.","qa":[["How do you reduce hallucinations?","<p><b>Short answer:</b> Ground answers with retrieval and tools, require sources, constrain outputs with schemas, verify results programmatically and let the system say it does not know.</p><p>Measure it with evals.</p>"]],"related":["fd-ft"]},"sd-support":{"icon":"🎧","title":"Design a customer support agent","type":"System design problems","what":"Answers order questions and handles small refunds, escalating the rest.","role":"Classic first question.","does":["Router, narrow tools, policy layer, human escalation.","Evals include wrong user and injection cases."],"facts":[["Key point","Policy in code, not prompt"]],"diagram":"Tile.","qa":[["How would you design a customer-support agent?","<p><b>Short answer:</b> Route by intent, give the agent narrow read and write tools behind a policy layer that checks ownership and limits, require approval above a refund threshold, keep conversation state, trace everything and evaluate on real tickets.</p><p>Escalate with a summary when unsure.</p>"]],"related":["sd-code"]},"sd-code":{"icon":"💻","title":"Design a coding agent","type":"System design problems","what":"Reads a repository, edits files, runs tests and proposes changes.","role":"Verifiable domain.","does":["Sandboxed shell and file tools, tests as the verifier.","Limit scope with roots and branch isolation."],"facts":[["Key point","Tests are the feedback signal"]],"diagram":"Tile.","qa":[["How would you design a coding agent?","<p><b>Short answer:</b> Provide search, read, edit and run-tests tools in a sandbox on a scratch branch, loop until tests pass or a limit is hit, use tests and linters as objective verification, and require human review before merge.</p><p>Context management for large repos is the hard part.</p>"]],"related":["sd-support","sd-know"]},"sd-know":{"icon":"🏢","title":"Design an enterprise knowledge assistant","type":"System design problems","what":"Answers employee questions from many internal systems with permissions respected.","role":"RAG plus tools.","does":["Per-user access control on retrieval.","MCP servers expose each system."],"facts":[["Key point","Retrieval must enforce permissions"]],"diagram":"Tile.","qa":[["How do you respect permissions in an enterprise assistant?","<p><b>Short answer:</b> Authenticate the user, pass identity to every retrieval and tool call, filter results by the user permissions at the source, and log access, so the model never sees data the user could not see.</p><p>Never rely on the prompt for access control.</p>"]],"related":["sd-code","sd-gw"]},"sd-gw":{"icon":"🚪","title":"Design a multi-tenant MCP gateway","type":"System design problems","what":"A shared gateway fronting many MCP servers for many teams and tenants.","role":"Governance platform.","does":["OAuth, per-tenant policy, rate limits, audit.","Registry of approved servers."],"facts":[["Key point","Identity, isolation, audit"]],"diagram":"Tile.","qa":[["How would you design an MCP gateway?","<p><b>Short answer:</b> Authenticate users with OAuth, map identity and tenant to policy, route to approved servers from a registry, enforce rate limits and approvals, isolate tenants, log every call and monitor latency and errors.</p><p>Do not pass tokens through to downstream systems.</p>"]],"related":["sd-know","sd-research"]},"sd-research":{"icon":"🔬","title":"Design a research agent","type":"System design problems","what":"Searches, reads sources, cross-checks and writes a cited report.","role":"Multi-step, parallel.","does":["Orchestrator with parallel workers and a verifier.","Citations and source-quality checks."],"facts":[["Key point","Parallel research, then synthesis"]],"diagram":"Tile.","qa":[["How would you design a research agent?","<p><b>Short answer:</b> An orchestrator plans sub-questions, worker agents search and read in parallel with limited tools, a verifier checks claims against sources, and a writer produces a cited report within budget limits.</p><p>Control cost with step and token budgets.</p>"]],"related":["sd-gw"]},"cd-loop":{"icon":"🔁","title":"Implement the agent loop","type":"Coding exercises","what":"Write a loop that calls the model, runs tools and stops on completion or limit.","role":"Most common exercise.","does":["Handle several tool calls and errors.","Add max steps and repeat detection."],"facts":[["Check","Limits and error results"]],"diagram":"Tile.","qa":[["What do interviewers look for in an agent loop?","<p><b>Short answer:</b> Correct message handling, execution of every tool call, error results returned to the model, a step limit, loop detection and clean termination.</p><p>Mention validation and logging.</p>"]],"related":["cd-reg"]},"cd-reg":{"icon":"🗂️","title":"Tool registry with validation","type":"Coding exercises","what":"Register functions with schemas and validate arguments before running.","role":"Safe dispatch.","does":["Reject unknown tools and bad arguments.","Generate schemas from function signatures."],"facts":[["Check","Validation before execution"]],"diagram":"Tile.","qa":[["Why validate arguments in a registry?","<p><b>Short answer:</b> Model output is untrusted, so arguments must match the schema and policy before any function runs.</p><p>Return clear errors for correction.</p>"]],"related":["cd-loop","cd-retry"]},"cd-retry":{"icon":"🔄","title":"Retry with backoff and timeout","type":"Coding exercises","what":"Wrap calls with exponential backoff, jitter and a deadline.","role":"Reliability basics.","does":["Retry only transient errors.","Make writes idempotent."],"facts":[["Check","Backoff, jitter, deadline"]],"diagram":"Tile.","qa":[["How do you implement retries correctly?","<p><b>Short answer:</b> Retry only transient failures, use exponential backoff with jitter, cap attempts and total time, and ensure the operation is idempotent.</p><p>Respect rate-limit headers.</p>"]],"related":["cd-reg","cd-compact"]},"cd-compact":{"icon":"✂️","title":"Context compaction","type":"Coding exercises","what":"Summarise old messages while keeping the goal, decisions and recent turns.","role":"Context management.","does":["Keep tool_use and tool_result pairs together.","Do not summarise away constraints."],"facts":[["Check","Preserve what matters"]],"diagram":"Tile.","qa":[["What is tricky about compacting a conversation?","<p><b>Short answer:</b> Keeping tool call and result pairs intact, preserving the goal, constraints and decisions, and not losing details the next step needs.</p><p>Test with long tasks.</p>"]],"related":["cd-retry","cd-policy"]},"cd-policy":{"icon":"🛡️","title":"Policy gate","type":"Coding exercises","what":"Decide in code whether a tool call is allowed, needs approval or must be blocked.","role":"Safety layer.","does":["Check role, ownership and limits.","Log every decision."],"facts":[["Check","Default deny"]],"diagram":"Tile.","qa":[["How do you implement a guardrail for tool calls?","<p><b>Short answer:</b> A function that evaluates the call against an allow-list, user role, ownership and amount limits, returns allow, require-approval or deny, and logs the decision.</p><p>Default to deny for unknown tools.</p>"]],"related":["cd-compact"]},"db-loop":{"icon":"🔄","title":"Agent keeps looping","type":"Debugging scenarios","what":"It repeats the same tool call or never reaches a final answer.","role":"Frequent issue.","does":["Check tool results for useful errors and stop criteria.","Add repeat detection and step limits."],"facts":[["Fix","Better errors, hard limits"]],"diagram":"Tile.","qa":[["An agent loops forever. How do you debug it?","<p><b>Short answer:</b> Read the trace for repeated calls, check whether tool results give the model new information or useful errors, clarify the stop condition in the prompt and add step limits and repeat detection.</p><p>Escalate instead of looping.</p>"]],"related":["db-tool"]},"db-tool":{"icon":"🎯","title":"Wrong tool chosen","type":"Debugging scenarios","what":"The model picks an overlapping or unsuitable tool.","role":"Tool design problem.","does":["Clarify descriptions and boundaries.","Reduce the number of tools."],"facts":[["Fix","Fewer, clearer tools"]],"diagram":"Tile.","qa":[["The agent picks the wrong tool. What do you change?","<p><b>Short answer:</b> Improve tool names and descriptions with when and when-not guidance, remove overlapping tools, merge related ones and add examples, then re-run the evals.</p><p>Tool descriptions act like prompts.</p>"]],"related":["db-loop","db-cost"]},"db-cost":{"icon":"💸","title":"Cost doubled overnight","type":"Debugging scenarios","what":"Token usage or model calls rose sharply.","role":"Operations issue.","does":["Compare traces before and after the change.","Look for longer contexts, extra retries or loops."],"facts":[["Fix","Budgets and caching"]],"diagram":"Tile.","qa":[["Costs suddenly doubled. What do you check?","<p><b>Short answer:</b> Compare traces and token counts by step, look for longer prompts, loops, extra retries, a model change or disabled caching, then add budgets and alerts.</p><p>Track cost per successful task.</p>"]],"related":["db-tool","db-inj"]},"db-inj":{"icon":"☣️","title":"Injection found in a document","type":"Debugging scenarios","what":"A retrieved document contained instructions that changed the agent behaviour.","role":"Security incident.","does":["Contain, review logs, restrict tools.","Add detection and isolation."],"facts":[["Fix","Isolate untrusted content"]],"diagram":"Tile.","qa":[["You find a prompt-injection attempt in production. What now?","<p><b>Short answer:</b> Contain by disabling the affected tool or source, review audit logs for impact, rotate exposed credentials, add isolation between untrusted content and powerful tools, require approvals and add the case to the eval suite.</p><p>Do a post-incident review.</p>"]],"related":["db-cost","db-hall"]},"db-hall":{"icon":"🌀","title":"Wrong arguments or invented data","type":"Debugging scenarios","what":"The model supplies fabricated ids or invalid parameters.","role":"Schema and grounding issue.","does":["Tighten schemas and validate.","Make tools return what valid values look like."],"facts":[["Fix","Strict schemas and helpful errors"]],"diagram":"Tile.","qa":[["The agent invents order ids. How do you stop it?","<p><b>Short answer:</b> Use strict schemas, validate against the database, return an error that tells the model to look the id up with a search tool, and require the lookup step in the instructions.</p><p>Never let the model guess identifiers.</p>"]],"related":["db-inj"]}};
+  var ORDERS = {"fr":["fr-clar","fr-arch","fr-tools","fr-safe","fr-trade"],"fd":["fd-ctx","fd-sample","fd-rag","fd-ft","fd-hall"],"sd":["sd-support","sd-code","sd-know","sd-gw","sd-research"],"cd":["cd-loop","cd-reg","cd-retry","cd-compact","cd-policy"],"db":["db-loop","db-tool","db-cost","db-inj","db-hall"]};
+  var NAMES = {"fr":"Answer framework","fd":"Fundamentals","sd":"System design","cd":"Coding exercises","db":"Debugging"};
+  var modal = document.getElementById('kModal'); if (!modal) return;
+  var bodyEl = document.getElementById('kBody'), lastFocus = null, cur = null, curOrder = null;
+  function row(label, val){ return '<tr><td>' + label + '</td><td>' + val + '</td></tr>'; }
+  function render(k){
+    var d = INFO[k]; if (!d) return false; cur = k;
+    document.getElementById('kIcon').textContent = d.icon;
+    document.getElementById('kTitle').textContent = d.title;
+    document.getElementById('kMeta').innerHTML = '<span class="kpill red">' + d.type + '</span><span class="kpill">' + d.qa.length + ' interview Q&amp;As</span>';
+    function fx(s) { return String(s).replace(/<(?![/]?(?:p|b|i|ul|li|code|br|strong|em|pre|span)[^a-z])/g, '&lt;'); }
+    var h = '';
+    h += '<div class="ksec"><h4>What it is</h4><p>' + fx(d.what) + '</p></div>';
+    h += '<div class="ksec"><h4>Role</h4><p>' + fx(d.role) + '</p></div>';
+    h += '<div class="ksec"><h4>What it does</h4><ul>' + d.does.map(function(x){ return '<li>' + fx(x) + '</li>'; }).join('') + '</ul></div>';
+    h += '<div class="ksec"><h4>Where to see it in the diagram</h4><p class="kdiagram">' + fx(d.diagram) + '</p></div>';
+    h += '<div class="ksec"><h4>Key facts</h4><table class="kfacts">' + d.facts.map(function(f){ return row(fx(f[0]), fx(f[1])); }).join('') + '</table></div>';
+    h += '<div class="ksec"><div class="kqa-h"><h4>Interview questions &amp; answers</h4><button type="button" id="kExpand">Expand all</button></div>' +
+         d.qa.map(function(q, i){ return '<details class="kqa"' + (i === 0 ? ' open' : '') + '><summary>' + fx(q[0]) + '</summary><div class="ans">' + fx(q[1]) + '</div></details>'; }).join('') + '</div>';
+    if (d.related && d.related.length) h += '<div class="ksec"><h4>Related topics</h4><div class="krel">' + d.related.filter(function(r){ return INFO[r]; }).map(function(r){ return '<button type="button" class="kchip" data-k="' + r + '">' + INFO[r].icon + ' ' + fx(INFO[r].title) + '</button>'; }).join('') + '</div></div>';
+    bodyEl.innerHTML = h; bodyEl.scrollTop = 0;
+    var ord = ORDERS[curOrder] || [], i = ord.indexOf(k);
+    document.getElementById('kPos').textContent = i >= 0 ? (NAMES[curOrder] + ': topic ' + (i + 1) + ' of ' + ord.length) : '';
+    document.getElementById('kPrev').disabled = !ord.length; document.getElementById('kNext').disabled = !ord.length;
+    return true;
+  }
+  function open(k, order){
+    if (!INFO[k]) return;
+    if (order) curOrder = order;
+    if (!modal.classList.contains('open')) lastFocus = document.activeElement;
+    render(k);
+    modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.body.classList.add('kmodal-open');
+    document.getElementById('kClose').focus();
+  }
+  function close(){
+    modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); document.body.classList.remove('kmodal-open');
+    if (lastFocus && lastFocus.focus) { try { lastFocus.focus({ preventScroll:true }); } catch(e){} }
+  }
+  function step(d){
+    var ord = ORDERS[curOrder]; if (!ord || !ord.length) return;
+    var i = ord.indexOf(cur); if (i < 0) i = d > 0 ? -1 : 0;
+    open(ord[(i + d + ord.length) % ord.length]);
+  }
+  function orderOf(el){ var s = el && el.closest ? el.closest('svg[data-order]') : null; return s ? s.getAttribute('data-order') : null; }
+  document.addEventListener('click', function(e){
+    var st = e.target.closest ? e.target.closest('[data-study]') : null;
+    if (st) { var o = st.getAttribute('data-study'); if (ORDERS[o]) { curOrder = o; open(ORDERS[o][0], o); } return; }
+    var t = e.target.closest ? e.target.closest('[data-k]') : null;
+    if (t && INFO[t.getAttribute('data-k')]) { e.preventDefault(); open(t.getAttribute('data-k'), orderOf(t)); return; }
+    if (e.target === modal) close();
+    if (e.target.id === 'kExpand') {
+      var ds = bodyEl.querySelectorAll('details.kqa'), allOpen = [].every.call(ds, function(x){ return x.open; });
+      [].forEach.call(ds, function(x){ x.open = !allOpen; }); e.target.textContent = allOpen ? 'Expand all' : 'Collapse all';
+    }
+  });
+  document.getElementById('kClose').onclick = close;
+  document.getElementById('kPrev').onclick = function(){ step(-1); };
+  document.getElementById('kNext').onclick = function(){ step(1); };
+  document.addEventListener('keydown', function(e){
+    if (modal.classList.contains('open')) {
+      if (e.key === 'Escape') { close(); return; }
+      if (e.key === 'ArrowRight' && !/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) { step(1); return; }
+      if (e.key === 'ArrowLeft' && !/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) { step(-1); return; }
+      if (e.key === 'Tab') {
+        var f = modal.querySelectorAll('button, summary, [href], [tabindex]:not([tabindex="-1"])'); if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+      return;
+    }
+    var g = e.target && e.target.closest ? e.target.closest('.clk[data-k]') : null;
+    if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(g.getAttribute('data-k'), orderOf(g)); }
+  });
+})();
+</script>
+<!--UIX-JS-START-->
+<script>
+/* ui-extras-v3: back-to-index button + editor-style syntax highlighting. Injected into every course page. */
+(function () {
+  var HOME = '../index.html#ai';
+
+  /* ---------------- back to index ---------------- */
+  function makeHome(floating) {
+    var a = document.createElement('a');
+    a.className = 'homebtn' + (floating ? ' homefloat' : '');
+    a.href = HOME; a.title = 'Back to the course list'; a.setAttribute('aria-label', 'Back to the course list');
+    a.innerHTML = '<span class="hbi">⌂</span><span class="hbl"> Courses</span>';
+    return a;
+  }
+  function addHome() {
+    var bar = document.getElementById('cmsbar');
+    if (!bar) return false;
+    if (bar.querySelector('.homebtn')) return true;
+    var a = makeHome(false), menu = document.getElementById('cmsMenu');
+    if (menu && menu.nextSibling) bar.insertBefore(a, menu.nextSibling); else bar.insertBefore(a, bar.firstChild);
+    return true;
+  }
+  function initHome() {
+    if (addHome()) return;
+    var tries = 0, t = setInterval(function () {
+      if (addHome()) { clearInterval(t); return; }
+      if (++tries > 30) { clearInterval(t); if (!document.querySelector('.homebtn')) document.body.appendChild(makeHome(true)); }
+    }, 100);
+  }
+
+  /* ---------------- syntax highlighting ---------------- */
+  function words(s) { var o = {}; s.split(/\s+/).forEach(function (w) { if (w) o[w] = 1; }); return o; }
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  var CS_KW = words('abstract as base bool byte char checked class const decimal delegate double enum event explicit extern false fixed float implicit in int interface internal is lock long namespace new null object operator out override params private protected public readonly ref sbyte sealed short sizeof stackalloc static string struct this true typeof uint ulong unchecked unsafe ushort using var virtual void volatile record init required get set when with from select where orderby group into join let partial global nameof dynamic async value');
+  var CS_CTL = words('if else switch case default for foreach while do break continue return throw try catch finally await yield goto');
+  var JS_KW = words('const let var function new class extends import from export default async static get set interface type enum implements public private protected readonly as null undefined true false void delete typeof instanceof in of this super abstract declare namespace');
+  var JS_CTL = words('if else for while do switch case break continue return throw try catch finally await yield');
+  var PY_KW = words('def class lambda is not and or in as with None True False global nonlocal async self cls print');
+  var PY_CTL = words('if elif else for while return try except finally raise yield break continue pass import from await assert del');
+  var SQL_KW = words('select from where and or not in is null as join left right inner outer full cross natural on group by order having limit offset fetch first next rows only insert into values update set delete create alter drop table index unique primary key foreign references constraint default check view materialized with recursive union intersect except all distinct case when then else end exists between like ilike similar to asc desc nulls begin commit rollback savepoint transaction returning using partition range list hash attach detach concurrently if for over unbounded preceding following current row explain analyze verbose buffers vacuum reindex cluster grant revoke schema database extension function procedure returns language replace trigger before after each execute declare cursor conflict do nothing cascade restrict add column rename truncate temporary temp unlogged tablespace lock share nowait skip locked generated always identity stored include storage inherits owner publication subscription connection slot window filter within lateral any some collate enable disable force row level security policy role user password login superuser to');
+  var SQL_TY = words('bigint int integer smallint text varchar char character boolean bool numeric decimal real double precision float timestamp timestamptz date time timetz interval jsonb json uuid serial bigserial smallserial bytea inet cidr money oid xml tsvector tsquery vector geometry geography array');
+  var BASH_KW = words('if then else elif fi for while until do done case esac in function select time');
+  var BASH_CTL = words('return exit break continue');
+  var HCL_KW = words('resource data variable output module provider locals terraform dynamic for in if true false null for_each count content lifecycle depends_on required_providers backend');
+  var DOCKER_KW = words('FROM RUN CMD LABEL EXPOSE ENV ADD COPY ENTRYPOINT VOLUME USER WORKDIR ARG ONBUILD STOPSIGNAL HEALTHCHECK SHELL AS MAINTAINER');
+  var JAVA_KW = words('abstract assert boolean byte char class const double enum extends final float implements import instanceof int interface long native new package private protected public short static strictfp super synchronized this throws transient void volatile null true false var record sealed permits');
+  var JAVA_CTL = words('if else switch case default for while do break continue return throw try catch finally');
+  var NGINX_KW = words('server location upstream http events worker_processes listen server_name root index proxy_pass proxy_set_header return rewrite try_files include add_header ssl_certificate ssl_certificate_key gzip access_log error_log keepalive_timeout client_max_body_size');
+  var LITS = words('true false null nil none undefined yes no on off');
+
+  var LANGS = {
+    sql: { ci: 1, lc: '--[^\\n]*', bc: '/\\*[\\s\\S]*?\\*/', str: ["\\$\\$[\\s\\S]*?\\$\\$", "'(?:[^']|'')*'"], idq: '"[^"\\n]*"', pre: [['v', '\\$\\d+|:[A-Za-z_]\\w*(?!:)']], kw: SQL_KW, ty: SQL_TY },
+    csharp: { lc: '//[^\\n]*', bc: '/\\*[\\s\\S]*?\\*/', str: ['"""[\\s\\S]*?"""', '\\$@"(?:[^"]|"")*"|@\\$"(?:[^"]|"")*"|@"(?:[^"]|"")*"', '\\$"(?:[^"\\\\\\n]|\\\\.)*"', '"(?:[^"\\\\\\n]|\\\\.)*"', "'(?:[^'\\\\\\n]|\\\\.)*'"], pre: [['m', '^[ \\t]*#\\w+[^\\n]*']], kw: CS_KW, ctl: CS_CTL, pascal: 1 },
+    javascript: { lc: '//[^\\n]*', bc: '/\\*[\\s\\S]*?\\*/', str: ['`(?:[^`\\\\]|\\\\[\\s\\S])*`', '"(?:[^"\\\\\\n]|\\\\.)*"', "'(?:[^'\\\\\\n]|\\\\.)*'"], kw: JS_KW, ctl: JS_CTL, pascal: 1 },
+    python: { lc: '#[^\\n]*', str: ['[rRbBfFuU]{0,2}"""[\\s\\S]*?"""', "[rRbBfFuU]{0,2}'''[\\s\\S]*?'''", '[rRbBfFuU]{0,2}"(?:[^"\\\\\\n]|\\\\.)*"', "[rRbBfFuU]{0,2}'(?:[^'\\\\\\n]|\\\\.)*'"], pre: [['f', '@[A-Za-z_][\\w.]*']], kw: PY_KW, ctl: PY_CTL, pascal: 1 },
+    bash: { lc: '#[^\\n]*', str: ['"(?:[^"\\\\]|\\\\[\\s\\S])*"', "'[^']*'"], pre: [['v', '\\$\\{[^}\\n]*\\}|\\$[A-Za-z_]\\w*|\\$[0-9?@#*!$]'], ['p', '--?[A-Za-z][\\w-]*']], kw: BASH_KW, ctl: BASH_CTL, wordRe: '[A-Za-z_][A-Za-z0-9_.\\-]*', cmd: 'fn' },
+    yaml: { lc: '#[^\\n]*', str: ['"(?:[^"\\\\\\n]|\\\\.)*"', "'(?:[^'\\n]|'')*'"], pre: [['p', '^[ \\t]*(?:-[ \\t]+)?[A-Za-z_][\\w.\\-/]*(?=[ \\t]*:(?:[ \\t]|$))'], ['v', '[&*][A-Za-z_]\\w*']], kw: {}, lit: 1, strKey: 1, wordRe: '[A-Za-z_][A-Za-z0-9_.\\-]*' },
+    json: { str: ['"(?:[^"\\\\\\n]|\\\\.)*"'], kw: {}, lit: 1, strKey: 1 },
+    hcl: { lc: '(?:#|//)[^\\n]*', bc: '/\\*[\\s\\S]*?\\*/', str: ['"(?:[^"\\\\\\n]|\\\\.)*"'], pre: [['p', '[A-Za-z_][\\w-]*(?=[ \\t]*=(?!=))']], kw: HCL_KW, lit: 1 },
+    dockerfile: { lc: '^[ \\t]*#[^\\n]*', str: ['"(?:[^"\\\\\\n]|\\\\.)*"', "'[^'\\n]*'"], pre: [['v', '\\$\\{[^}\\n]*\\}|\\$[A-Za-z_]\\w*'], ['p', '--[A-Za-z][\\w-]*']], kw: DOCKER_KW, bash: 1 },
+    ini: { lc: '^[ \\t]*[#;][^\\n]*', str: ['"(?:[^"\\\\\\n]|\\\\.)*"'], pre: [['t', '^[ \\t]*\\[[^\\]\\n]+\\]'], ['p', '^[ \\t]*[A-Za-z_][\\w.\\-]*(?=[ \\t]*[=:])']], kw: {}, lit: 1, wordRe: '[A-Za-z_][A-Za-z0-9_.\\-]*' },
+    xml: { bc: '\\x3c!--[\\s\\S]*?-->', str: ['"[^"]*"', "'[^']*'"], pre: [['k', '</?[A-Za-z][\\w:.\\-]*'], ['p', '[A-Za-z_:][\\w:.\\-]*(?=\\s*=)']], kw: {}, wordRe: '[A-Za-z_][A-Za-z0-9_.\\-]*' },
+    java: { lc: '//[^\\n]*', bc: '/\\*[\\s\\S]*?\\*/', str: ['"""[\\s\\S]*?"""', '"(?:[^"\\\\\\n]|\\\\.)*"', "'(?:[^'\\\\\\n]|\\\\.)*'"], pre: [['p', '@[A-Za-z_]\\w*']], kw: JAVA_KW, ctl: JAVA_CTL, pascal: 1 },
+    nginx: { lc: '#[^\\n]*', str: ['"(?:[^"\\\\\\n]|\\\\.)*"', "'[^'\\n]*'"], pre: [['v', '\\$[A-Za-z_]\\w*']], kw: NGINX_KW, cmd: 'kw', wordRe: '[A-Za-z_][A-Za-z0-9_.\\-]*' },
+    http: { str: ['"(?:[^"\\\\\\n]|\\\\.)*"'], pre: [['k', '^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b'], ['t', 'HTTP/\\d(?:\\.\\d)?'], ['p', '^[A-Za-z][\\w-]*(?=:)']], kw: {}, lit: 1 }
+  };
+  var ALIAS = { cs: 'csharp', 'c#': 'csharp', dotnet: 'csharp', js: 'javascript', ts: 'javascript', typescript: 'javascript', jsx: 'javascript', tsx: 'javascript', py: 'python', sh: 'bash', shell: 'bash', zsh: 'bash', powershell: 'bash', ps1: 'bash', yml: 'yaml', terraform: 'hcl', tf: 'hcl', docker: 'dockerfile', properties: 'ini', conf: 'ini', toml: 'ini', html: 'xml', xaml: 'xml', razor: 'csharp', psql: 'sql', postgres: 'sql', mysql: 'sql', tsql: 'sql' };
+  var CACHE = {};
+
+  function compile(name) {
+    if (CACHE[name]) return CACHE[name];
+    var c = LANGS[name], parts = [], names = [];
+    function add(n, re) { parts.push('(' + re + ')'); names.push(n); }
+    if (c.bc) add('c', c.bc);
+    if (c.lc) add('c', c.lc);
+    (c.str || []).forEach(function (s) { add('s', s); });
+    if (c.idq) add('i', c.idq);
+    (c.pre || []).forEach(function (p) { add(p[0], p[1]); });
+    add('n', '\\b0[xX][0-9a-fA-F_]+\\b|\\b\\d[\\d_]*(?:\\.\\d+)?(?:[eE][+-]?\\d+)?[a-zA-Z]*\\b');
+    add('w', c.wordRe || '[A-Za-z_][A-Za-z0-9_]*');
+    add('o', '[|;&(){}]|=>|->|::');
+    var out = { re: new RegExp(parts.join('|'), 'gm'), names: names, c: c };
+    CACHE[name] = out; return out;
+  }
+
+  function span(cls, text) { return '<span class="t-' + cls + '">' + esc(text) + '</span>'; }
+
+  function highlight(src, lang) {
+    var cp = compile(lang), c = cp.c, re = cp.re, names = cp.names, out = '', last = 0, m, atCmd = true, prevDot = false;
+    re.lastIndex = 0;
+    while ((m = re.exec(src)) !== null) {
+      if (m[0].length === 0) { re.lastIndex++; continue; }
+      var gap = src.slice(last, m.index);
+      if (gap) {
+        out += esc(gap);
+        if (c.cmd && gap.indexOf('\n') >= 0 && gap.replace(/\\[ \t]*\n/g, '').indexOf('\n') >= 0) atCmd = true;
+        prevDot = /\.\s*$/.test(gap);
+      }
+      var type = null;
+      for (var g = 0; g < names.length; g++) { if (m[g + 1] !== undefined) { type = names[g]; break; } }
+      var t = m[0];
+      if (type === 'w') {
+        var key = c.ci ? t.toLowerCase() : t, after = src.charAt(re.lastIndex), cls = null;
+        if (c.kw && c.kw[key]) cls = c.ctl && c.ctl[key] ? 'ct' : 'kw';
+        else if (c.ctl && c.ctl[key]) cls = 'ct';
+        else if (c.ty && c.ty[key]) cls = 'ty';
+        else if (c.lit && LITS[t.toLowerCase()]) cls = 'kw';
+        else if (c.cmd && atCmd) cls = c.cmd;
+        else if (!prevDot && after === '(' && lang !== 'sql') cls = 'fn';
+        else if (lang === 'sql' && after === '(') cls = 'fn';
+        else if (c.pascal && /^[A-Z][A-Za-z0-9_]*$/.test(t) && t.length > 1 && !/^[A-Z0-9_]+$/.test(t)) cls = 'ty';
+        else if (c.pascal && /^I[A-Z][a-z]/.test(t)) cls = 'ty';
+        if (c.cmd) { atCmd = !!(c.kw && c.kw[key] && /^(if|then|else|elif|do|while|until|time)$/.test(key)); }
+        out += cls ? span(cls, t) : esc(t);
+        prevDot = false;
+      } else if (type === 'o') {
+        if (c.cmd && /^[|;&(]$/.test(t)) atCmd = true;
+        out += esc(t); prevDot = false;
+      } else if (type === 's' && c.strKey && /^[ \t]*:/.test(src.slice(re.lastIndex, re.lastIndex + 12))) {
+        out += span('var', t); prevDot = false;
+      } else if (type === 'p') {
+        var mm = /^([ \t]*(?:-[ \t]+)?)([\s\S]*)$/.exec(t);
+        out += esc(mm[1]) + span('var', mm[2]); prevDot = false;
+      } else {
+        var map = { c: 'com', s: 'str', i: 'var', n: 'num', v: 'var', f: 'fn', p: 'var', k: 'kw', t: 'ty', m: 'ct' };
+        out += span(map[type] || 'str', t);
+        if (c.cmd && type === 'c') atCmd = true;
+        prevDot = false;
+      }
+      last = re.lastIndex;
+    }
+    out += esc(src.slice(last));
+    return out;
+  }
+
+  function guess(text) {
+    var t = text.replace(/^\s+/, '');
+    if (/^[{\[]/.test(t) && /["\]}]/.test(t)) return 'json';
+    if (/^\s*(apiVersion|kind|metadata|spec|version|services|name|on|jobs):/m.test(text) && /:\s/.test(text)) return 'yaml';
+    if (/^\s*(\$ |#!\/|kubectl|docker|aws|helm|git|curl|sudo|npm|dotnet|az |eksctl|terraform|echo|export|cd |ls |cat |mkdir|chmod)/m.test(text)) return 'bash';
+    if (/\b(select|insert into|update|delete from|create table|alter table)\b/i.test(text) && /\b(from|into|set|table|values)\b/i.test(text)) return 'sql';
+    if (/\b(public|private|internal)\b[\s\S]*[;{]|\bnamespace\b|\busing\s+[A-Z]/.test(text)) return 'csharp';
+    return null;
+  }
+
+  function norm(l) {
+    if (!l) return null;
+    l = String(l).toLowerCase().trim();
+    l = ALIAS[l] || l;
+    return LANGS[l] ? l : null;
+  }
+
+  /* copy button: icon only (the page script swaps its text to "Copied" for 1.5 s; show a tick instead) */
+  var ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
+  var ICON_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12.5 9.5 18 20 6.5"/></svg>';
+  function iconize(b) {
+    if (b.__ic) return; b.__ic = 1;
+    function render(done) { b.innerHTML = done ? ICON_OK : ICON_COPY; b.classList.toggle('done', !!done); }
+    render(false); b.title = 'Copy code'; b.setAttribute('aria-label', 'Copy code');
+    new MutationObserver(function () {
+      var t = (b.textContent || '').trim();
+      if (!t) return;
+      if (/copied/i.test(t)) { render(true); setTimeout(function () { render(false); }, 1500); } else render(false);
+    }).observe(b, { childList: true, characterData: true, subtree: true });
+  }
+
+  function run() {
+    [].forEach.call(document.querySelectorAll('.codewrap .copy'), iconize);
+    [].forEach.call(document.querySelectorAll('pre'), function (pre) {
+      if (pre.getAttribute('data-hl')) return;
+      var code = pre.querySelector('code') || pre;
+      if (code.children.length > 0) { pre.setAttribute('data-hl', 'pre'); return; }
+      var text = code.textContent, lang = norm(pre.getAttribute('data-lang')) || (pre.getAttribute('data-lang') ? null : guess(text));
+      if (!lang) { pre.setAttribute('data-hl', 'none'); return; }
+      try { code.innerHTML = highlight(text, lang); pre.setAttribute('data-hl', lang); } catch (e) { pre.setAttribute('data-hl', 'err'); }
+    });
+  }
+  window.__highlightCode = run; window.__highlight = highlight;
+
+  /* ---------------- keep the window pinned (iPad rotation / URL-bar resize can scroll it) ---------------- */
+  function pin() {
+    if (!document.body.classList.contains('cms')) return;
+    if (window.pageYOffset || window.pageXOffset) window.scrollTo(0, 0);
+    var root = document.documentElement; if (root.scrollTop) root.scrollTop = 0; if (document.body.scrollTop) document.body.scrollTop = 0;
+  }
+  /* iOS can keep the pre-rotation layout size until something nudges it: force a reflow and re-apply the viewport meta */
+  function reflow() {
+    var d = document.documentElement, m = document.querySelector('meta[name="viewport"]');
+    d.style.minHeight = 'calc(100% + 1px)'; void d.offsetHeight; d.style.minHeight = '';
+    if (m) { var c = m.getAttribute('content'); m.setAttribute('content', c); }
+  }
+  function pinSoon() { pin(); reflow(); setTimeout(function () { pin(); reflow(); }, 120); setTimeout(pin, 400); setTimeout(function () { pin(); reflow(); }, 900); }
+  window.addEventListener('orientationchange', pinSoon);
+  window.addEventListener('resize', pinSoon);
+  window.addEventListener('scroll', pin, { passive: true });
+  if (window.visualViewport) { window.visualViewport.addEventListener('resize', pinSoon); window.visualViewport.addEventListener('scroll', pin); }
+
+  function start() { initHome(); run(); pin(); setTimeout(run, 400); setTimeout(run, 1500); }
+  if (document.readyState === 'complete') start(); else window.addEventListener('load', start);
+})();
+</script>
+<!--UIX-JS-END-->
+</body>
+</html>

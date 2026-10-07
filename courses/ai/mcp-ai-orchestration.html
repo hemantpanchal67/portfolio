@@ -1,0 +1,1469 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#fdfbf2">
+<title>MCP and AI Orchestration – Complete Course</title>
+<link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@500;700&family=Indie+Flower&family=Inter:wght@400;600&family=Kalam:wght@400;700&family=Merriweather:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#e9e4d6; --paper:#fdfbf2; --line:#cfe0f1; --margin:#e58a8a; --ink:#1f3a8a; --hi:#fff176; --red:#c62828; --green:#2e7d32; --orange:#ef6c00;
+          --fb:#ffffff; --fy:#fff3a8; --fg:#d7f0d4; --fr:#fde0dc; --fo:#ffe0b2; --code:#eef3ff; --codesoft:#eef3ff88; --th:#dfe8ff; --note:#ffe9a8; --shadow:rgba(0,0,0,.25);
+          --body-font:'Patrick Hand','Caveat',cursive; --head-font:'Caveat',cursive; --code-font:'Caveat',cursive; --fs:20px; }
+  :root[data-theme="dark"] { --bg:#0e1015; --paper:#1d212a; --line:#2d3441; --margin:#b34a4a; --ink:#cfdcff; --hi:#6b5d00; --red:#ff8a80; --green:#81c784; --orange:#ffb74d;
+          --fb:#262b36; --fy:#4a4320; --fg:#1f3d27; --fr:#4a2323; --fo:#4a3216; --code:#2a3142; --codesoft:#2a314288; --th:#2a3350; --note:#5a4b1a; --shadow:rgba(0,0,0,.6); }
+  :root[data-theme="sepia"] { --bg:#cdbf9f; --paper:#f4ecd8; --line:#dccda6; --margin:#c98b6b; --ink:#4b3621; --hi:#f7d774; --red:#9c2f1f; --green:#4d6b2f; --orange:#b5651d;
+          --fb:#fbf6e8; --fy:#f2dd9b; --fg:#dfe6c3; --fr:#f1d2c4; --fo:#f3d9b0; --code:#ebdfc2; --codesoft:#ebdfc288; --th:#e6d6ae; --note:#f3d98c; }
+  :root[data-theme="blueprint"] { --bg:#071c33; --paper:#0f3a66; --line:#2b5d92; --margin:#8fc1ee; --ink:#e8f2ff; --hi:#1f6aa8; --red:#ffd166; --green:#8ff0b5; --orange:#ffb86b;
+          --fb:#144a80; --fy:#2a5f96; --fg:#14584f; --fr:#6a3a58; --fo:#6b5a2e; --code:#164b7d; --codesoft:#164b7d88; --th:#1d5a96; --note:#356fa6; --shadow:rgba(0,0,0,.6); }
+  :root[data-theme="mint"] { --bg:#c4e0d3; --paper:#f1faf5; --line:#c6e4d4; --margin:#7bbf9b; --ink:#14463a; --hi:#d4f58a; --red:#b3261e; --green:#1b6b3a; --orange:#c2670a;
+          --fb:#ffffff; --fy:#f3f2b4; --fg:#cdeed9; --fr:#fbd9d4; --fo:#fde3bd; --code:#e0f2ea; --codesoft:#e0f2ea88; --th:#cfeadc; --note:#e5f2a6; }
+  :root[data-theme="clean"] { --bg:#f1f3f5; --paper:#ffffff; --line:transparent; --margin:transparent; --ink:#1b2a41; --hi:#ffe98a; --red:#c0392b; --green:#2e7d32; --orange:#d35400;
+          --fb:#ffffff; --fy:#fff6c8; --fg:#e3f4e3; --fr:#fdeaea; --fo:#fff0dc; --code:#eef2f7; --codesoft:#eef2f788; --th:#e3ebf6; --note:#fff1b8; --shadow:rgba(0,0,0,.15); }
+  #toolbar { position:sticky; top:0; z-index:50; display:flex; flex-wrap:wrap; gap:10px 18px; align-items:center; justify-content:center; padding:8px 14px;
+          background:var(--paper); color:var(--ink); border-bottom:3px solid var(--margin); box-shadow:0 3px 10px var(--shadow); font-family:system-ui,'Segoe UI',sans-serif; font-size:15px; line-height:1.2; }
+  #toolbar b { font-size:16px; } #toolbar label { display:flex; align-items:center; gap:6px; }
+  #toolbar select, #toolbar button { font:inherit; padding:5px 8px; border:2px solid var(--ink); border-radius:8px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  @media print { #toolbar { display:none; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); font-family:var(--body-font); color:var(--ink); font-size:var(--fs); }
+  .page { max-width:900px; margin:26px auto; padding:30px 30px 40px 84px; position:relative; box-shadow:0 6px 18px var(--shadow); line-height:32px;
+      background: linear-gradient(90deg, transparent calc(var(--mx,62px) - 2px), var(--margin) calc(var(--mx,62px) - 2px), var(--margin) var(--mx,62px), transparent var(--mx,62px)),
+      repeating-linear-gradient(transparent 0, transparent 31px, var(--line) 31px, var(--line) 32px), var(--paper); }
+  .page::after { content:attr(data-p); position:absolute; right:18px; bottom:8px; font-family:var(--head-font); font-size:22px; opacity:.6; }
+  h1 { font-family:var(--head-font); font-size:58px; margin:0 0 4px; line-height:64px; transform:rotate(-1deg); }
+  h1 span { border-bottom:4px double var(--red); }
+  h2 { font-family:var(--head-font); font-size:36px; margin:32px 0 0; line-height:32px; color:var(--red); transform:rotate(-.6deg); }
+  h2::after { content:""; display:block; height:3px; width:55%; background:var(--red); border-radius:50%; opacity:.6; margin-top:2px; }
+  h1 + h2, h1 + p + h2 { margin-top:16px; }
+  h3 { font-family:var(--head-font); font-size:28px; margin:16px 0 0; line-height:32px; color:var(--orange); }
+  p, ul, ol { margin:0; }
+  p.el { text-align:justify; margin:4px 0 6px; } .el b, li b { color:var(--red); }
+  ul, ol { padding-left:30px; }
+  ul { list-style:none; } ul li::before { content:"➜ "; color:var(--red); margin-left:-28px; display:inline-block; width:28px; }
+  .hi { background:linear-gradient(transparent 20%, var(--hi) 20%, var(--hi) 90%, transparent 90%); padding:0 3px; }
+  .note { display:inline-block; background:var(--note); padding:4px 14px; transform:rotate(-1deg); box-shadow:2px 3px 6px rgba(0,0,0,.2); line-height:28px; margin:8px 0; }
+  .green { color:var(--green); } .red { color:var(--red); }
+  code { font-family:var(--code-font); font-size:23px; background:var(--code); padding:0 5px; border:1px dashed var(--ink); border-radius:4px; }
+  pre { margin:4px 0; font-family:var(--code-font); font-size:22px; line-height:32px; background:var(--codesoft); border-left:4px solid var(--ink); padding:0 12px; overflow-x:auto; }
+  table { border-collapse:collapse; margin:8px 0; width:100%; line-height:27px; font-size:19px; }
+  th, td { border:2px solid var(--ink); padding:2px 9px; text-align:left; vertical-align:top; }
+  th { font-family:var(--head-font); font-size:25px; background:var(--th); }
+  svg { width:100%; height:auto; display:block; margin:10px 0; }
+  svg text { font-family:var(--head-font); font-size:22px; fill:var(--ink); text-anchor:middle; }
+  svg .b { fill:var(--fb); stroke:var(--ink); stroke-width:2.5; }
+  svg .y { fill:var(--fy); stroke:var(--ink); stroke-width:2.5; }
+  svg .g { fill:var(--fg); stroke:var(--green); stroke-width:2.5; }
+  svg .r { fill:var(--fr); stroke:var(--red); stroke-width:2.5; }
+  svg .o { fill:var(--fo); stroke:var(--orange); stroke-width:2.5; }
+  svg .zone { fill:none; stroke:var(--ink); stroke-width:2.5; stroke-dasharray:9 6; }
+  svg .l { stroke:var(--ink); stroke-width:2.5; fill:none; marker-end:url(#ar); }
+  svg .d { stroke:var(--red); stroke-width:2.5; fill:none; stroke-dasharray:6 5; marker-end:url(#ar); }
+  svg .s { font-size:17px; fill:var(--red); }
+  svg .t { font-size:28px; fill:var(--red); font-weight:700; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:0 24px; }
+  @media (max-width:700px){ body{font-size:17px} .page{padding:20px 12px 30px 48px} .two{grid-template-columns:1fr} }
+  @media print { body{background:#fff} .page{box-shadow:none; margin:0; page-break-after:always} }
+
+  /* ===== iPad / touch friendly ===== */
+  html { -webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-behavior:smooth; }
+  body { padding-bottom:calc(150px + env(safe-area-inset-bottom)); padding-left:env(safe-area-inset-left); padding-right:env(safe-area-inset-right); -webkit-tap-highlight-color:transparent; }
+  button, select { touch-action:manipulation; }
+  #toolbar { padding-top:calc(8px + env(safe-area-inset-top)); transition:transform .25s ease; }
+  #toolbar.hide { transform:translateY(-115%); }
+  #toolbar select, #toolbar button { min-height:44px; font-size:16px; }
+  .page { --mx:62px; }
+  @media (max-width:1100px) {
+    .page { margin:14px auto; max-width:calc(100% - 28px); padding:26px 26px 46px 80px; }
+    p.el, li, td { font-size:1em; }
+    table { font-size:18px; }
+    svg text { stroke:none; }
+  }
+  @media (max-width:820px) {
+    .page { --mx:40px; padding:22px 18px 44px 60px; max-width:calc(100% - 16px); margin:10px auto; }
+    h1 { font-size:46px; line-height:52px; } h2 { font-size:32px; }
+    table { display:block; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .two { grid-template-columns:1fr; }
+  }
+  @media (orientation:landscape) and (min-width:1000px) and (max-width:1400px) { .page { max-width:900px; } }
+  /* read-from-here buttons */
+  .spk { display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; margin-left:10px; vertical-align:middle; padding:0; font-size:18px; line-height:1;
+         border:2px solid var(--ink); border-radius:50%; background:var(--fb); color:var(--ink); cursor:pointer; transform:rotate(.6deg); }
+  .spk:active { background:var(--hi); }
+  /* narrator dock */
+  #narrator { position:fixed; left:50%; transform:translateX(-50%); bottom:calc(10px + env(safe-area-inset-bottom)); z-index:60; width:min(760px, calc(100% - 20px));
+              background:var(--paper); color:var(--ink); border:3px solid var(--ink); border-radius:20px; box-shadow:0 8px 24px var(--shadow); font-family:system-ui,'Segoe UI',sans-serif; font-size:16px; line-height:1.25; overflow:hidden; }
+  #narrator .prog { height:6px; background:var(--code); } #narrator .prog i { display:block; height:100%; width:0; background:var(--red); transition:width .3s; }
+  #narrator .row { display:flex; align-items:center; gap:8px 12px; padding:8px 12px; flex-wrap:wrap; }
+  #narrator .extra { border-top:1px dashed var(--ink); justify-content:space-between; }
+  #narrator.min .extra { display:none; }
+  #narrator button { min-width:48px; min-height:48px; font-size:22px; padding:0 10px; border:2px solid var(--ink); border-radius:14px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  #narrator button.main { background:var(--red); color:var(--paper); min-width:60px; font-size:26px; }
+  #narrator button:active { transform:scale(.95); }
+  #narrator #nStatus { flex:1 1 140px; min-width:0; font-size:15px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  #narrator label { display:flex; align-items:center; gap:6px; font-size:15px; }
+  #narrator select { min-height:44px; font-size:16px; max-width:220px; padding:4px 8px; border:2px solid var(--ink); border-radius:10px; background:var(--fb); color:var(--ink); }
+  #narrator input[type=checkbox] { width:22px; height:22px; accent-color:var(--red); }
+  .reading { background:var(--hi) !important; box-shadow:0 0 0 4px var(--hi); border-radius:6px; transition:background .2s; }
+  svg.reading { box-shadow:none; outline:4px solid var(--hi); outline-offset:2px; background:transparent !important; }
+  @media print { #narrator, .spk { display:none !important; } }
+
+  /* ===== settings button + panel ===== */
+  #settingsBtn { position:fixed; top:calc(10px + env(safe-area-inset-top)); right:calc(12px + env(safe-area-inset-right)); z-index:70; width:52px; height:52px; padding:0; font-size:26px; line-height:1;
+                 border:3px solid var(--ink); border-radius:50%; background:var(--paper); color:var(--ink); box-shadow:0 4px 12px var(--shadow); cursor:pointer; touch-action:manipulation; }
+  #settingsBtn:active { transform:scale(.94); }
+  #settingsPanel { position:fixed; top:calc(72px + env(safe-area-inset-top)); right:calc(12px + env(safe-area-inset-right)); z-index:80; width:min(400px, calc(100% - 24px)); max-height:calc(100vh - 100px - env(safe-area-inset-top));
+                   overflow-y:auto; -webkit-overflow-scrolling:touch; display:none; padding:14px 16px 16px; background:var(--paper); color:var(--ink); border:3px solid var(--ink); border-radius:18px;
+                   box-shadow:0 12px 32px var(--shadow); font-family:system-ui,'Segoe UI',sans-serif; font-size:16px; line-height:1.3; }
+  #settingsPanel.open { display:block; overflow-x:hidden; }
+  #settingsPanel label select { min-width:0; max-width:62%; text-overflow:ellipsis; }
+  #settingsPanel { max-height:calc(100vh - 190px - env(safe-area-inset-top)); }
+  #settingsPanel .hd { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; font-size:19px; font-weight:700; }
+  #settingsPanel .hd button { width:44px; height:44px; font-size:20px; border:2px solid var(--ink); border-radius:12px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  #settingsPanel h4 { margin:14px 0 6px; padding-top:10px; border-top:2px dashed var(--ink); font-size:16px; }
+  #settingsPanel h4:first-of-type { border-top:0; padding-top:0; }
+  #settingsPanel label { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:8px 0; }
+  #settingsPanel label select { flex:0 0 62%; min-height:44px; font-size:16px; padding:4px 8px; border:2px solid var(--ink); border-radius:10px; background:var(--fb); color:var(--ink); }
+  #settingsPanel label.chk { justify-content:flex-start; min-height:44px; }
+  #settingsPanel input[type=checkbox] { width:24px; height:24px; accent-color:var(--red); }
+  #settingsPanel .reset { width:100%; min-height:46px; margin-top:8px; font-size:16px; border:2px solid var(--ink); border-radius:12px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  #settingsScrim { position:fixed; inset:0; z-index:75; display:none; background:rgba(0,0,0,.25); }
+  #settingsScrim.open { display:block; }
+  @media print { #settingsBtn, #settingsPanel, #settingsScrim { display:none !important; } }
+
+  /* ===== narrator controls now live inside the settings panel ===== */
+  body { padding-bottom:calc(40px + env(safe-area-inset-bottom)) !important; }
+  #settingsPanel { max-height:calc(100vh - 100px - env(safe-area-inset-top)); }
+  #settingsPanel #narrator { position:static; transform:none; width:auto; margin:6px 0 12px; border:2px solid var(--ink); border-radius:14px; box-shadow:none; background:var(--code); }
+  #settingsPanel #narrator .row { padding:8px; gap:8px; justify-content:center; }
+  #settingsPanel #narrator #nStatus { flex:1 1 100%; order:5; text-align:center; white-space:normal; font-size:15px; }
+  #settingsBtn.playing { background:var(--red); color:var(--paper); }
+
+  /* ===== animated architecture pages ===== */
+  .tag { font-family:var(--body-font); font-size:20px; color:var(--paper); background:var(--red); border-radius:12px; padding:0 10px; vertical-align:middle; }
+  .animbtn { min-height:46px; margin:6px 0 10px; padding:0 16px; font-size:16px; font-family:system-ui,'Segoe UI',sans-serif; border:2px solid var(--ink); border-radius:12px; background:var(--fb); color:var(--ink); cursor:pointer; touch-action:manipulation; }
+  .animbtn[aria-pressed="true"] { background:var(--hi); }
+  ol.steps { padding-left:34px; } ol.steps li { margin:2px 0; }
+  .stpli { border-radius:8px; animation:actbg 16s linear infinite; }
+  .stp { animation:act 16s linear infinite; }
+  @keyframes act { 0%,12.5% { opacity:1; } 12.6%,100% { opacity:.22; } }
+  @keyframes actbg { 0%,12.5% { background:var(--hi); } 12.6%,100% { background:transparent; } }
+  @keyframes dashmove { to { stroke-dashoffset:-28; } }
+  @keyframes blinkip { 0%,100% { opacity:1; } 50% { opacity:.25; } }
+  svg .flow { stroke-dasharray:8 6; animation:dashmove 1.1s linear infinite; }
+  svg .blink { animation:blinkip 2.4s ease-in-out infinite; }
+  svg .bus { stroke:var(--orange); stroke-width:3; fill:none; }
+  svg .soft { stroke:var(--ink); stroke-width:2; fill:none; opacity:.5; }
+  svg .m { font-size:17px; }
+  svg .pk1 { fill:var(--red); stroke:var(--ink); stroke-width:2; }
+  svg .pk2 { fill:var(--orange); stroke:var(--ink); stroke-width:2; }
+  svg .pk3 { fill:var(--green); stroke:var(--ink); stroke-width:2; }
+  svg .pkb { fill:var(--ink); stroke:var(--paper); stroke-width:2; }
+  svg .bdg { fill:var(--hi); stroke:var(--ink); stroke-width:2.5; }
+  svg .bt { font-size:16px; font-weight:700; }
+  .anim-paused .flow, .anim-paused .blink, .anim-paused .stp, .anim-paused .stpli { animation-play-state:paused !important; }
+  @media (prefers-reduced-motion:reduce) { .flow, .blink, .stp, .stpli { animation:none !important; } }
+  @media (max-width:820px) { .tag { display:none; } }
+
+  /* ===== full-width interactive architecture page (not notebook styled) ===== */
+  .archpage { margin:0; padding:22px clamp(10px, 2.4vw, 40px) 46px; background:var(--paper); color:var(--ink); font-family:var(--body-font); font-size:var(--fs); line-height:1.5;
+              border-top:8px solid var(--red); border-bottom:8px solid var(--red); box-shadow:0 6px 18px var(--shadow); }
+  .archpage h1 { font-size:clamp(34px, 4vw, 54px); line-height:1.15; margin:0 0 6px; transform:none; }
+  .archpage h1 span { border:0; }
+  .archpage h2 { font-size:28px; line-height:1.2; margin:0 0 8px; transform:none; }
+  .archpage h2::after { display:none; }
+  .archpage h3 { font-size:22px; margin:0 0 6px; line-height:1.2; }
+  .archpage p, .archpage ol, .archpage ul { margin:0; }
+  .archpage .lead { max-width:1100px; font-size:1.05em; margin-bottom:10px; }
+  .archpage .archtools { display:flex; flex-wrap:wrap; gap:10px; margin:8px 0 14px; }
+  .archpage .animbtn.primary { background:var(--red); color:var(--paper); border-color:var(--red); font-weight:700; }
+  .diagramwrap { background:var(--fb); border:3px solid var(--ink); border-radius:18px; padding:10px clamp(4px, 1vw, 14px); box-shadow:0 6px 16px var(--shadow); }
+  .diagramwrap svg { margin:0 auto; max-width:1700px; }
+  .clk { cursor:pointer; outline:none; }
+  .clk:hover rect, .clk:focus-visible rect { stroke-width:4.5; filter:brightness(1.07) drop-shadow(0 0 4px var(--red)); }
+  .clk:hover text, .clk:focus-visible text { font-weight:700; }
+  .clk.lnk:hover path:not(.hit), .clk.lnk:focus-visible path:not(.hit) { stroke-width:6; filter:drop-shadow(0 0 4px var(--red)); }
+  .clk:focus-visible { outline:3px solid var(--red); outline-offset:3px; }
+  svg .hit { stroke:transparent; stroke-width:20; fill:none; pointer-events:stroke; marker-end:none; }
+  svg circle { pointer-events:none; }
+  .archidx { margin:18px 0 8px; }
+  .archidx .cgrp { display:flex; flex-wrap:wrap; align-items:center; gap:6px 8px; margin:8px 0; }
+  .archidx .cgrp h3 { margin:0 8px 0 0; min-width:210px; color:var(--orange); }
+  .archidx .cgrp > div { display:flex; flex-wrap:wrap; gap:8px; }
+  .kchip { min-height:44px; padding:6px 14px; font:inherit; font-size:.9em; color:var(--ink); background:var(--fb); border:2px solid var(--ink); border-radius:22px; cursor:pointer; touch-action:manipulation; }
+  .kchip:hover, .kchip:focus-visible { background:var(--hi); }
+  .archgrid { display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:18px; margin-top:18px; }
+  .acard { background:var(--fb); border:2px solid var(--ink); border-radius:16px; padding:14px 18px 16px; }
+  .acard table { margin:4px 0; font-size:.88em; }
+  .acard .tip { margin-top:8px; background:var(--note); padding:6px 12px; border-radius:10px; }
+  @media (max-width:820px) { .archidx .cgrp h3 { min-width:100%; } }
+
+  /* ===== detail modal ===== */
+  body.kmodal-open { overflow:hidden; }
+  #kModal { position:fixed; inset:0; z-index:200; display:none; align-items:center; justify-content:center; padding:clamp(6px, 2vw, 24px); background:rgba(8,12,28,.62); -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px); }
+  #kModal.open { display:flex; }
+  #kModal .kcard { width:min(1040px, 100%); max-height:100%; display:flex; flex-direction:column; background:var(--paper); color:var(--ink); border:3px solid var(--ink); border-radius:22px; overflow:hidden;
+                   box-shadow:0 20px 60px rgba(0,0,0,.5); font-family:system-ui,'Segoe UI',Roboto,sans-serif; font-size:16px; line-height:1.55; animation:kpop .18s ease-out; }
+  @keyframes kpop { from { transform:translateY(14px) scale(.98); opacity:0; } to { transform:none; opacity:1; } }
+  .khead { display:flex; align-items:center; gap:14px; padding:14px 18px; background:var(--th); border-bottom:3px solid var(--ink); }
+  .khead .ico { font-size:34px; line-height:1; }
+  .khead h3 { font-family:inherit; color:var(--ink); transform:none; flex:1; margin:0; font-size:21px; line-height:1.25; }
+  .khead .meta { display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+  .kpill { display:inline-block; padding:1px 10px; border-radius:12px; font-size:13px; font-weight:600; background:var(--hi); border:1.5px solid var(--ink); }
+  .kpill.red { background:var(--red); color:var(--paper); border-color:var(--red); }
+  .kclose { flex:none; width:48px; height:48px; font-size:22px; border:2px solid var(--ink); border-radius:14px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  .kbody { overflow:auto; -webkit-overflow-scrolling:touch; padding:6px 22px 18px; }
+  .ksec { margin-top:14px; }
+  .ksec h4 { margin:0 0 6px; font-size:15px; letter-spacing:.06em; text-transform:uppercase; color:var(--red); }
+  .ksec p, .ksec ul { margin:0; } .ksec ul { padding-left:22px; } .ksec li { margin:3px 0; }
+  .ksec code, .kqa code { font-family:Consolas,'Courier New',monospace; font-size:.92em; background:var(--code); border:1px solid var(--ink); border-radius:4px; padding:0 4px; }
+  .kdiagram { background:var(--note); border-left:5px solid var(--red); border-radius:8px; padding:8px 12px; }
+  .kfacts { width:100%; border-collapse:collapse; font-size:15px; } .kfacts td { border:1.5px solid var(--ink); padding:5px 10px; vertical-align:top; } .kfacts td:first-child { width:30%; font-weight:700; background:var(--th); }
+  .kqa-h { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+  .kqa-h button { min-height:38px; padding:0 12px; font:inherit; font-size:14px; border:2px solid var(--ink); border-radius:10px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  .kqa { border:2px solid var(--ink); border-radius:12px; margin:8px 0; background:var(--fb); }
+  .kqa summary { cursor:pointer; padding:10px 14px; font-weight:700; list-style:none; display:flex; gap:10px; min-height:44px; align-items:center; }
+  .kqa summary::-webkit-details-marker { display:none; }
+  .kqa summary::before { content:'Q'; flex:none; width:26px; height:26px; border-radius:50%; background:var(--red); color:var(--paper); display:inline-flex; align-items:center; justify-content:center; font-size:13px; }
+  .kqa[open] summary { background:var(--th); border-bottom:2px solid var(--ink); }
+  .kqa .ans { padding:10px 14px 12px 50px; }
+  .krel { display:flex; flex-wrap:wrap; gap:8px; }
+  .krel .kchip { font-size:14px; }
+  .kfoot { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 14px; border-top:3px solid var(--ink); background:var(--th); }
+  .kfoot button { min-height:46px; padding:0 18px; font:inherit; font-weight:700; border:2px solid var(--ink); border-radius:12px; background:var(--fb); color:var(--ink); cursor:pointer; }
+  .kfoot button.primary { background:var(--red); color:var(--paper); border-color:var(--red); }
+  .kfoot .pos { font-size:14px; opacity:.85; text-align:center; }
+  @media print { #kModal { display:none !important; } }
+  @media (prefers-reduced-motion:reduce) { #kModal .kcard { animation:none; } }
+
+  /* ===== course layout (left curriculum, right lesson panel) ===== */
+  html, body { height:100%; }
+  body.cms { margin:0; padding:0 !important; overflow:hidden; background:var(--paper); }
+  #cms { display:grid; grid-template-columns:minmax(250px, 340px) minmax(0, 1fr); grid-template-rows:58px minmax(0, 1fr); height:100vh; height:100dvh; }
+  #cms.noside { grid-template-columns:0 minmax(0, 1fr); }
+  #cms.noside #cmsside { display:none; }
+  #cmsbar { grid-column:1 / -1; display:flex; align-items:center; gap:12px; min-width:0; padding:0 80px 0 10px; background:var(--th); border-bottom:3px solid var(--red); }
+  #cmsbar .menu { flex:none; width:46px; height:46px; font-size:24px; line-height:1; border:2px solid var(--ink); border-radius:12px; background:var(--fb); color:var(--ink); cursor:pointer; touch-action:manipulation; }
+  #cmsbar .ttl { flex:1 1 auto; min-width:0; white-space:nowrap; overflow:hidden; font-family:var(--head-font); font-size:28px; line-height:1.2; color:var(--ink); }
+  #cmsbar .prog { flex:0 1 340px; min-width:110px; font:600 13px/1.2 system-ui,'Segoe UI',sans-serif; color:var(--ink); }
+  #cmsbar .prog .bar { height:9px; margin-top:4px; border:2px solid var(--ink); border-radius:6px; background:var(--fb); overflow:hidden; }
+  #cmsbar .prog .bar i { display:block; height:100%; width:0; background:var(--green); transition:width .3s; }
+  #cmsbar .prog span { display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  #cmsside { overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; min-width:0; background:var(--fb); border-right:3px solid var(--ink); font-size:calc(var(--fs) - 2px); }
+  .sbhead { padding:12px 14px; border-bottom:2px dashed var(--ink); position:sticky; top:0; z-index:2; background:var(--fb); }
+  .sbhead h2 { margin:0 0 8px; font-size:24px; line-height:1.2; transform:none; color:var(--red); }
+  .sbhead h2::after { display:none; }
+  .sbhead input { width:100%; min-height:44px; padding:6px 12px; font:16px system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--paper); border:2px solid var(--ink); border-radius:12px; }
+  .sbtools { display:flex; gap:8px; margin-top:8px; }
+  .sbtools button { flex:1; min-height:40px; font:14px system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--fb); border:2px solid var(--ink); border-radius:10px; cursor:pointer; }
+  .sec { border-bottom:2px solid var(--ink); }
+  .sechd { display:flex; align-items:center; gap:8px; width:100%; min-height:50px; padding:8px 14px; text-align:left; font:inherit; font-weight:700; color:var(--ink); background:var(--th); border:0; cursor:pointer; touch-action:manipulation; }
+  .sechd .t { flex:1; min-width:0; overflow-wrap:anywhere; line-height:1.25; }
+  .sechd .cnt { flex:none; font:600 12px system-ui,'Segoe UI',sans-serif; opacity:.8; }
+  .sechd .chev { flex:none; transition:transform .2s; }
+  .sec.collapsed .chev { transform:rotate(-90deg); }
+  .sec.collapsed .lessons { display:none; }
+  .lessonbtn { display:flex; align-items:flex-start; gap:10px; width:100%; min-height:48px; padding:9px 12px 9px 16px; text-align:left; font:inherit; color:var(--ink); background:transparent; border:0; border-left:6px solid transparent; cursor:pointer; touch-action:manipulation; }
+  .lessonbtn:hover { background:var(--code); }
+  .lessonbtn.active { background:var(--hi); border-left-color:var(--red); font-weight:700; }
+  .lessonbtn .ck { flex:none; width:24px; height:24px; margin-top:1px; border:2px solid var(--ink); border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font:700 12px system-ui,'Segoe UI',sans-serif; }
+  .lessonbtn.done .ck { background:var(--green); border-color:var(--green); color:#fff; }
+  .lessonbtn .lt { flex:1; min-width:0; overflow-wrap:anywhere; line-height:1.25; }
+  .lessonbtn .tm { display:block; margin-top:2px; font:12px system-ui,'Segoe UI',sans-serif; opacity:.7; font-weight:400; }
+  .lessonbtn[hidden], .sec[hidden] { display:none; }
+  #cmsmain { overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; min-width:0; position:relative; padding:16px clamp(12px, 2.4vw, 40px) 0; }
+  .lesson { display:none; max-width:1200px; margin:0 auto; padding-bottom:22px; }
+  .lesson.active { display:block; }
+  .lcrumb { margin:0 0 10px; font:14px/1.3 system-ui,'Segoe UI',sans-serif; opacity:.85; overflow-wrap:anywhere; }
+  .lesson .hero { margin:0 0 12px; }
+  .lesson .hero h1 { font-size:clamp(32px, 4vw, 50px); line-height:1.15; margin:0 0 4px; transform:none; }
+  .lesson .hero p { margin:0; }
+  .sn { background:var(--fb); border:2px solid var(--ink); border-radius:16px; padding:14px 20px 18px; margin:0; box-shadow:0 4px 12px var(--shadow); line-height:1.55; }
+  .sn > h2 { margin:0 0 8px; font-size:clamp(28px, 3vw, 36px); line-height:1.2; color:var(--red); transform:none; }
+  .sn > h2::after { width:55%; }
+  .sn > h1 { font-size:clamp(30px, 3.4vw, 46px); line-height:1.15; margin:0 0 6px; transform:none; }
+  .sn h3 { line-height:1.25; }
+  .sn svg { max-width:1500px; margin:12px auto; }
+  .sn li, .sn p, .sn td, .sn th, .sn code, .sn .note, .sn h1, .sn h2, .sn h3 { overflow-wrap:break-word; }
+  .sn code { overflow-wrap:anywhere; }
+  .sn pre { white-space:pre; overflow-x:auto; max-width:100%; }
+  .sn table { width:100%; max-width:100%; table-layout:auto; }
+  .sn td, .sn th { min-width:5em; word-break:normal; }
+  .sn p.el { text-align:left; }
+  .sn .two { display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:0 28px; }
+  .lesson .archpage { margin:0; padding:0; border:0; box-shadow:none; background:transparent; }
+  .lesson .archpage > .archhead { margin-bottom:12px; }
+  .lfoot { position:sticky; bottom:0; z-index:5; display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr); gap:10px; max-width:1200px; margin:0 auto; padding:10px 0 12px; background:var(--paper); border-top:3px solid var(--ink); }
+  .lfoot button { min-width:0; min-height:50px; padding:0 14px; white-space:nowrap; overflow:hidden; font:700 16px system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--fb); border:2px solid var(--ink); border-radius:14px; cursor:pointer; touch-action:manipulation; }
+  .lfoot button.primary { background:var(--red); border-color:var(--red); color:var(--paper); }
+  .lfoot button.done { background:var(--green); border-color:var(--green); color:#fff; }
+  .lfoot button:disabled { opacity:.4; cursor:default; }
+  #cmsscrim { display:none; }
+  /* Explain in Hindi */
+  .hx { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin:2px 0 14px; }
+  .hx button { min-height:48px; padding:0 18px; white-space:nowrap; overflow:hidden; max-width:100%; font:700 16px system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--fb); border:2px solid var(--ink); border-radius:24px; cursor:pointer; touch-action:manipulation; }
+  .hx button.hxbtn { background:var(--red); border-color:var(--red); color:var(--paper); }
+  .hx .hxsub { flex:1 1 220px; min-width:0; font:14px/1.35 system-ui,'Segoe UI',sans-serif; opacity:.85; }
+  .hx .hxcap { flex:1 1 100%; min-width:0; padding:10px 14px; background:var(--note); border-left:6px solid var(--red); border-radius:10px; font:16px/1.5 system-ui,'Segoe UI',sans-serif; }
+  .hx .hxcap b { display:block; margin-bottom:2px; font-size:13px; letter-spacing:.05em; text-transform:uppercase; color:var(--red); }
+  .hx .hxmsg { flex:1 1 100%; padding:8px 12px; border:2px dashed var(--red); border-radius:10px; font:15px/1.4 system-ui,'Segoe UI',sans-serif; }
+  .hx [hidden] { display:none !important; }
+  svg .spot > rect { stroke:var(--red) !important; stroke-width:6 !important; filter:drop-shadow(0 0 10px var(--red)); }
+  svg .spot.lnk path:not(.hit) { stroke:var(--red) !important; stroke-width:7 !important; filter:drop-shadow(0 0 8px var(--red)); }
+  svg .spot text { font-weight:700; }
+  @media (max-width:900px) {
+    #cms { grid-template-columns:minmax(0, 1fr); }
+    #cmsside { position:fixed; top:58px; bottom:0; left:0; width:min(340px, 88vw); z-index:90; transform:translateX(-105%); transition:transform .25s; box-shadow:6px 0 18px var(--shadow); }
+    #cms.sideopen #cmsside { transform:none; }
+    #cms.noside { grid-template-columns:minmax(0, 1fr); }
+    #cms.noside #cmsside { display:block; }
+    #cms.sideopen #cmsscrim { display:block; position:fixed; top:58px; left:0; right:0; bottom:0; z-index:80; background:rgba(0,0,0,.4); }
+    #cmsbar .prog { display:none; }
+    .lfoot { grid-template-columns:minmax(0,1fr) minmax(0,1.5fr) minmax(0,1fr); gap:6px; padding:8px 0 10px; } .lfoot button { min-height:46px; padding:0 8px; font-size:14px; }
+  }
+  @media print { #cmsbar, #cmsside, .lfoot, .hx { display:none !important; } body.cms { overflow:visible; } #cms { display:block; height:auto; } #cmsmain { overflow:visible; } .lesson { display:block !important; page-break-after:always; } }
+
+  /* diagram-highlight-v2 */
+  .diagramwrap svg { overflow: visible; }
+  .stp { transform-box: fill-box; transform-origin: center; }
+  @keyframes act {
+    0%, 12.5% { opacity: 1; transform: scale(1.05); filter: drop-shadow(0 5px 7px rgba(0,0,0,.35)); }
+    13.5%, 100% { opacity: 1; transform: none; filter: none; }
+  }
+  /*UIX-CSS-START*/
+  /* ui-extras-v3: home button, editor-style code colours, rounded modal tables */
+  .homebtn { flex:none; display:inline-flex; align-items:center; gap:2px; min-height:40px; padding:0 12px; margin:0 6px 0 0; font:600 14px/1 system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--fb,#fff); border:2px solid var(--ink); border-radius:10px; text-decoration:none; white-space:nowrap; cursor:pointer; }
+  .homebtn:hover, .homebtn:focus-visible { background:var(--hi); }
+  .homebtn .hbi { font-size:18px; line-height:1; }
+  @media (max-width:640px) { .homebtn { padding:0 10px; min-width:40px; justify-content:center; } .homebtn .hbl { display:none; } }
+  .homefloat { position:fixed; top:10px; left:10px; z-index:60; box-shadow:2px 3px 0 rgba(0,0,0,.2); }
+
+  :root { --tk-kw:#0000ff; --tk-ct:#af00db; --tk-str:#a31515; --tk-com:#008000; --tk-num:#098658; --tk-ty:#267f99; --tk-fn:#795e26; --tk-var:#001080; }
+  :root[data-theme="dark"], :root[data-theme="blueprint"] { --tk-kw:#7cc4ff; --tk-ct:#e3a6ff; --tk-str:#ffb08a; --tk-com:#8fd18f; --tk-num:#c8e8a8; --tk-ty:#5ee6cf; --tk-fn:#ffe39a; --tk-var:#b8e4ff; }
+  /* iPad / iOS Safari: lock the page itself so only #cmsmain and #cmsside scroll. Without this the whole window can scroll
+     (rubber-band, URL-bar resize, orientation change) and the top bar plus breadcrumb row slide out of view. */
+  html { overscroll-behavior: none; background: var(--paper); }
+  /* no explicit width/height here: iOS keeps the old size after a rotation; four insets always follow the real viewport */
+  body.cms { position: fixed; top: 0; left: 0; right: 0; bottom: 0; width: auto; height: auto; overflow: hidden; overscroll-behavior: none; -webkit-text-size-adjust: 100%; }
+  body.cms #cms { position: absolute; top: 0; left: 0; right: 0; bottom: 0; width: auto; height: auto; }
+  /* hide/show the course menu: with the menu display:none the lesson area used to fall into the 0px grid column and collapse to a sliver.
+     Give both areas explicit cells and let the lesson area take the full row when the menu is hidden. */
+  #cmsside { grid-column: 1; grid-row: 2; }
+  #cmsmain { grid-column: 2; grid-row: 2; }
+  #cms.noside { grid-template-columns: minmax(0, 1fr); }
+  #cms.noside #cmsmain { grid-column: 1 / -1; }
+  @media (max-width: 900px) { #cmsmain { grid-column: 1 / -1; } #cms.noside { grid-template-columns: minmax(0, 1fr); } }
+  /* safe areas (notch / home indicator / rounded corners in landscape) */
+  #cmsbar { padding-left: max(10px, env(safe-area-inset-left)); }
+  #cmsmain { padding-left: max(clamp(12px, 2.4vw, 40px), env(safe-area-inset-left)); padding-right: max(clamp(12px, 2.4vw, 40px), env(safe-area-inset-right)); }
+  .lfoot { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+
+  /* tablets and iPad in landscape: use the whole width (slimmer course menu, no 1200px cap on the lesson) */
+  @media (min-width: 901px) and (max-width: 1500px) {
+    #cms { grid-template-columns: minmax(220px, 290px) minmax(0, 1fr); }
+    .lesson, .lfoot { max-width: none; }
+    #cmsmain { padding-left: max(clamp(12px, 1.6vw, 24px), env(safe-area-inset-left)); padding-right: max(clamp(12px, 1.6vw, 24px), env(safe-area-inset-right)); }
+    .sn { padding-left: 18px; padding-right: 18px; }
+    .sn svg, .diagramwrap svg { max-width: 100%; }
+    #cmsbar .ttl { font-size: 24px; }
+  }
+  /* short landscape screens (iPad 768 to 834 px high): tighter vertical spacing so more lesson shows */
+  @media (orientation: landscape) and (max-height: 860px) and (min-width: 901px) {
+    .lesson .hero h1 { font-size: clamp(26px, 3vw, 38px); }
+    .sn { padding-top: 10px; padding-bottom: 14px; }
+    .lfoot { padding-top: 6px; }
+    .lfoot button { min-height: 44px; }
+    #kModal { padding: 8px; }
+    #kModal .kcard { max-height: calc(100% - 2px); }
+  }
+  #cmsmain { overflow-x: hidden; }
+  #cmsmain, #cmsside { overscroll-behavior: contain; }
+  #cmsbar { position: relative; z-index: 30; }
+
+  /* copy button: icon only */
+  .codewrap .copy { display:inline-flex; align-items:center; justify-content:center; width:34px; min-width:34px; height:34px; min-height:34px; padding:0; line-height:1; font-size:0; color:var(--ink); }
+  .codewrap .copy svg { width:18px; height:18px; display:block; pointer-events:none; }
+  .codewrap .copy:hover, .codewrap .copy:focus-visible { background:var(--hi); }
+  .codewrap .copy.done { color:var(--green); border-color:var(--green); }
+
+  /* code editor background: off-white (not the theme's blue tint); dark editor for the Dark theme; Blueprint keeps its own tone */
+  :root { --codebg:#fbfaf5; }
+  :root[data-theme="dark"] { --codebg:#1e1e1e; }
+  :root[data-theme="blueprint"] { --codebg:#0f3358; }
+  pre, .sn pre, .codewrap pre { background:var(--codebg) !important; }
+  pre .t-kw { color:var(--tk-kw); } pre .t-ct { color:var(--tk-ct); } pre .t-str { color:var(--tk-str); } pre .t-num { color:var(--tk-num); }
+  pre .t-ty { color:var(--tk-ty); } pre .t-fn { color:var(--tk-fn); } pre .t-var { color:var(--tk-var); }
+  pre .t-com { color:var(--tk-com); font-style:italic; }
+
+  .kqa, #kModal .kqa { overflow:hidden; }
+  .kqa[open] summary, #kModal .kqa[open] summary { border-radius:10px 10px 0 0; }
+  .kqa:not([open]) summary, #kModal .kqa:not([open]) summary { border-radius:10px; }
+  .kfacts, #kModal .kfacts { border-collapse:separate; border-spacing:0; border:2px solid var(--ink); border-radius:12px; overflow:hidden; }
+  .kfacts td, #kModal .kfacts td { border:0; border-bottom:1.5px solid var(--ink); }
+  .kfacts td:first-child, #kModal .kfacts td:first-child { border-right:1.5px solid var(--ink); }
+  .kfacts tr:last-child td, #kModal .kfacts tr:last-child td { border-bottom:0; }
+  /*UIX-CSS-END*/
+
+  /* ===== DotNet course additions ===== */
+  .sn pre { font-family:Consolas,'Courier New',monospace; font-size:14.5px; line-height:1.55; background:var(--code); border:1.5px solid var(--ink); border-left:6px solid var(--red); border-radius:10px; padding:12px 14px; margin:8px 0; overflow-x:auto; max-width:100%; white-space:pre; }
+  .sn pre code { font-family:inherit; font-size:inherit; background:none; border:0; padding:0; overflow-wrap:normal; }
+  .codewrap { position:relative; margin:8px 0; }
+  .codewrap pre { margin:0; padding-top:26px; }
+  .codewrap pre[data-lang]::before { content:attr(data-lang); position:absolute; top:5px; left:14px; font:700 11px system-ui,'Segoe UI',sans-serif; letter-spacing:.08em; text-transform:uppercase; opacity:.65; color:var(--ink); }
+  .codewrap .copy { position:absolute; top:4px; right:6px; min-height:30px; padding:0 12px; font:12px system-ui,'Segoe UI',sans-serif; color:var(--ink); background:var(--fb); border:1.5px solid var(--ink); border-radius:8px; cursor:pointer; }
+  .qa-item { border:2px solid var(--ink); border-radius:12px; margin:10px 0; overflow:hidden; background:var(--paper); }
+  .qa-item .qq { margin:0; padding:8px 14px; background:var(--th); line-height:1.4; }
+  .qa-item .aa { margin:0; padding:8px 14px 10px; line-height:1.5; }
+  .qa-item .aa p { margin:0 0 7px; } .qa-item .aa ul { margin:3px 0 8px; } .qa-item .aa .codewrap { margin:6px 0 10px; }
+  .qa-item .aa .tip { background:var(--note); border-left:5px solid var(--red); border-radius:8px; padding:6px 12px; }
+  .qa-item .qq { cursor:default; } .qa-practice { margin:2px 0 12px; }
+  .practice .qa-item .qq { cursor:pointer; } .practice .qa-item .qq::after { content:'  ▸ tap to reveal'; font:12px system-ui,sans-serif; opacity:.6; }
+  .practice .qa-item.open .qq::after { content:'  ▾'; }
+  .practice .qa-item:not(.open) .aa { display:none; }
+  .qa-item code { font-family:Consolas,'Courier New',monospace; font-size:.9em; }
+  #cmsbar .animbtn { flex:none; min-height:40px; margin:0; padding:0 12px; font-size:13px; white-space:nowrap; }
+  .sn .archtools { margin:6px 0 10px; }
+  .sn .diagramwrap { margin:8px 0 12px; }
+  @media (max-width:900px) { #cmsbar .animbtn { display:none; } }
+</style>
+</head>
+<body>
+
+<button id="settingsBtn" type="button" aria-label="Open settings" aria-expanded="false" aria-controls="settingsPanel" title="Settings">⚙️</button>
+<div id="settingsScrim"></div>
+<div id="settingsPanel" role="dialog" aria-label="Settings">
+  <div class="hd"><span>⚙️ Settings</span><button id="settingsClose" type="button" aria-label="Close settings">✕</button></div>
+  <h4>🎨 Appearance</h4>
+  <label>Theme
+    <select id="themeSel">
+      <option value="classic">📒 Classic notebook</option>
+      <option value="dark">🌙 Dark</option>
+      <option value="sepia">📜 Sepia</option>
+      <option value="blueprint">📘 Blueprint</option>
+      <option value="mint">🌿 Mint</option>
+      <option value="clean">⬜ Clean (no lines)</option>
+    </select></label>
+  <label>Font
+    <select id="fontSel">
+      <option value="patrick">✍️ Patrick Hand</option>
+      <option value="caveat">Caveat – cursive</option>
+      <option value="kalam">Kalam – natural</option>
+      <option value="indie">Indie Flower – playful</option>
+      <option value="architect">Architects Daughter – neat</option>
+      <option value="serif">Merriweather – serif (default)</option>
+      <option value="sans">Inter – clean sans</option>
+      <option value="mono">Monospace – code style</option>
+    </select></label>
+  <label>Text size
+    <select id="sizeSel"><option value="17px">Small</option><option value="20px" selected>Medium</option><option value="23px">Large</option><option value="26px">Extra large</option></select></label>
+  <button id="resetBtn" class="reset" type="button">↺ Reset appearance</button>
+  <h4>🎧 Narrator</h4>
+<div id="narrator">
+  <div class="prog"><i id="nBar"></i></div>
+  <div class="row">
+    <button id="nPrev" aria-label="Previous section" title="Previous section">⏮</button>
+    <button id="nPlay" class="main" aria-label="Play narration" title="Play / pause">▶</button>
+    <button id="nStop" aria-label="Stop" title="Stop">⏹</button>
+    <button id="nNext" aria-label="Next section" title="Next section">⏭</button>
+    <div id="nStatus">🎧 Narrator – tap ▶ to listen</div>
+    </div>
+  </div>
+
+  <label>Speed
+    <select id="nRate"><option value="0.75">0.75×</option><option value="0.9">0.9×</option><option value="1" selected>1×</option><option value="1.15">1.15×</option><option value="1.3">1.3×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option></select></label>
+  <label>Voice <select id="nVoice"><option value="">Default voice</option></select></label>
+  <label class="chk"><input type="checkbox" id="nLabels"> Read diagram labels aloud</label>
+</div>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--ink)"/></marker>
+</defs></svg>
+
+<div id="src" hidden><section data-sec="Understanding MCP"><article data-key="what" data-title="1. What is the Model Context Protocol (MCP) and Why It Exists"><h2>1. What is the Model Context Protocol (MCP) and Why It Exists</h2><p class="el">The <b>Model Context Protocol (MCP)</b> is an <b>open standard</b> for connecting AI applications to <b>tools, data and prompts</b>. Before MCP, every AI application needed a custom integration for every system it wanted to use, which is an <b>N times M</b> problem. With MCP, a system is wrapped <b>once</b> as an <b>MCP server</b> and any <b>MCP-compatible client</b> can use it, turning the problem into <b>N plus M</b>. A common analogy is a universal port: one connector that many devices and accessories can share.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="ar">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated MCP architecture" data-order="ar"><circle r="8" class="pk1"><animateMotion dur="7.5s" begin="0s" repeatCount="indefinite" path="M100.5,82 L299.5,82 L498.5,82 L697.5,82 L896.5,82"/></circle><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="ar-host" tabindex="0" role="button" aria-label="Host application"><title>Host application – click for details</title><rect class="y" x="20" y="30" width="161" height="104" rx="10"/><text x="100.5" y="78.1" style="font-size:19px">Host app</text><text x="100.5" y="99.6" class="m" style="font-size:14px">user + model</text></g></g>
+<path class="l" d="M181,82 H219"/>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="ar-client" tabindex="0" role="button" aria-label="MCP client"><title>MCP client – click for details</title><rect class="o" x="219" y="30" width="161" height="104" rx="10"/><text x="299.5" y="78.1" style="font-size:19px">MCP client</text><text x="299.5" y="99.6" class="m" style="font-size:14px">one per server</text></g></g>
+<path class="l" d="M380,82 H418"/>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="ar-transport" tabindex="0" role="button" aria-label="Transport"><title>Transport – click for details</title><rect class="b" x="418" y="30" width="161" height="104" rx="10"/><text x="498.5" y="78.1" style="font-size:19px">Transport</text><text x="498.5" y="99.6" class="m" style="font-size:14px">stdio · HTTP</text></g></g>
+<path class="l" d="M579,82 H617"/>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="ar-server" tabindex="0" role="button" aria-label="MCP server"><title>MCP server – click for details</title><rect class="g" x="617" y="30" width="161" height="104" rx="10"/><text x="697.5" y="78.1" style="font-size:19px">MCP server</text><text x="697.5" y="99.6" class="m" style="font-size:14px">tools · resources</text></g></g>
+<path class="l" d="M778,82 H816"/>
+<g class="stp" style="animation-delay:-8s"><g class="clk" data-k="ar-system" tabindex="0" role="button" aria-label="External systems"><title>External systems – click for details</title><rect class="r" x="816" y="30" width="161" height="104" rx="10"/><text x="896.5" y="78.1" style="font-size:19px">Systems</text><text x="896.5" y="99.6" class="m" style="font-size:14px">DB · APIs · files</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><h3>The architecture</h3><p class="el">Three roles matter. The <b>host</b> is the AI application the user works with, such as a chat app, an IDE or your own agent; it owns the model, the user relationship and the <b>security policy</b>. The host creates an <b>MCP client</b> for each server, and each client keeps a <b>one-to-one stateful session</b> with its <b>MCP server</b>. Servers expose capabilities from real systems: databases, SaaS APIs, file systems and internal services. Messages use <b>JSON-RPC 2.0</b> over a <b>transport</b>: standard input and output for local servers, or <b>Streamable HTTP</b> for remote servers.</p><h3>Features and benefits</h3><p class="el">MCP gives you <b>reuse</b> (write a server once), <b>a consistent way to discover capabilities</b> at run time, <b>a growing ecosystem</b> of ready-made servers, a clear <b>separation of concerns</b> (tool owners build servers, application teams build hosts), and <b>portability</b> between models and clients.</p><h3>Problems and limits</h3><p class="el">MCP does not make tools safe by itself. <b>Security is a real concern</b> (prompt injection, malicious servers, over-broad permissions), tool descriptions and results <b>consume context window</b>, poorly designed tools confuse models, remote servers need <b>authentication and operations</b>, and the specification keeps <b>evolving</b>, so always check the current revision. MCP also standardises <b>tool access</b>, not agent behaviour: you still need good orchestration, evaluation and guardrails.</p><table><tr><th>Question</th><th>Answer</th></tr><tr><td>What problem does it solve?</td><td>Custom N by M integrations between AI apps and systems</td></tr><tr><td>Who creates the protocol?</td><td>Originally created by Anthropic and developed as an open standard with wide industry adoption; check modelcontextprotocol.io for the current governance</td></tr><tr><td>What does it carry?</td><td>Tools, resources, prompts, plus client features such as sampling, roots and elicitation</td></tr><tr><td>How are messages encoded?</td><td>JSON-RPC 2.0</td></tr><tr><td>How does it connect?</td><td>stdio for local, Streamable HTTP for remote</td></tr></table></article><article data-key="primitives" data-title="2. Protocol Primitives: Tools, Resources, Prompts, Sampling, Roots, Elicitation"><h2>2. Protocol Primitives: Tools, Resources, Prompts, Sampling, Roots, Elicitation</h2><p class="el">MCP defines three <b>server features</b> and several <b>client features</b>. The key idea is <b>who controls</b> each one. <b>Tools</b> are functions the <b>model</b> decides to call, such as running a query or creating a ticket. <b>Resources</b> are read-only data identified by URIs that the <b>application</b> chooses to attach as context. <b>Prompts</b> are reusable, parameterised templates that the <b>user</b> selects, often as slash commands. On the client side, <b>sampling</b> lets a server ask the host to run a model completion, <b>roots</b> tell a server which directories it should stay within, and <b>elicitation</b> lets a server ask the user for missing input.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="pm">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 312" role="img" aria-label="Animated MCP primitives" data-order="pm"><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="pm-tools" tabindex="0" role="button" aria-label="Tools"><title>Tools – click for details</title><rect class="g" x="20" y="30" width="305" height="104" rx="10"/><text x="172.5" y="78.1" style="font-size:19px">Tools</text><text x="172.5" y="99.6" class="m" style="font-size:14px">model-controlled</text></g></g>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="pm-res" tabindex="0" role="button" aria-label="Resources"><title>Resources – click for details</title><rect class="o" x="347" y="30" width="305" height="104" rx="10"/><text x="499.5" y="78.1" style="font-size:19px">Resources</text><text x="499.5" y="99.6" class="m" style="font-size:14px">app-controlled</text></g></g>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="pm-prompts" tabindex="0" role="button" aria-label="Prompts"><title>Prompts – click for details</title><rect class="b" x="674" y="30" width="305" height="104" rx="10"/><text x="826.5" y="78.1" style="font-size:19px">Prompts</text><text x="826.5" y="99.6" class="m" style="font-size:14px">user-controlled</text></g></g>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="pm-sampling" tabindex="0" role="button" aria-label="Sampling"><title>Sampling – click for details</title><rect class="y" x="20" y="156" width="305" height="104" rx="10"/><text x="172.5" y="204.1" style="font-size:19px">Sampling</text><text x="172.5" y="225.6" class="m" style="font-size:14px">server asks model</text></g></g>
+<g class="stp" style="animation-delay:-8s"><g class="clk" data-k="pm-roots" tabindex="0" role="button" aria-label="Roots"><title>Roots – click for details</title><rect class="r" x="347" y="156" width="305" height="104" rx="10"/><text x="499.5" y="204.1" style="font-size:19px">Roots</text><text x="499.5" y="225.6" class="m" style="font-size:14px">scope</text></g></g>
+<g class="stp" style="animation-delay:-6s"><g class="clk" data-k="pm-elicit" tabindex="0" role="button" aria-label="Elicitation"><title>Elicitation – click for details</title><rect class="g" x="674" y="156" width="305" height="104" rx="10"/><text x="826.5" y="204.1" style="font-size:19px">Elicitation</text><text x="826.5" y="225.6" class="m" style="font-size:14px">ask the user</text></g></g>
+<text x="500" y="304" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><table><tr><th>Primitive</th><th>Controlled by</th><th>Direction</th><th>Typical use</th></tr><tr><td>Tools</td><td>Model</td><td>Server to client</td><td>Query a DB, create an issue, send a message</td></tr><tr><td>Resources</td><td>Application</td><td>Server to client</td><td>Files, records, documents as context</td></tr><tr><td>Prompts</td><td>User</td><td>Server to client</td><td>Review code, triage an incident</td></tr><tr><td>Sampling</td><td>Client and user approve</td><td>Server asks client</td><td>Server needs an LLM completion</td></tr><tr><td>Roots</td><td>Client</td><td>Client tells server</td><td>Limit file access to a project folder</td></tr><tr><td>Elicitation</td><td>Client and user</td><td>Server asks user</td><td>Ask for a missing parameter</td></tr></table><pre data-lang="json"><code>// a tool as returned by tools/list
+{ "name": "search_tickets",
+  "description": "Search support tickets. Use for questions about existing tickets. Does not create or modify tickets.",
+  "inputSchema": { "type": "object",
+    "properties": { "query": { "type": "string" }, "status": { "type": "string", "enum": ["open", "closed"] }, "limit": { "type": "integer", "maximum": 25 } },
+    "required": ["query"] },
+  "annotations": { "readOnlyHint": true, "idempotentHint": true, "openWorldHint": false } }</code></pre><span class="note">Tool annotations are hints for client UIs, not security controls. A server can still lie, so enforce permissions in the server and policy in the host.</span></article><article data-key="lifecycle" data-title="3. Lifecycle, Messages and Transports"><h2>3. Lifecycle, Messages and Transports</h2><p class="el">An MCP session follows a clear lifecycle. The client sends <b>initialize</b> with the protocol version it supports and its capabilities; the server replies with its own version, capabilities and information; the client confirms with a <b>notifications/initialized</b> message. Both sides now know which features are available. The client <b>lists</b> tools, resources or prompts, <b>calls or reads</b> them, and may receive notifications such as <code>tools/list_changed</code>. Requests can report <b>progress</b> and be <b>cancelled</b>, and the session ends when the transport closes. Protocol versions are identified by <b>date</b> (for example 2025-06-18), so negotiating the version matters.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="lc">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated session lifecycle" data-order="lc"><circle r="8" class="pk1"><animateMotion dur="7.5s" begin="0s" repeatCount="indefinite" path="M100.5,82 L299.5,82 L498.5,82 L697.5,82 L896.5,82"/></circle><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="lc-init" tabindex="0" role="button" aria-label="Initialize"><title>Initialize – click for details</title><rect class="y" x="20" y="30" width="161" height="104" rx="10"/><text x="100.5" y="78.1" style="font-size:19px">Initialize</text><text x="100.5" y="99.6" class="m" style="font-size:14px">handshake</text></g></g>
+<path class="l" d="M181,82 H219"/>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="lc-cap" tabindex="0" role="button" aria-label="Capability negotiation"><title>Capability negotiation – click for details</title><rect class="o" x="219" y="30" width="161" height="104" rx="10"/><text x="299.5" y="78.1" style="font-size:19px">Capabilities</text><text x="299.5" y="99.6" class="m" style="font-size:14px">negotiate</text></g></g>
+<path class="l" d="M380,82 H418"/>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="lc-list" tabindex="0" role="button" aria-label="Discover: list"><title>Discover: list – click for details</title><rect class="g" x="418" y="30" width="161" height="104" rx="10"/><text x="498.5" y="78.1" style="font-size:19px">List</text><text x="498.5" y="99.6" class="m" style="font-size:14px">discover</text></g></g>
+<path class="l" d="M579,82 H617"/>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="lc-call" tabindex="0" role="button" aria-label="Invoke: call and read"><title>Invoke: call and read – click for details</title><rect class="b" x="617" y="30" width="161" height="104" rx="10"/><text x="697.5" y="78.1" style="font-size:19px">Call / read</text><text x="697.5" y="99.6" class="m" style="font-size:14px">do the work</text></g></g>
+<path class="l" d="M778,82 H816"/>
+<g class="stp" style="animation-delay:-8s"><g class="clk" data-k="lc-end" tabindex="0" role="button" aria-label="Shutdown and cancellation"><title>Shutdown and cancellation – click for details</title><rect class="r" x="816" y="30" width="161" height="104" rx="10"/><text x="896.5" y="78.1" style="font-size:19px">Shutdown</text><text x="896.5" y="99.6" class="m" style="font-size:14px">cancel · close</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><h3>Transports</h3><p class="el"><b>stdio</b> launches the server as a subprocess and exchanges newline-delimited JSON-RPC messages over standard input and output; it is simple and ideal for local tools. <b>Streamable HTTP</b> uses HTTP POST for client messages and can stream responses and server messages; it is designed for remote servers, which must handle authentication, scaling and security. It replaced the earlier HTTP with Server-Sent Events transport.</p><pre data-lang="json"><code>// 1. client -&gt; server
+{ "jsonrpc": "2.0", "id": 1, "method": "initialize",
+  "params": { "protocolVersion": "2025-06-18", "capabilities": { "roots": { "listChanged": true }, "sampling": {}, "elicitation": {} },
+              "clientInfo": { "name": "my-host", "version": "1.0.0" } } }
+// 2. server -&gt; client
+{ "jsonrpc": "2.0", "id": 1, "result": { "protocolVersion": "2025-06-18", "capabilities": { "tools": { "listChanged": true }, "resources": {} },
+              "serverInfo": { "name": "tickets-server", "version": "0.3.0" } } }
+// 3. client -&gt; server (notification, no id)
+{ "jsonrpc": "2.0", "method": "notifications/initialized" }
+// 4. call a tool
+{ "jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": { "name": "search_tickets", "arguments": { "query": "refund", "limit": 5 } } }
+// 5. result: tool failures use isError, not a JSON-RPC error
+{ "jsonrpc": "2.0", "id": 2, "result": { "content": [ { "type": "text", "text": "3 tickets found: T-101, T-118, T-120" } ], "isError": false } }</code></pre></article></section><section data-sec="Designing and Integrating"><article data-key="server" data-title="4. Building an MCP Server (Python and C#)"><h2>4. Building an MCP Server (Python and C#)</h2><p class="el">Building a server has four stages. <b>Design</b> the tools first: think in user tasks, keep the set small and write descriptions the model can act on. <b>Implement</b> with an official SDK, which handles the protocol and transports so you write only the tool logic. <b>Test</b> with the <b>MCP Inspector</b> (<code>npx @modelcontextprotocol/inspector</code>), unit tests and evals with a real model. <b>Package and deploy</b> as a local command or as a remote HTTPS service behind authentication.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="bs">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated building a server" data-order="bs"><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="bs-design" tabindex="0" role="button" aria-label="Design the tools first"><title>Design the tools first – click for details</title><rect class="y" x="20" y="30" width="223" height="104" rx="10"/><text x="131.5" y="78.1" style="font-size:19px">Design tools</text><text x="131.5" y="99.6" class="m" style="font-size:14px">tasks first</text></g></g>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="bs-impl" tabindex="0" role="button" aria-label="Implement with an SDK"><title>Implement with an SDK – click for details</title><rect class="g" x="265" y="30" width="223" height="104" rx="10"/><text x="376.5" y="78.1" style="font-size:19px">Implement</text><text x="376.5" y="99.6" class="m" style="font-size:14px">SDK</text></g></g>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="bs-test" tabindex="0" role="button" aria-label="Test with the Inspector"><title>Test with the Inspector – click for details</title><rect class="o" x="510" y="30" width="223" height="104" rx="10"/><text x="621.5" y="78.1" style="font-size:19px">Test</text><text x="621.5" y="99.6" class="m" style="font-size:14px">Inspector · evals</text></g></g>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="bs-ship" tabindex="0" role="button" aria-label="Package and deploy"><title>Package and deploy – click for details</title><rect class="b" x="755" y="30" width="223" height="104" rx="10"/><text x="866.5" y="78.1" style="font-size:19px">Package · deploy</text><text x="866.5" y="99.6" class="m" style="font-size:14px">local or remote</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><pre data-lang="python"><code># server.py - Python SDK (FastMCP). Run: python server.py   |  inspect: npx @modelcontextprotocol/inspector python server.py
+from mcp.server.fastmcp import FastMCP
+mcp = FastMCP("tickets")
+
+@mcp.tool()
+def search_tickets(query: str, status: str = "open", limit: int = 5) -&gt; str:
+    """Search support tickets. Use for questions about existing tickets. Does not modify anything."""
+    rows = db.search(query, status, min(limit, 25))                 # hard cap protects the context window
+    return "\n".join(f"{r.id}: {r.title} [{r.status}]" for r in rows) or "No tickets found."
+
+@mcp.tool()
+def close_ticket(ticket_id: str, resolution: str) -&gt; str:
+    """Close one ticket with a resolution note. Destructive: only call after the user confirms."""
+    if not db.exists(ticket_id):
+        raise ValueError(f"Unknown ticket {ticket_id}. Use search_tickets to find valid ids.")   # surfaces as isError
+    db.close(ticket_id, resolution); return f"Closed {ticket_id}"
+
+@mcp.resource("ticket://{ticket_id}")
+def ticket_resource(ticket_id: str) -&gt; str:
+    """Full text of one ticket."""
+    return db.get(ticket_id).as_text()
+
+@mcp.prompt()
+def triage(ticket_id: str) -&gt; str:
+    return f"Read ticket://{ticket_id}, classify severity (P1-P4), and propose next steps."
+
+if __name__ == "__main__":
+    mcp.run(transport="stdio")           # use transport="streamable-http" for a remote server</code></pre><pre data-lang="csharp"><code>// C# SDK: dotnet add package ModelContextProtocol  (and ModelContextProtocol.AspNetCore for HTTP)
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using ModelContextProtocol.Server;
+using System.ComponentModel;
+
+var builder = Host.CreateApplicationBuilder(args);
+builder.Services.AddMcpServer().WithStdioServerTransport().WithToolsFromAssembly();
+await builder.Build().RunAsync();
+
+[McpServerToolType]
+public static class TicketTools
+{
+    [McpServerTool, Description("Search support tickets. Use for questions about existing tickets. Does not modify anything.")]
+    public static string SearchTickets([Description("Free text query")] string query, int limit = 5)
+        =&gt; string.Join("\n", Repo.Search(query, Math.Min(limit, 25)).Select(t =&gt; $"{t.Id}: {t.Title}"));
+}</code></pre><pre data-lang="json"><code>// Claude Desktop: claude_desktop_config.json            // Claude Code (project): .mcp.json
+{ "mcpServers": {
+    "tickets": { "command": "python", "args": ["C:/mcp/server.py"], "env": { "TICKETS_DB": "C:/data/tickets.db" } },
+    "crm":     { "type": "http", "url": "https://mcp.example.com/crm" }       // remote server (needs auth)
+} }</code></pre><span class="note">SDK APIs and configuration formats change between releases. Confirm names and options in the official documentation for the SDK version you install.</span></article><article data-key="client" data-title="5. Building a Client and Integrating with an Agent"><h2>5. Building a Client and Integrating with an Agent</h2><p class="el">A host integrates MCP by running a client per server. The flow has four steps. <b>Connect and discover</b>: launch or connect to the server, initialise the session and list its tools. <b>Expose to the model</b>: convert each MCP tool into the model provider's function-calling format (name, description and the input schema map directly) and namespace names by server. <b>Route the call</b>: when the model requests a tool, apply user approval and policy, then send <code>tools/call</code> to the right server. <b>Return the result</b>: trim it, keep the error flag and send it back to the model as a tool result, treating the content as <b>untrusted data</b>.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="cl">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated building a client" data-order="cl"><circle r="8" class="pk1"><animateMotion dur="6s" begin="0s" repeatCount="indefinite" path="M125.5,82 L374.5,82 L623.5,82 L872.5,82"/></circle><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="cl-discover" tabindex="0" role="button" aria-label="Connect and discover"><title>Connect and discover – click for details</title><rect class="y" x="20" y="30" width="211" height="104" rx="10"/><text x="125.5" y="78.1" style="font-size:19px">Connect + discover</text><text x="125.5" y="99.6" class="m" style="font-size:14px">list_tools</text></g></g>
+<path class="l" d="M231,82 H269"/>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="cl-expose" tabindex="0" role="button" aria-label="Expose tools to the model"><title>Expose tools to the model – click for details</title><rect class="o" x="269" y="30" width="211" height="104" rx="10"/><text x="374.5" y="78.1" style="font-size:19px">Expose to model</text><text x="374.5" y="99.6" class="m" style="font-size:14px">tool defs</text></g></g>
+<path class="l" d="M480,82 H518"/>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="cl-route" tabindex="0" role="button" aria-label="Route the call"><title>Route the call – click for details</title><rect class="g" x="518" y="30" width="211" height="104" rx="10"/><text x="623.5" y="78.1" style="font-size:19px">Route call</text><text x="623.5" y="99.6" class="m" style="font-size:14px">policy first</text></g></g>
+<path class="l" d="M729,82 H767"/>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="cl-return" tabindex="0" role="button" aria-label="Return the result"><title>Return the result – click for details</title><rect class="b" x="767" y="30" width="211" height="104" rx="10"/><text x="872.5" y="78.1" style="font-size:19px">Return result</text><text x="872.5" y="99.6" class="m" style="font-size:14px">tool_result</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><pre data-lang="python"><code># Minimal MCP-aware agent: discover tools from a stdio server, give them to Claude, route tool calls back
+import asyncio, anthropic
+from mcp import ClientSession, StdioServerParameters
+from mcp.client.stdio import stdio_client
+
+llm = anthropic.Anthropic()
+MODEL = "claude-sonnet-5-5"
+
+async def main(question: str):
+    params = StdioServerParameters(command="python", args=["server.py"])
+    async with stdio_client(params) as (read, write):
+        async with ClientSession(read, write) as session:
+            await session.initialize()                                        # handshake + capability negotiation
+            listed = await session.list_tools()
+            tools = [{"name": t.name, "description": t.description or "", "input_schema": t.inputSchema} for t in listed.tools]
+
+            messages = [{"role": "user", "content": question}]
+            for _ in range(8):                                                # always cap the loop
+                resp = llm.messages.create(model=MODEL, max_tokens=1024, tools=tools, messages=messages)
+                if resp.stop_reason != "tool_use":
+                    return "".join(b.text for b in resp.content if b.type == "text")
+                messages.append({"role": "assistant", "content": resp.content})
+                results = []
+                for block in resp.content:
+                    if block.type == "tool_use":
+                        if not policy_allows(block.name, block.input):         # host-level policy / user approval
+                            results.append({"type": "tool_result", "tool_use_id": block.id, "content": "Blocked by policy", "is_error": True}); continue
+                        out = await session.call_tool(block.name, block.input)
+                        text = "".join(c.text for c in out.content if c.type == "text")[:4000]
+                        results.append({"type": "tool_result", "tool_use_id": block.id, "content": text, "is_error": bool(out.isError)})
+                messages.append({"role": "user", "content": results})
+
+print(asyncio.run(main("Which tickets mention refunds?")))</code></pre></article><article data-key="design" data-title="6. Design Principles for MCP Servers and Tools"><h2>6. Design Principles for MCP Servers and Tools</h2><p class="el">Good MCP design is mostly good <b>tool design for a model</b>. Make tools <b>task-oriented</b>: one tool that completes a user task beats six thin wrappers over API endpoints. Write <b>precise schemas</b> with enums, ranges and descriptions that say when to use each argument, and add an <b>output schema</b> when results are structured. Return <b>small, relevant results</b>, paginate or give links instead of dumping data, and make error messages <b>instructive</b> so the model can recover. Be <b>safe by design</b>: idempotent operations, confirmation for destructive ones and honest annotations, with real enforcement on the server. Finally, <b>operate</b> the server: log calls, measure latency and errors, rate limit, version tools and document changes.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="dz">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated design principles" data-order="dz"><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="dz-task" tabindex="0" role="button" aria-label="Task-oriented tools"><title>Task-oriented tools – click for details</title><rect class="g" x="20" y="30" width="174" height="104" rx="10"/><text x="107" y="78.1" style="font-size:19px">Task-oriented</text><text x="107" y="99.6" class="m" style="font-size:14px">workflow tools</text></g></g>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="dz-schema" tabindex="0" role="button" aria-label="Schemas and descriptions"><title>Schemas and descriptions – click for details</title><rect class="o" x="216" y="30" width="174" height="104" rx="10"/><text x="303" y="78.1" style="font-size:19px">Schemas</text><text x="303" y="99.6" class="m" style="font-size:14px">precise</text></g></g>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="dz-result" tabindex="0" role="button" aria-label="Results and errors"><title>Results and errors – click for details</title><rect class="b" x="412" y="30" width="174" height="104" rx="10"/><text x="499" y="78.1" style="font-size:19px">Results</text><text x="499" y="99.6" class="m" style="font-size:14px">small + paged</text></g></g>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="dz-safe" tabindex="0" role="button" aria-label="Safe by design"><title>Safe by design – click for details</title><rect class="r" x="608" y="30" width="174" height="104" rx="10"/><text x="695" y="78.1" style="font-size:19px">Safe by design</text><text x="695" y="99.6" class="m" style="font-size:14px">idempotent</text></g></g>
+<g class="stp" style="animation-delay:-8s"><g class="clk" data-k="dz-ops" tabindex="0" role="button" aria-label="Operate it"><title>Operate it – click for details</title><rect class="y" x="804" y="30" width="174" height="104" rx="10"/><text x="891" y="78.1" style="font-size:19px">Operate</text><text x="891" y="99.6" class="m" style="font-size:14px">logs · versions</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><table><tr><th>Principle</th><th>Instead of</th><th>Do this</th></tr><tr><td>Task-oriented</td><td>get_user, get_orders, get_refunds, create_refund</td><td>handle_refund_request(order_id, reason)</td></tr><tr><td>Compact output</td><td>Raw 500-field JSON</td><td>The 8 fields that answer the question, plus an id to fetch more</td></tr><tr><td>Instructive errors</td><td>Error 400</td><td>Unknown order A-9. Use search_orders to find valid ids.</td></tr><tr><td>Idempotent writes</td><td>Create twice on retry</td><td>Idempotency key per request</td></tr><tr><td>Pagination</td><td>Return 10,000 rows</td><td>limit and cursor, with a "next" hint</td></tr><tr><td>Naming</td><td>doStuff, api_call_3</td><td>search_tickets, close_ticket (verbs and nouns)</td></tr></table><pre data-lang="python"><code>@mcp.tool()
+def handle_refund_request(order_id: str, reason: str, idempotency_key: str) -&gt; str:
+    """Process a refund request for ONE order. Checks eligibility, issues the refund if under 100 USD, otherwise creates an approval task.
+    Use after the user has confirmed they want a refund. Returns a short status line. Safe to retry with the same idempotency_key."""
+    order = orders.get(order_id)
+    if not order:
+        raise ValueError(f"Unknown order {order_id}. Use search_orders to find the right id.")
+    if not eligibility.ok(order):
+        return f"Not eligible: {eligibility.reason(order)}"
+    return refunds.process(order, reason, key=idempotency_key)            # server enforces limits and ownership</code></pre></article></section><section data-sec="Security and Enterprise Orchestration"><article data-key="security" data-title="7. Security and Authorization"><h2>7. Security and Authorization</h2><p class="el">Because MCP connects models to real systems, security needs a clear <b>threat model</b>. <b>Prompt injection</b> is the central threat: tool results and resource content are <b>untrusted</b> and may contain instructions that hijack the model, and combining tools (read private data plus send a message) can create exfiltration paths. <b>Tool poisoning</b> hides malicious instructions in tool descriptions, and a <b>rug pull</b> changes definitions after a user approved them. <b>Remote servers</b> use <b>OAuth-based authorization</b>: the server acts as a resource server, validates tokens, audiences and scopes on every request, and must <b>never pass client tokens through</b> to downstream APIs, which is the <b>confused deputy</b> problem. <b>Local servers</b> run code with the user permissions and need consent, sandboxing and review.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="sc">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated MCP security" data-order="sc"><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="sc-inject" tabindex="0" role="button" aria-label="Prompt injection"><title>Prompt injection – click for details</title><rect class="r" x="20" y="30" width="174" height="104" rx="10"/><text x="107" y="67.4" style="font-size:19px">Prompt</text><text x="107" y="88.7" style="font-size:19px">injection</text><text x="107" y="110.2" class="m" style="font-size:14px">untrusted output</text></g></g>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="sc-poison" tabindex="0" role="button" aria-label="Tool poisoning and rug pulls"><title>Tool poisoning and rug pulls – click for details</title><rect class="o" x="216" y="30" width="174" height="104" rx="10"/><text x="303" y="78.1" style="font-size:19px">Tool poisoning</text><text x="303" y="99.6" class="m" style="font-size:14px">rug pulls</text></g></g>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="sc-auth" tabindex="0" role="button" aria-label="Authorization (OAuth)"><title>Authorization (OAuth) – click for details</title><rect class="g" x="412" y="30" width="174" height="104" rx="10"/><text x="499" y="78.1" style="font-size:19px">Authorization</text><text x="499" y="99.6" class="m" style="font-size:14px">OAuth</text></g></g>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="sc-confused" tabindex="0" role="button" aria-label="Confused deputy and token passthrough"><title>Confused deputy and token passthrough – click for details</title><rect class="b" x="608" y="30" width="174" height="104" rx="10"/><text x="695" y="77.7" style="font-size:18px">Confused deputy</text><text x="695" y="99.2" class="m" style="font-size:14px">no passthrough</text></g></g>
+<g class="stp" style="animation-delay:-8s"><g class="clk" data-k="sc-local" tabindex="0" role="button" aria-label="Local server risks"><title>Local server risks – click for details</title><rect class="y" x="804" y="30" width="174" height="104" rx="10"/><text x="891" y="78.1" style="font-size:19px">Local servers</text><text x="891" y="99.6" class="m" style="font-size:14px">sandbox</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><table><tr><th>Threat</th><th>Mitigation</th></tr><tr><td>Prompt injection via tool output</td><td>Treat output as data, least privilege, human approval for risky actions, separate read and send capabilities</td></tr><tr><td>Tool poisoning, rug pulls</td><td>Allow-list and pin servers, review and hash tool definitions, alert on changes</td></tr><tr><td>Excessive scopes</td><td>Minimal OAuth scopes, short-lived audience-bound tokens</td></tr><tr><td>Token passthrough, confused deputy</td><td>Validate audience, use on-behalf-of token exchange for downstream calls</td></tr><tr><td>Malicious local server or command</td><td>Show the exact command, require consent, sandbox, prefer vetted packages</td></tr><tr><td>SSRF and data exfiltration</td><td>Egress allow-lists, block internal addresses, log and rate limit</td></tr><tr><td>No accountability</td><td>Per-user identity on every call and full audit logs</td></tr></table><pre data-lang="python"><code># Host-side policy gate in front of every tools/call
+SENSITIVE = {"close_ticket", "send_email", "handle_refund_request"}
+def policy_allows(server, tool, args, user):
+    if (server, tool) not in ALLOW_LIST:                          # only approved, pinned tools
+        return False
+    if tool in SENSITIVE:
+        return ui.confirm(user, f"Allow {server}.{tool} with {args}?")   # human approval with the real arguments shown
+    return True
+
+# Server-side: validate the token on EVERY request (remote server)
+def authenticate(request):
+    claims = jwt.decode(bearer(request), key=JWKS, audience="https://mcp.example.com/crm", algorithms=["RS256"])   # audience must be THIS server
+    require_scopes(claims, ["tickets:read"])
+    return claims["sub"]          # use the user identity for downstream authorisation; never forward this token</code></pre><span class="note">Authorization requirements are part of the specification and have changed between revisions. Read the authorization section of the current MCP specification before implementing it.</span></article><article data-key="enterprise" data-title="8. Enterprise Architecture and Equivalent Orchestration Standards"><h2>8. Enterprise Architecture and Equivalent Orchestration Standards</h2><p class="el">At enterprise scale you manage <b>many servers, clients and teams</b>. An <b>MCP gateway</b> centralises authentication, authorisation, policy, rate limiting, logging and routing, and hides server details from clients. A <b>registry or catalogue</b> lists approved, reviewed and versioned servers with owners, preventing shadow integrations. <b>Observability</b> traces every model request and tool call with user identity, arguments and outcome, and OpenTelemetry-based conventions help standardise it. Compose these with <b>orchestration frameworks</b> (LangGraph, Semantic Kernel, Microsoft Agent Framework, vendor agent SDKs) that add state, graphs and approvals.</p><div class="archtools"><button type="button" class="animbtn primary" data-study="en">🎓 Study this diagram topic by topic</button></div><div class="diagramwrap"><svg viewBox="0 0 1000 186" role="img" aria-label="Animated enterprise orchestration" data-order="en"><g class="stp" style="animation-delay:-16s"><g class="clk" data-k="en-gw" tabindex="0" role="button" aria-label="MCP gateway"><title>MCP gateway – click for details</title><rect class="g" x="20" y="30" width="174" height="104" rx="10"/><text x="107" y="78.1" style="font-size:19px">Gateway</text><text x="107" y="99.6" class="m" style="font-size:14px">auth · policy</text></g></g>
+<g class="stp" style="animation-delay:-14s"><g class="clk" data-k="en-reg" tabindex="0" role="button" aria-label="Server registry and catalogue"><title>Server registry and catalogue – click for details</title><rect class="o" x="216" y="30" width="174" height="104" rx="10"/><text x="303" y="78.1" style="font-size:19px">Registry</text><text x="303" y="99.6" class="m" style="font-size:14px">approved servers</text></g></g>
+<g class="stp" style="animation-delay:-12s"><g class="clk" data-k="en-a2a" tabindex="0" role="button" aria-label="Agent-to-agent (A2A)"><title>Agent-to-agent (A2A) – click for details</title><rect class="b" x="412" y="30" width="174" height="104" rx="10"/><text x="499" y="78.1" style="font-size:19px">A2A</text><text x="499" y="99.6" class="m" style="font-size:14px">agent to agent</text></g></g>
+<g class="stp" style="animation-delay:-10s"><g class="clk" data-k="en-fw" tabindex="0" role="button" aria-label="Orchestration frameworks"><title>Orchestration frameworks – click for details</title><rect class="y" x="608" y="30" width="174" height="104" rx="10"/><text x="695" y="78.1" style="font-size:19px">Frameworks</text><text x="695" y="99.6" class="m" style="font-size:14px">orchestrate</text></g></g>
+<g class="stp" style="animation-delay:-8s"><g class="clk" data-k="en-obs" tabindex="0" role="button" aria-label="Observability and audit"><title>Observability and audit – click for details</title><rect class="r" x="804" y="30" width="174" height="104" rx="10"/><text x="891" y="78.1" style="font-size:19px">Observability</text><text x="891" y="99.6" class="m" style="font-size:14px">audit</text></g></g>
+<text x="500" y="178" class="s" style="font-size:17px">👆 Tap or click any box for details and interview questions</text></svg></div><h3>Equivalent and complementary standards</h3><p class="el">MCP is not the only way to connect tools. <b>Native function calling</b> with JSON Schema is supported by all major model APIs; <b>OpenAPI-described tools</b> let an agent call REST APIs; frameworks have their own <b>plugin or tool models</b>. <b>Agent2Agent (A2A)</b> is a separate open protocol for independent agents to discover each other through <b>agent cards</b> and exchange tasks. A useful rule of thumb is that <b>MCP connects an agent to tools and data, while A2A connects an agent to other agents</b>. Design tools so they are <b>portable</b>: business logic in a service, thin adapters for MCP, OpenAPI and function calling.</p><table><tr><th>Need</th><th>Option</th></tr><tr><td>Expose a tool to many AI apps</td><td>MCP server</td></tr><tr><td>Call an existing REST API from an agent</td><td>OpenAPI tool definition or an MCP wrapper</td></tr><tr><td>One app, one model, simple tools</td><td>Native function calling</td></tr><tr><td>Agents from different teams or vendors collaborating</td><td>A2A</td></tr><tr><td>Stateful, multi-step control flow with approvals</td><td>LangGraph, Semantic Kernel or Microsoft Agent Framework</td></tr><tr><td>Central governance of tool access</td><td>MCP gateway plus registry</td></tr></table><pre data-lang="yaml"><code># Gateway policy sketch (illustrative, not a specific product)
+servers:
+  crm:
+    url: https://mcp.internal/crm
+    owner: sales-platform
+    version: 1.4.2
+    allowed_teams: [support, sales]
+    tools:
+      search_accounts: { access: read }
+      update_account:  { access: write, approval: required, rate_limit: "20/min" }
+auth:
+  issuer: https://login.example.com
+  audience: https://mcp.internal/crm
+  required_scopes: [crm.read]
+audit: { log_arguments: redacted, retention_days: 365 }</code></pre></article><article data-key="experience" data-title="9. Experience Guide: Designing and Integrating MCP Systems"><h2>9. Experience Guide: Designing and Integrating MCP Systems</h2><p class="el">If a role asks for <b>experience designing and integrating systems using MCP or equivalent AI orchestration standards</b>, hiring teams want evidence that you have made real design decisions, handled security and operated the result. Here is a <b>reference project</b> you can build (or describe from your own work) and the points that demonstrate depth.</p><h3>Reference project: enterprise assistant with governed tool access</h3><p class="el"><b>Goal:</b> an internal assistant that answers questions from company systems and performs a small set of actions (create ticket, update CRM record) with safe approvals. <b>Design:</b> three MCP servers (tickets, CRM, knowledge search) built from a shared service layer; a <b>host</b> with an agent loop, policy gate and approval UI; an <b>MCP gateway</b> in front of remote servers with OAuth, per-user identity, rate limits and audit; <b>OpenTelemetry traces</b> across model calls and tool calls; and an <b>eval suite</b> for tool selection, safety and injection resistance.</p><table><tr><th>Area</th><th>Decision you can explain</th><th>Why</th></tr><tr><td>Tool design</td><td>Eight task-oriented tools instead of fifty endpoint wrappers</td><td>Higher tool-selection accuracy, lower token use</td></tr><tr><td>Transport</td><td>Local stdio for developer tools, remote Streamable HTTP for shared systems</td><td>Matches trust and operations needs</td></tr><tr><td>Security</td><td>Audience-bound OAuth tokens, no passthrough, approval for writes, egress allow-list</td><td>Limits the blast radius of injection</td></tr><tr><td>Reliability</td><td>Idempotency keys, timeouts, retries, pagination, progress notifications</td><td>Safe retries and bounded latency</td></tr><tr><td>Governance</td><td>Gateway, registry, owners, version pinning, tool-definition change alerts</td><td>Prevents shadow integrations and rug pulls</td></tr><tr><td>Quality</td><td>Evals for tool choice, argument accuracy, refusal of unsafe actions, injection cases</td><td>Regressions caught before release</td></tr><tr><td>Portability</td><td>Business logic in a service with adapters for MCP, OpenAPI and function calling</td><td>Avoids lock-in to one protocol or vendor</td></tr></table><h3>How to talk about it</h3><p class="el">Use a short <b>situation, action, result</b> structure and include numbers where you honestly have them. For example: <i>the situation</i> was that every team had built its own tool integrations for its own copilot; <i>my actions</i> were to define a shared set of MCP servers, add a gateway with OAuth and audit, introduce evals and an approval policy; <i>the results</i> were fewer duplicated integrations, a measurable gain in tool-selection accuracy and a clear audit trail. Be ready to discuss <b>trade-offs</b> (local versus remote, many small tools versus few rich ones), <b>failures you hit</b> (tool descriptions that confused the model, oversized results, a token passthrough bug) and what you changed. Only claim experience you can defend with detail.</p><pre data-lang="text"><code>Checklist - things worth having done at least once
+[ ] Built an MCP server with tools, a resource and a prompt, and tested it with the Inspector
+[ ] Wrote a client or host that lists tools, applies a policy gate and routes calls
+[ ] Implemented OAuth on a remote server and validated audience and scopes
+[ ] Added tracing across model requests and tool calls
+[ ] Created an eval set (tool selection, argument accuracy, injection, refusals)
+[ ] Designed an approval flow for destructive tools
+[ ] Compared MCP with native function calling or OpenAPI for the same tool, and can say when to use each</code></pre></article></section><section data-sec="Interview Preparation"><article data-key="qa" data-title="10. Interview Q&amp;A: MCP and AI Orchestration"><h2>10. Interview Q&A: MCP and AI Orchestration</h2><div class="qa-item"><p class="qq"><b>Q1. What is MCP and what problem does it solve?</b></p><div class="aa"><p><b>Short answer:</b> An open protocol for connecting AI applications to tools, data and prompts, replacing custom N by M integrations with servers written once and reused by any compatible client.</p><p>It standardises discovery and invocation of capabilities, not agent behaviour.</p></div></div><div class="qa-item"><p class="qq"><b>Q2. Explain the host, client and server roles.</b></p><div class="aa"><p><b>Short answer:</b> The host is the AI application that owns the model and security policy, it creates one client per server, and each client keeps a stateful session with one server that exposes capabilities.</p><p>Trust decisions and user consent live in the host.</p></div></div><div class="qa-item"><p class="qq"><b>Q3. What are tools, resources and prompts?</b></p><div class="aa"><p><b>Short answer:</b> Tools are model-controlled functions, resources are application-controlled read-only data identified by URIs, and prompts are user-controlled parameterised templates.</p><p>Who controls each one is the key distinction.</p></div></div><div class="qa-item"><p class="qq"><b>Q4. What are sampling, roots and elicitation?</b></p><div class="aa"><p><b>Short answer:</b> Client features: sampling lets a server request a model completion through the host, roots declare the directories a server should stay in, and elicitation lets a server ask the user for input.</p><p>All keep the host and user in control.</p></div></div><div class="qa-item"><p class="qq"><b>Q5. Which transports does MCP support?</b></p><div class="aa"><p><b>Short answer:</b> stdio for local servers launched as subprocesses and Streamable HTTP for remote servers, with the older HTTP and SSE transport superseded.</p><p>Messages are JSON-RPC 2.0 on both.</p></div></div><div class="qa-item"><p class="qq"><b>Q6. Describe the session lifecycle.</b></p><div class="aa"><p><b>Short answer:</b> Initialize with version and capability negotiation, an initialized notification, discovery with list methods, invocation with call and read methods, and shutdown.</p><p>Notifications such as list_changed, progress and cancellation can occur throughout.</p></div></div><div class="qa-item"><p class="qq"><b>Q7. How are tool errors reported?</b></p><div class="aa"><p><b>Short answer:</b> A failing tool returns a normal result with isError true and a message the model can read, while protocol-level problems use JSON-RPC errors.</p><p>Make error text instructive so the model can recover.</p></div></div><div class="qa-item"><p class="qq"><b>Q8. How do you design good MCP tools?</b></p><div class="aa"><p><b>Short answer:</b> Task-oriented tools with precise schemas, compact and paginated outputs, instructive errors, idempotency and confirmation for destructive actions.</p><p>Treat descriptions like prompts and test them.</p></div></div><div class="qa-item"><p class="qq"><b>Q9. What is structured tool output?</b></p><div class="aa"><p><b>Short answer:</b> A tool can declare an output schema and return structured content alongside text so clients can validate and parse results reliably.</p><p>It arrived in later spec revisions, so check the current version.</p></div></div><div class="qa-item"><p class="qq"><b>Q10. How do you test an MCP server?</b></p><div class="aa"><p><b>Short answer:</b> Use the MCP Inspector for manual exploration, unit tests for tool logic and schemas, and evals with a real model for tool selection and argument accuracy.</p><p>Test security cases such as injection and unauthorised calls too.</p></div></div><div class="qa-item"><p class="qq"><b>Q11. How do you integrate MCP tools into an agent?</b></p><div class="aa"><p><b>Short answer:</b> Connect and list tools, convert them to the model provider function-calling format, route tool calls through policy and approval to the right server, then return trimmed results.</p><p>Namespace tool names by server.</p></div></div><div class="qa-item"><p class="qq"><b>Q12. Local or remote MCP server?</b></p><div class="aa"><p><b>Short answer:</b> Local stdio servers are simple and run with user permissions; remote servers centralise credentials, updates and governance but need authentication, scaling and monitoring.</p><p>Enterprises usually prefer remote servers behind a gateway.</p></div></div><div class="qa-item"><p class="qq"><b>Q13. What are the main MCP security risks?</b></p><div class="aa"><p><b>Short answer:</b> Prompt injection through tool output, tool poisoning and rug pulls, over-broad scopes, confused deputy and token passthrough, and malicious local servers.</p><p>Mitigate with least privilege, approvals, allow-lists, audience-bound tokens and sandboxing.</p></div></div><div class="qa-item"><p class="qq"><b>Q14. What is tool poisoning?</b></p><div class="aa"><p><b>Short answer:</b> Hiding malicious instructions in tool metadata that the model reads, or silently changing tool definitions after approval.</p><p>Pin versions, review definitions and alert on changes.</p></div></div><div class="qa-item"><p class="qq"><b>Q15. How is a remote MCP server authorised?</b></p><div class="aa"><p><b>Short answer:</b> With OAuth-based authorization: the client gets an access token for that server, and the server validates the token, audience and scopes on every request.</p><p>Follow the authorization section of the current specification.</p></div></div><div class="qa-item"><p class="qq"><b>Q16. What is the token passthrough anti-pattern?</b></p><div class="aa"><p><b>Short answer:</b> Accepting a token that was not issued for the MCP server and forwarding it to a downstream API, which breaks audience validation and accountability.</p><p>Use a token exchange or separate downstream credentials instead.</p></div></div><div class="qa-item"><p class="qq"><b>Q17. What is a confused deputy problem here?</b></p><div class="aa"><p><b>Short answer:</b> A server with more authority than the user performs actions on the user behalf without proper checks, letting a user or attacker exceed their rights.</p><p>Always authorise against the user identity.</p></div></div><div class="qa-item"><p class="qq"><b>Q18. Why use an MCP gateway and registry?</b></p><div class="aa"><p><b>Short answer:</b> A gateway centralises authentication, policy, rate limits, routing and audit; a registry lists approved, versioned and owned servers.</p><p>Together they give governance and prevent shadow integrations.</p></div></div><div class="qa-item"><p class="qq"><b>Q19. MCP versus A2A?</b></p><div class="aa"><p><b>Short answer:</b> MCP connects an agent to tools and data; A2A lets independent agents discover each other and exchange tasks.</p><p>They are complementary, not competing.</p></div></div><div class="qa-item"><p class="qq"><b>Q20. What are equivalent orchestration standards to MCP?</b></p><div class="aa"><p><b>Short answer:</b> Native function calling with JSON Schema, OpenAPI-described tools, framework plugin models and A2A for agent collaboration.</p><p>Keep business logic in a service with thin adapters so tools stay portable.</p></div></div><div class="qa-item"><p class="qq"><b>Q21. How do you handle large or long-running tool calls?</b></p><div class="aa"><p><b>Short answer:</b> Paginate or return resource links, send progress notifications, support cancellation, set timeouts and make operations idempotent.</p><p>Newer spec revisions add asynchronous task patterns, so check the current spec.</p></div></div><div class="qa-item"><p class="qq"><b>Q22. What do you monitor on MCP servers?</b></p><div class="aa"><p><b>Short answer:</b> Call counts, latency, error rates, usage per user and client, security events and traces linking model requests to tool calls.</p><p>Redact sensitive arguments in logs.</p></div></div><div class="qa-item"><p class="qq"><b>Q23. How would you describe your MCP experience in an interview?</b></p><div class="aa"><p><b>Short answer:</b> Present a real project with design decisions, security measures, evals and trade-offs, using a situation, action and result structure and only claiming what you can defend.</p><p>Mention failures and what you changed, which shows depth.</p></div></div></article><article data-key="cheat" data-title="11. Cheat Sheet and Mind Map"><h2>11. Cheat Sheet and Mind Map</h2><table><tr><th>Topic</th><th>Remember</th></tr><tr><td>MCP</td><td>Open protocol for tools, resources and prompts; N plus M instead of N times M</td></tr><tr><td>Roles</td><td>Host (model, policy), client (one per server), server (capabilities)</td></tr><tr><td>Primitives</td><td>Tools (model), resources (app), prompts (user); sampling, roots, elicitation (client)</td></tr><tr><td>Wire</td><td>JSON-RPC 2.0 over stdio or Streamable HTTP; dated protocol versions</td></tr><tr><td>Lifecycle</td><td>initialize, capabilities, list, call, shutdown; isError for tool failures</td></tr><tr><td>Design</td><td>Task-oriented, precise schemas, compact output, instructive errors, idempotent</td></tr><tr><td>Security</td><td>Untrusted output, poisoning, OAuth audience, no passthrough, sandbox local</td></tr><tr><td>Enterprise</td><td>Gateway, registry, tracing, A2A for agent to agent, frameworks for orchestration</td></tr></table><div class="diagramwrap"><svg viewBox="0 0 1000 600" role="img" aria-label="Animated MCP and AI orchestration mind map"><ellipse class="g" cx="500" cy="300" rx="125" ry="62"/>
+<text x="500" y="296" class="t" style="font-size:24px">MCP</text>
+<text x="500" y="324" class="m">one protocol for tools and context</text>
+<path class="soft flow" d="M500,300 L500,65"/>
+<rect class="g" x="385" y="13" width="230" height="104" rx="14"/><text x="500" y="43" style="font-weight:700;fill:var(--red);font-size:18px">Architecture</text>
+<text x="500" y="67" class="m" style="font-size:15px">host</text>
+<text x="500" y="86" class="m" style="font-size:15px">client</text>
+<text x="500" y="105" class="m" style="font-size:15px">server</text>
+<path class="soft flow" d="M500,300 L820,183"/>
+<rect class="y" x="705" y="131" width="230" height="104" rx="14"/><text x="820" y="161" style="font-weight:700;fill:var(--red);font-size:18px">Primitives</text>
+<text x="820" y="185" class="m" style="font-size:15px">tools · resources · prompts</text>
+<text x="820" y="204" class="m" style="font-size:15px">sampling</text>
+<text x="820" y="223" class="m" style="font-size:15px">roots · elicitation</text>
+<path class="soft flow" d="M500,300 L820,417"/>
+<rect class="o" x="705" y="365" width="230" height="104" rx="14"/><text x="820" y="395" style="font-weight:700;fill:var(--red);font-size:18px">Protocol</text>
+<text x="820" y="419" class="m" style="font-size:15px">JSON-RPC</text>
+<text x="820" y="438" class="m" style="font-size:15px">stdio · HTTP</text>
+<text x="820" y="457" class="m" style="font-size:15px">capabilities</text>
+<path class="soft flow" d="M500,300 L500,535"/>
+<rect class="b" x="385" y="483" width="230" height="104" rx="14"/><text x="500" y="513" style="font-weight:700;fill:var(--red);font-size:18px">Build</text>
+<text x="500" y="537" class="m" style="font-size:15px">SDKs</text>
+<text x="500" y="556" class="m" style="font-size:15px">Inspector</text>
+<text x="500" y="575" class="m" style="font-size:15px">task-oriented tools</text>
+<path class="soft flow" d="M500,300 L180,418"/>
+<rect class="r" x="65" y="366" width="230" height="104" rx="14"/><text x="180" y="396" style="font-weight:700;fill:var(--red);font-size:18px">Security</text>
+<text x="180" y="420" class="m" style="font-size:15px">injection</text>
+<text x="180" y="439" class="m" style="font-size:15px">OAuth</text>
+<text x="180" y="458" class="m" style="font-size:15px">no passthrough</text>
+<path class="soft flow" d="M500,300 L180,182"/>
+<rect class="y" x="65" y="130" width="230" height="104" rx="14"/><text x="180" y="160" style="font-weight:700;fill:var(--red);font-size:18px">Enterprise</text>
+<text x="180" y="184" class="m" style="font-size:15px">gateway</text>
+<text x="180" y="203" class="m" style="font-size:15px">registry</text>
+<text x="180" y="222" class="m" style="font-size:15px">A2A · frameworks</text></svg></div></article></section></div>
+<div id="kModal" role="dialog" aria-modal="true" aria-labelledby="kTitle" aria-hidden="true">
+  <div class="kcard">
+    <div class="khead"><span class="ico" id="kIcon"></span><div style="flex:1;min-width:0"><h3 id="kTitle"></h3><div class="meta" id="kMeta"></div></div><button type="button" class="kclose" id="kClose" aria-label="Close">✕</button></div>
+    <div class="kbody" id="kBody"></div>
+    <div class="kfoot"><button type="button" id="kPrev">◀ Prev</button><span class="pos" id="kPos"></span><button type="button" id="kNext" class="primary">Next ▶</button></div>
+  </div>
+</div>
+<script>
+(function(){
+  var FONTS = {
+    patrick:  ["'Patrick Hand','Caveat',cursive", "'Caveat',cursive", "'Caveat',cursive"],
+    caveat:   ["'Caveat',cursive", "'Caveat',cursive", "'Caveat',cursive"],
+    kalam:    ["'Kalam',cursive", "'Kalam',cursive", "'Kalam',cursive"],
+    indie:    ["'Indie Flower',cursive", "'Indie Flower',cursive", "'Indie Flower',cursive"],
+    architect:["'Architects Daughter',cursive", "'Architects Daughter',cursive", "'Architects Daughter',cursive"],
+    serif:    ["'Merriweather',Georgia,serif", "'Merriweather',Georgia,serif", "Consolas,'Courier New',monospace"],
+    sans:     ["'Inter',system-ui,'Segoe UI',sans-serif", "'Inter',system-ui,'Segoe UI',sans-serif", "Consolas,'Courier New',monospace"],
+    mono:     ["Consolas,'Courier New',monospace", "Consolas,'Courier New',monospace", "Consolas,'Courier New',monospace"]
+  };
+  var root = document.documentElement, KEY = 'notes-appearance-v1';
+  var themeSel = document.getElementById('themeSel'), fontSel = document.getElementById('fontSel'), sizeSel = document.getElementById('sizeSel');
+  var DEF = { theme:'classic', font:'serif', size:'20px' };
+  function load(){ try { return Object.assign({}, DEF, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch(e){ return Object.assign({}, DEF); } }
+  function save(s){ try { localStorage.setItem(KEY, JSON.stringify(s)); } catch(e){} }
+  function apply(s){
+    if (s.theme === 'classic') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', s.theme);
+    var f = FONTS[s.font] || FONTS.patrick;
+    root.style.setProperty('--body-font', f[0]); root.style.setProperty('--head-font', f[1]); root.style.setProperty('--code-font', f[2]);
+    root.style.setProperty('--fs', s.size);
+    themeSel.value = s.theme; fontSel.value = s.font; sizeSel.value = s.size;
+  }
+  var state = load(); apply(state);
+  function change(){ state = { theme:themeSel.value, font:fontSel.value, size:sizeSel.value }; apply(state); save(state); }
+  themeSel.onchange = fontSel.onchange = sizeSel.onchange = change;
+  document.getElementById('resetBtn').onclick = function(){ state = Object.assign({}, DEF); apply(state); save(state); };
+})();
+</script>
+<script>(function(){
+  var COURSE_KEY = 'ai-mcp-v1', store = { done:{}, last:null, collapsed:{} };
+  try { var s0 = JSON.parse(localStorage.getItem(COURSE_KEY) || '{}'); for (var k0 in s0) store[k0] = s0[k0]; } catch(e){}
+  function save(){ try { localStorage.setItem(COURSE_KEY, JSON.stringify(store)); } catch(e){} }
+  function mk(tag, cls, html){ var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  var HX = {"what":[{"en":"MCP is an open standard to connect AI applications to tools, data and prompts. You wrap a system once as a server and any compatible client can use it. The host owns the model and security, each client talks to one server, and messages use JSON RPC over stdio or streamable HTTP.","hi":"MCP AI applications \u0915\u094b tools, data \u0914\u0930 prompts \u0938\u0947 \u091c\u094b\u0921\u093c\u0928\u0947 \u0915\u093e \u090f\u0915 open standard \u0939\u0948\u0964 \u0906\u092a \u0915\u093f\u0938\u0940 system \u0915\u094b \u090f\u0915 \u092c\u093e\u0930 server \u0915\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 wrap \u0915\u0930\u0924\u0947 \u0939\u094b \u0914\u0930 \u0915\u094b\u0908 \u092d\u0940 compatible client \u0909\u0938\u0947 use \u0915\u0930 \u0938\u0915\u0924\u093e \u0939\u0948\u0964 Host model \u0914\u0930 security \u0915\u093e \u092e\u093e\u0932\u093f\u0915 \u0939\u0948, \u0939\u0930 client \u090f\u0915 server \u0938\u0947 \u092c\u093e\u0924 \u0915\u0930\u0924\u093e \u0939\u0948, \u0914\u0930 messages stdio \u092f\u093e streamable HTTP \u092a\u0930 JSON RPC \u092e\u0947\u0902 \u091a\u0932\u0924\u0947 \u0939\u0948\u0902\u0964","k":["ar-host","ar-client","ar-transport","ar-server","ar-system"]},{"en":"MCP standardises tool access, not agent behaviour, and it does not make tools safe by itself.","hi":"MCP tool access \u0915\u094b standardise \u0915\u0930\u0924\u093e \u0939\u0948, agent \u0915\u0947 behaviour \u0915\u094b \u0928\u0939\u0940\u0902, \u0914\u0930 \u092f\u0947 \u0905\u092a\u0928\u0947 \u0906\u092a tools \u0915\u094b safe \u0928\u0939\u0940\u0902 \u092c\u0928\u093e\u0924\u093e\u0964","k":[]}],"primitives":[{"en":"Tools are controlled by the model, resources by the application and prompts by the user. Sampling lets a server ask the host for a model completion, roots limit file scope, and elicitation asks the user for missing input.","hi":"Tools \u0915\u094b model control \u0915\u0930\u0924\u093e \u0939\u0948, resources \u0915\u094b application \u0914\u0930 prompts \u0915\u094b user\u0964 Sampling server \u0915\u094b host \u0938\u0947 model completion \u092e\u093e\u0901\u0917\u0928\u0947 \u0926\u0947\u0924\u093e \u0939\u0948, roots file scope \u0938\u0940\u092e\u093f\u0924 \u0915\u0930\u0924\u0947 \u0939\u0948\u0902, \u0914\u0930 elicitation user \u0938\u0947 missing input \u092e\u093e\u0901\u0917\u0924\u093e \u0939\u0948\u0964","k":["pm-tools","pm-res","pm-prompts","pm-sampling","pm-roots","pm-elicit"]},{"en":"Annotations are hints, not security.","hi":"Annotations hints \u0939\u0948\u0902, security \u0928\u0939\u0940\u0902\u0964","k":[]}],"lifecycle":[{"en":"A session starts with initialize and capability negotiation, then the client lists and calls tools and resources, with notifications, progress and cancellation. Use stdio for local servers and streamable HTTP for remote ones. Tool failures are returned with is error, not as protocol errors.","hi":"Session initialize \u0914\u0930 capability negotiation \u0938\u0947 \u0936\u0941\u0930\u0942 \u0939\u094b\u0924\u093e \u0939\u0948, \u092b\u093f\u0930 client tools \u0914\u0930 resources list \u0914\u0930 call \u0915\u0930\u0924\u093e \u0939\u0948, notifications, progress \u0914\u0930 cancellation \u0915\u0947 \u0938\u093e\u0925\u0964 Local servers \u0915\u0947 \u0932\u093f\u090f stdio \u0914\u0930 remote \u0915\u0947 \u0932\u093f\u090f streamable HTTP use \u0915\u0930\u094b\u0964 Tool failures is error \u0915\u0947 \u0938\u093e\u0925 \u0932\u094c\u091f\u0924\u0947 \u0939\u0948\u0902, protocol errors \u0915\u0940 \u0924\u0930\u0939 \u0928\u0939\u0940\u0902\u0964","k":["lc-init","lc-cap","lc-list","lc-call","lc-end"]},{"en":"Protocol versions are dates, so negotiate them.","hi":"Protocol versions \u0924\u093e\u0930\u0940\u0916\u0947\u0902 \u0939\u094b\u0924\u0940 \u0939\u0948\u0902, \u0907\u0938\u0932\u093f\u090f \u0909\u0928\u094d\u0939\u0947\u0902 negotiate \u0915\u0930\u094b\u0964","k":[]}],"server":[{"en":"Design a few task oriented tools first, implement them with an official SDK in Python or C sharp, test with the MCP Inspector and real model evals, then package as a local command or a remote HTTPS service with authentication.","hi":"\u092a\u0939\u0932\u0947 \u0915\u0941\u091b task oriented tools design \u0915\u0930\u094b, \u0909\u0928\u094d\u0939\u0947\u0902 Python \u092f\u093e C sharp \u0915\u0947 official SDK \u0938\u0947 implement \u0915\u0930\u094b, MCP Inspector \u0914\u0930 \u0905\u0938\u0932\u0940 model evals \u0938\u0947 test \u0915\u0930\u094b, \u092b\u093f\u0930 local command \u092f\u093e authentication \u0935\u093e\u0932\u0940 remote HTTPS service \u0915\u0947 \u0930\u0942\u092a \u092e\u0947\u0902 package \u0915\u0930\u094b\u0964","k":["bs-design","bs-impl","bs-test","bs-ship"]},{"en":"Cap result sizes to protect the context window.","hi":"Context window \u092c\u091a\u093e\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f result sizes \u092a\u0930 cap \u0932\u0917\u093e\u0913\u0964","k":[]}],"client":[{"en":"A host runs one client per server. It connects and lists tools, converts them to the model tool format, routes tool calls through policy and approval to the right server, and returns trimmed results, treating content as untrusted.","hi":"Host \u0939\u0930 server \u0915\u0947 \u0932\u093f\u090f \u090f\u0915 client \u091a\u0932\u093e\u0924\u093e \u0939\u0948\u0964 \u0935\u0939 connect \u0939\u094b\u0915\u0930 tools list \u0915\u0930\u0924\u093e \u0939\u0948, \u0909\u0928\u094d\u0939\u0947\u0902 model \u0915\u0947 tool format \u092e\u0947\u0902 \u092c\u0926\u0932\u0924\u093e \u0939\u0948, tool calls \u0915\u094b policy \u0914\u0930 approval \u0938\u0947 \u0917\u0941\u091c\u093c\u093e\u0930\u0915\u0930 \u0938\u0939\u0940 server \u0924\u0915 \u092a\u0939\u0941\u0901\u091a\u093e\u0924\u093e \u0939\u0948, \u0914\u0930 trimmed results \u0932\u094c\u091f\u093e\u0924\u093e \u0939\u0948, content \u0915\u094b untrusted \u092e\u093e\u0928\u0915\u0930\u0964","k":["cl-discover","cl-expose","cl-route","cl-return"]},{"en":"Namespace tool names by server to avoid clashes.","hi":"Clashes \u0938\u0947 \u092c\u091a\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f tool names \u092e\u0947\u0902 server \u0915\u093e namespace \u0932\u0917\u093e\u0913\u0964","k":[]}],"design":[{"en":"Design tools for a model: task oriented, with precise schemas, small paginated results and instructive errors. Make them idempotent, confirm destructive actions, enforce permissions on the server, and operate with logging, metrics, rate limits and versioning.","hi":"Model \u0915\u0947 \u0932\u093f\u090f tools design \u0915\u0930\u094b: task oriented, precise schemas, \u091b\u094b\u091f\u0947 paginated results \u0914\u0930 instructive errors \u0915\u0947 \u0938\u093e\u0925\u0964 \u0909\u0928\u094d\u0939\u0947\u0902 idempotent \u092c\u0928\u093e\u0913, destructive actions confirm \u0915\u0930\u093e\u0913, server \u092a\u0930 permissions enforce \u0915\u0930\u094b, \u0914\u0930 logging, metrics, rate limits \u0914\u0930 versioning \u0915\u0947 \u0938\u093e\u0925 \u091a\u0932\u093e\u0913\u0964","k":["dz-task","dz-schema","dz-result","dz-safe","dz-ops"]},{"en":"Treat tool descriptions like prompts and test them.","hi":"Tool descriptions \u0915\u094b prompts \u0915\u0940 \u0924\u0930\u0939 \u092e\u093e\u0928\u094b \u0914\u0930 test \u0915\u0930\u094b\u0964","k":[]}],"security":[{"en":"Treat all tool output as untrusted because of prompt injection. Watch for tool poisoning and rug pulls, use OAuth with audience bound tokens on remote servers, never pass tokens through to downstream APIs, and sandbox and review local servers.","hi":"Prompt injection \u0915\u0940 \u0935\u091c\u0939 \u0938\u0947 \u0938\u093e\u0930\u0947 tool output \u0915\u094b untrusted \u092e\u093e\u0928\u094b\u0964 Tool poisoning \u0914\u0930 rug pulls \u092a\u0930 \u0928\u091c\u093c\u0930 \u0930\u0916\u094b, remote servers \u092a\u0930 audience bound tokens \u0935\u093e\u0932\u093e OAuth use \u0915\u0930\u094b, tokens \u0915\u094b downstream APIs \u0924\u0915 pass through \u092e\u0924 \u0915\u0930\u094b, \u0914\u0930 local servers \u0915\u094b sandbox \u0935 review \u0915\u0930\u094b\u0964","k":["sc-inject","sc-poison","sc-auth","sc-confused","sc-local"]},{"en":"Combining a read private data tool with a send tool is an exfiltration path.","hi":"Private data \u092a\u0922\u093c\u0928\u0947 \u0935\u093e\u0932\u093e tool \u0914\u0930 \u092d\u0947\u091c\u0928\u0947 \u0935\u093e\u0932\u093e tool \u092e\u093f\u0932\u093e\u0928\u093e exfiltration \u0915\u093e \u0930\u093e\u0938\u094d\u0924\u093e \u092c\u0928 \u0938\u0915\u0924\u093e \u0939\u0948\u0964","k":[]}],"enterprise":[{"en":"At enterprise scale use an MCP gateway for authentication, policy and audit, a registry of approved servers, and end to end tracing. MCP connects agents to tools while A two A connects agents to agents. Keep tool logic portable behind thin adapters for MCP, OpenAPI and function calling.","hi":"Enterprise scale \u092a\u0930 authentication, policy \u0914\u0930 audit \u0915\u0947 \u0932\u093f\u090f MCP gateway, approved servers \u0915\u0940 registry \u0914\u0930 end to end tracing use \u0915\u0930\u094b\u0964 MCP agents \u0915\u094b tools \u0938\u0947 \u091c\u094b\u0921\u093c\u0924\u093e \u0939\u0948 \u091c\u092c\u0915\u093f A two A agents \u0915\u094b agents \u0938\u0947\u0964 Tool logic \u0915\u094b MCP, OpenAPI \u0914\u0930 function calling \u0915\u0947 \u092a\u0924\u0932\u0947 adapters \u0915\u0947 \u092a\u0940\u091b\u0947 portable \u0930\u0916\u094b\u0964","k":["en-gw","en-reg","en-a2a","en-fw","en-obs"]},{"en":"Decouple tools from orchestration so they can move.","hi":"Tools \u0915\u094b orchestration \u0938\u0947 \u0905\u0932\u0917 \u0930\u0916\u094b \u0924\u093e\u0915\u093f \u0935\u0947 \u0915\u0939\u0940\u0902 \u092d\u0940 \u091c\u093e \u0938\u0915\u0947\u0902\u0964","k":[]}],"experience":[{"en":"To show experience with MCP, describe a real project: shared MCP servers built on a service layer, a host with a policy gate and approvals, a gateway with OAuth and audit, tracing, and evals. Explain your trade offs and failures honestly, and only claim what you can defend.","hi":"MCP \u0915\u093e \u0905\u0928\u0941\u092d\u0935 \u0926\u093f\u0916\u093e\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u090f\u0915 \u0905\u0938\u0932\u0940 project \u092c\u0924\u093e\u0913: service layer \u092a\u0930 \u092c\u0928\u0947 shared MCP servers, policy gate \u0914\u0930 approvals \u0935\u093e\u0932\u093e host, OAuth \u0914\u0930 audit \u0935\u093e\u0932\u093e gateway, tracing \u0914\u0930 evals\u0964 \u0905\u092a\u0928\u0947 trade offs \u0914\u0930 failures \u0908\u092e\u093e\u0928\u0926\u093e\u0930\u0940 \u0938\u0947 \u092c\u0924\u093e\u0913, \u0914\u0930 \u0938\u093f\u0930\u094d\u092b \u0935\u0939\u0940 \u0926\u093e\u0935\u093e \u0915\u0930\u094b \u091c\u093f\u0938\u0947 \u0906\u092a defend \u0915\u0930 \u0938\u0915\u094b\u0964","k":[]},{"en":"Use a situation, action and result structure with real numbers.","hi":"\u0905\u0938\u0932\u0940 numbers \u0915\u0947 \u0938\u093e\u0925 situation, action \u0914\u0930 result \u0915\u0940 structure use \u0915\u0930\u094b\u0964","k":[]}],"qa":[{"en":"These are the interview questions on MCP and AI orchestration: roles, primitives, lifecycle, transports, tool design, security, authorization, gateways, A two A and how to present your experience.","hi":"\u092f\u0947 MCP \u0914\u0930 AI orchestration \u092a\u0930 interview questions \u0939\u0948\u0902: roles, primitives, lifecycle, transports, tool design, security, authorization, gateways, A two A \u0914\u0930 \u0905\u092a\u0928\u093e \u0905\u0928\u0941\u092d\u0935 \u0915\u0948\u0938\u0947 \u092c\u0924\u093e\u090f\u0901\u0964","k":[]},{"en":"Remember: untrusted tool output, audience bound tokens, no token passthrough, task oriented tools.","hi":"\u092f\u093e\u0926 \u0930\u0916\u094b: tool output untrusted, audience bound tokens, token passthrough \u0928\u0939\u0940\u0902, task oriented tools\u0964","k":[]}],"cheat":[{"en":"This is a summary and a mind map of MCP and AI orchestration. Revise it before interviews.","hi":"\u092f\u0947 MCP \u0914\u0930 AI orchestration \u0915\u093e summary \u0914\u0930 mind map \u0939\u0948\u0964 Interviews \u0938\u0947 \u092a\u0939\u0932\u0947 \u0907\u0938\u0947 revise \u0915\u0930\u094b\u0964","k":[]},{"en":"Practise by building a small server and a client with a policy gate.","hi":"\u090f\u0915 \u091b\u094b\u091f\u093e server \u0914\u0930 policy gate \u0935\u093e\u0932\u093e client \u092c\u0928\u093e\u0915\u0930 practise \u0915\u0930\u094b\u0964","k":[]}]};
+
+  /* ---------- build lessons from the authored source ---------- */
+  var src = document.getElementById('src'), sections = [], lessons = [];
+  [].forEach.call(src.querySelectorAll(':scope > section'), function(secEl){
+    var sec = { id:'sec-' + (sections.length + 1), title:secEl.getAttribute('data-sec'), lessons:[] }; sections.push(sec);
+    [].forEach.call(secEl.querySelectorAll(':scope > article'), function(a){
+      var id = 'les-' + (lessons.length + 1), art = mk('article', 'lesson'); art.id = id;
+      var crumb = mk('div', 'lcrumb'); art.appendChild(crumb);
+      var card = mk('section', 'sn'); while (a.firstChild) card.appendChild(a.firstChild); art.appendChild(card);
+      var words = (card.textContent || '').split(/\s+/).length;
+      var L = { id:id, key:a.getAttribute('data-key'), title:a.getAttribute('data-title'), sec:sec, el:art, card:card, crumb:crumb, mins:Math.max(1, Math.round(words / 170)), idx:lessons.length };
+      lessons.push(L); sec.lessons.push(L);
+    });
+  });
+  src.remove();
+
+  /* ---------- skeleton ---------- */
+  document.body.classList.add('cms');
+  var cms = mk('div'); cms.id = 'cms';
+  var bar = mk('header'); bar.id = 'cmsbar';
+  bar.innerHTML = '<button type="button" class="menu" id="cmsMenu" aria-label="Show or hide course menu" aria-expanded="true">☰</button><div class="ttl" id="cmsTtl">MCP and AI Orchestration – Complete Course</div><button type="button" id="animToggle" class="animbtn" aria-pressed="false">⏸ Pause animations</button><div class="prog"><span id="cmsProgTxt"></span><div class="bar"><i id="cmsProgBar"></i></div></div>';
+  var side = mk('aside'); side.id = 'cmsside'; side.setAttribute('aria-label', 'Course curriculum');
+  var main = mk('main'); main.id = 'cmsmain';
+  var scrim = mk('div'); scrim.id = 'cmsscrim';
+  lessons.forEach(function(L){ main.appendChild(L.el); });
+  var foot = mk('div', 'lfoot');
+  foot.innerHTML = '<button type="button" id="lfPrev" data-fit>◀ Previous</button><button type="button" id="lfDone" class="primary" data-fit>Mark as complete</button><button type="button" id="lfNext" data-fit>Next ▶</button>';
+  main.appendChild(foot);
+  cms.appendChild(bar); cms.appendChild(side); cms.appendChild(main); cms.appendChild(scrim);
+  document.body.insertBefore(cms, document.body.firstChild);
+
+  /* ---------- code blocks: wrapper + copy button ---------- */
+  [].forEach.call(main.querySelectorAll('pre'), function(pre){
+    var w = mk('div', 'codewrap'); pre.parentNode.insertBefore(w, pre); w.appendChild(pre);
+    var b = mk('button', 'copy'); b.type = 'button'; b.textContent = 'Copy'; b.setAttribute('aria-label', 'Copy code');
+    b.onclick = function(){
+      var t = pre.textContent;
+      var done = function(){ b.textContent = 'Copied ✓'; setTimeout(function(){ b.textContent = 'Copy'; }, 1500); };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, function(){ b.textContent = 'Press Ctrl+C'; });
+      else { var ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch(e){} ta.remove(); }
+    };
+    w.appendChild(b);
+  });
+
+  /* ---------- interview practice mode (hide answers until tapped) ---------- */
+  lessons.forEach(function(L){
+    if (!L.card.querySelector('.qa-item')) return;
+    var b = mk('button', 'animbtn qa-practice'); b.type = 'button'; b.textContent = '🎯 Practice mode: hide answers';
+    var on = false;
+    b.onclick = function(){ on = !on; L.card.classList.toggle('practice', on); [].forEach.call(L.card.querySelectorAll('.qa-item'), function(i){ i.classList.remove('open'); }); b.textContent = on ? '👁 Show all answers' : '🎯 Practice mode: hide answers'; if (window.CMS) window.CMS.refresh(); };
+    var h2 = L.card.querySelector('h2'); var anchor = L.card.querySelector('.hx') || h2; L.card.insertBefore(b, anchor.nextSibling);
+    L.card.addEventListener('click', function(e){ var q = e.target.closest ? e.target.closest('.qq') : null; if (q && L.card.classList.contains('practice')) q.parentNode.classList.toggle('open'); });
+  });
+
+  /* ---------- sidebar ---------- */
+  var sh = mk('div', 'sbhead');
+  sh.innerHTML = '<h2>Course content</h2><input type="search" id="sbSearch" placeholder="Search lessons…" aria-label="Search lessons"><div class="sbtools"><button type="button" id="sbCollapse">Collapse all</button><button type="button" id="sbExpand">Expand all</button></div>';
+  side.appendChild(sh);
+  sections.forEach(function(sec, si){
+    var box = mk('div', 'sec'); box.id = sec.id;
+    var hd = mk('button', 'sechd'); hd.type = 'button'; hd.setAttribute('aria-expanded', 'true');
+    hd.innerHTML = '<span class="chev">▾</span><span class="t"></span><span class="cnt"></span>';
+    hd.querySelector('.t').textContent = 'Section ' + (si + 1) + ': ' + sec.title;
+    var list = mk('div', 'lessons');
+    sec.lessons.forEach(function(L){
+      var b = mk('button', 'lessonbtn'); b.type = 'button'; b.setAttribute('data-id', L.id);
+      b.innerHTML = '<span class="ck"></span><span class="lt"></span>';
+      b.querySelector('.lt').textContent = L.title;
+      var tm = mk('span', 'tm'); tm.textContent = '⏱ ' + L.mins + ' min'; b.querySelector('.lt').appendChild(tm);
+      b.onclick = function(){ show(L.id, true); closeDrawer(); };
+      L.btn = b; list.appendChild(b);
+    });
+    hd.onclick = function(){ var c = !box.classList.contains('collapsed'); box.classList.toggle('collapsed', c); store.collapsed[sec.id] = c; hd.setAttribute('aria-expanded', c ? 'false' : 'true'); save(); };
+    box.appendChild(hd); box.appendChild(list); side.appendChild(box);
+    sec.box = box; sec.hd = hd;
+    if (store.collapsed[sec.id]) { box.classList.add('collapsed'); hd.setAttribute('aria-expanded', 'false'); }
+  });
+  function setAllCollapsed(c){ sections.forEach(function(sec){ sec.box.classList.toggle('collapsed', c); sec.hd.setAttribute('aria-expanded', c ? 'false' : 'true'); store.collapsed[sec.id] = c; }); save(); }
+  document.getElementById('sbCollapse').onclick = function(){ setAllCollapsed(true); };
+  document.getElementById('sbExpand').onclick = function(){ setAllCollapsed(false); };
+  document.getElementById('sbSearch').oninput = function(){
+    var q = this.value.trim().toLowerCase();
+    sections.forEach(function(sec){
+      var any = false;
+      sec.lessons.forEach(function(L){ var hit = !q || L.title.toLowerCase().indexOf(q) >= 0 || (L.card.textContent || '').toLowerCase().indexOf(q) >= 0; L.btn.hidden = !hit; if (hit) any = true; });
+      sec.box.hidden = !any; if (q && any) sec.box.classList.remove('collapsed');
+    });
+  };
+
+  /* ---------- drawer / menu ---------- */
+  var isMobile = function(){ return window.matchMedia('(max-width: 900px)').matches; };
+  function closeDrawer(){ cms.classList.remove('sideopen'); }
+  document.getElementById('cmsMenu').onclick = function(){
+    if (isMobile()) cms.classList.toggle('sideopen'); else cms.classList.toggle('noside');
+    var open = isMobile() ? cms.classList.contains('sideopen') : !cms.classList.contains('noside');
+    this.setAttribute('aria-expanded', open ? 'true' : 'false'); setTimeout(refresh, 120);
+  };
+  scrim.onclick = closeDrawer;
+
+  /* ---------- progress + footer ---------- */
+  function updateProgress(){
+    var done = lessons.filter(function(L){ return store.done[L.id]; }).length, pct = Math.round(done / lessons.length * 100);
+    document.getElementById('cmsProgTxt').textContent = pct + '% complete · ' + done + ' of ' + lessons.length + ' lessons';
+    document.getElementById('cmsProgBar').style.width = pct + '%';
+    lessons.forEach(function(L){ var d = !!store.done[L.id]; L.btn.classList.toggle('done', d); L.btn.querySelector('.ck').textContent = d ? '✓' : (L.idx + 1); });
+    sections.forEach(function(sec){ var d = sec.lessons.filter(function(L){ return store.done[L.id]; }).length; sec.hd.querySelector('.cnt').textContent = d + '/' + sec.lessons.length; });
+  }
+  var current = null, bPrev = document.getElementById('lfPrev'), bDone = document.getElementById('lfDone'), bNext = document.getElementById('lfNext');
+  function byId(id){ for (var i = 0; i < lessons.length; i++) if (lessons[i].id === id) return lessons[i]; return null; }
+  function show(id){
+    var L = byId(id); if (!L) return;
+    if (current && current !== L && window.__hxStop) window.__hxStop();
+    lessons.forEach(function(x){ x.el.classList.toggle('active', x === L); x.btn.classList.toggle('active', x === L); });
+    current = L; store.last = id; save();
+    L.crumb.textContent = 'Section ' + (sections.indexOf(L.sec) + 1) + ': ' + L.sec.title + '  ›  Lesson ' + (L.idx + 1) + ' of ' + lessons.length;
+    L.sec.box.classList.remove('collapsed'); L.sec.hd.setAttribute('aria-expanded', 'true');
+    if (L.btn.scrollIntoView) { try { L.btn.scrollIntoView({ block:'nearest' }); } catch(e){} }
+    main.scrollTop = 0;
+    bPrev.disabled = L.idx === 0; bNext.disabled = L.idx === lessons.length - 1;
+    var d = !!store.done[id]; bDone.textContent = d ? '✓ Completed (tap to undo)' : 'Mark as complete'; bDone.classList.toggle('done', d); bDone.classList.toggle('primary', !d);
+    try { history.replaceState(null, '', '#' + id); } catch(e){}
+    updateProgress(); refresh(); if (window.__syncAnim) setTimeout(window.__syncAnim, 80);
+  }
+  bPrev.onclick = function(){ if (current && current.idx > 0) show(lessons[current.idx - 1].id); };
+  bNext.onclick = function(){ if (!current) return; store.done[current.id] = true; if (current.idx < lessons.length - 1) show(lessons[current.idx + 1].id); else show(current.id); };
+  bDone.onclick = function(){ if (!current) return; store.done[current.id] = !store.done[current.id]; save(); show(current.id); };
+
+  /* ---------- keep text inside boxes ---------- */
+  function fitSvgText(root){
+    [].forEach.call((root || document).querySelectorAll('svg'), function(svg){
+      var texts = [].slice.call(svg.querySelectorAll('text'));
+      texts.forEach(function(t){ t.style.fontSize = ''; });
+      var rects = [].slice.call(svg.querySelectorAll('rect.b, rect.y, rect.g, rect.r, rect.o')).map(function(r){ return { x:+r.getAttribute('x'), y:+r.getAttribute('y'), w:+r.getAttribute('width'), h:+r.getAttribute('height') }; }).filter(function(r){ return r.w > 0 && r.h > 0; });
+      texts.forEach(function(t){
+        var x = parseFloat(t.getAttribute('x')), y = parseFloat(t.getAttribute('y'));
+        if (isNaN(x) || isNaN(y) || t.classList.contains('t')) return;
+        var best = null;
+        rects.forEach(function(r){ if (x >= r.x && x <= r.x + r.w && y - 6 >= r.y && y - 6 <= r.y + r.h && (!best || r.w * r.h < best.w * best.h)) best = r; });
+        if (!best) return;
+        var bb; try { bb = t.getBBox(); } catch(e){ return; }
+        if (!bb || !bb.width) return;
+        var anchor = getComputedStyle(t).textAnchor, pad = 8, maxW;
+        if (anchor === 'middle') maxW = 2 * (Math.min(x - best.x, best.x + best.w - x) - pad);
+        else if (anchor === 'end') maxW = x - best.x - pad; else maxW = best.x + best.w - x - pad;
+        var fs = parseFloat(getComputedStyle(t).fontSize) || 20, g = 0;
+        while (bb.width > maxW && fs > 9 && g++ < 6) { fs = Math.max(9, fs * maxW / bb.width * 0.98); t.style.fontSize = fs + 'px'; try { bb = t.getBBox(); } catch(e){ break; } }
+      });
+    });
+  }
+  function fitHtml(){
+    [].forEach.call(document.querySelectorAll('[data-fit], #cmsTtl, .hx button'), function(e){
+      if (!e.offsetParent) return;
+      e.style.fontSize = ''; var fs = parseFloat(getComputedStyle(e).fontSize), g = 0;
+      while ((e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 2) && fs > 10 && g++ < 30) { fs -= 1; e.style.fontSize = fs + 'px'; }
+    });
+  }
+  var rt; function refresh(){ clearTimeout(rt); rt = setTimeout(function(){ if (current) fitSvgText(current.el); fitHtml(); }, 30); }
+  window.addEventListener('resize', function(){ refresh(); });
+  window.addEventListener('load', function(){ refresh(); setTimeout(refresh, 700); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(refresh);
+  ['themeSel', 'fontSel', 'sizeSel', 'resetBtn'].forEach(function(id){ var el = document.getElementById(id); if (!el) return; el.addEventListener('change', function(){ setTimeout(refresh, 350); setTimeout(refresh, 1300); }); el.addEventListener('click', function(){ setTimeout(refresh, 350); }); });
+  window.CMS = { show:show, lessons:lessons, refresh:refresh };
+
+  /* ---------- Explain in Hindi: every lesson (spoken Hindi, English captions) ---------- */
+  var synth = window.speechSynthesis, hx = { playing:false, paused:false, token:0, i:0, j:0, sents:[], comp:null, voice:null, segs:[] };
+  function hiVoice(){
+    var v = (synth && synth.getVoices && synth.getVoices()) || [], hi = v.filter(function(x){ return /^hi/i.test(x.lang); });
+    return hi.filter(function(x){ return /Google|Lekha|Hemant|Kalpana|Neerja|Swara|Madhur/i.test(x.name); })[0] || hi[0] || null;
+  }
+  function sentences(t){ return t.replace(/\u0964\s*/g, '\u0964\u0001').split('\u0001').map(function(s){ return s.trim(); }).filter(Boolean); }
+  function spot(keys){
+    [].forEach.call(document.querySelectorAll('svg .spot'), function(e){ e.classList.remove('spot'); });
+    if (!current || !keys || !keys.length) return; var first = null;
+    keys.forEach(function(k){ [].forEach.call(current.el.querySelectorAll('svg [data-k="' + k + '"]'), function(e){ e.classList.add('spot'); if (!first) first = e; }); });
+    if (first && first.scrollIntoView) { try { first.scrollIntoView({ block:'center', behavior:'smooth' }); } catch(e){} }
+  }
+  function ui(c){
+    var on = hx.playing || hx.paused;
+    c.querySelector('.hxbtn').hidden = on;
+    [].forEach.call(c.querySelectorAll('.hxctl'), function(b){ b.hidden = !on; });
+    c.querySelector('[data-act="pause"]').textContent = hx.paused ? '▶ Resume' : '⏸ Pause';
+    c.querySelector('.hxcap').hidden = !on;
+  }
+  function caption(c){
+    var s = hx.segs[hx.i]; if (!s) return;
+    c.querySelector('.hxcap').innerHTML = '<b>Simple explanation · step ' + (hx.i + 1) + ' of ' + hx.segs.length + '</b><span></span>';
+    c.querySelector('.hxcap span').textContent = s.en;
+    spot(s.k);
+  }
+  function speak(){
+    var c = hx.comp; if (!c || !hx.playing) return;
+    if (hx.i >= hx.segs.length) { stop(true); return; }
+    if (!hx.sents.length) { hx.sents = sentences(hx.segs[hx.i].hi); hx.j = 0; caption(c); }
+    if (hx.j >= hx.sents.length) { hx.i++; hx.sents = []; return speak(); }
+    var my = hx.token, u = new SpeechSynthesisUtterance(hx.sents[hx.j]);
+    if (hx.voice) { u.voice = hx.voice; u.lang = hx.voice.lang; } else u.lang = 'hi-IN';
+    var nr = document.getElementById('nRate'); u.rate = Math.min(1.3, Math.max(0.7, (nr ? parseFloat(nr.value) || 1 : 1) * 0.92));
+    u.onend = function(){ if (my !== hx.token) return; hx.j++; speak(); };
+    u.onerror = function(e){ if (my !== hx.token) return; if (e && (e.error === 'interrupted' || e.error === 'canceled')) return; hx.j++; speak(); };
+    synth.speak(u);
+  }
+  function stop(finished){
+    hx.token++; if (synth) synth.cancel(); var c = hx.comp;
+    hx.playing = false; hx.paused = false; hx.sents = []; hx.i = 0; hx.j = 0; spot([]);
+    if (c) { ui(c); if (finished) { var cap = c.querySelector('.hxcap'); cap.hidden = false; cap.innerHTML = '<b>Finished</b><span>That was the explanation. Press the button to listen again.</span>'; } }
+  }
+  window.__hxStop = function(){ if (hx.playing || hx.paused) stop(false); };
+  function begin(c, segs){
+    var msg = c.querySelector('.hxmsg');
+    if (!synth || !window.SpeechSynthesisUtterance) { msg.hidden = false; msg.textContent = 'Speech is not supported in this browser.'; return; }
+    var go = function(){
+      hx.voice = hiVoice();
+      if (!hx.voice) { msg.hidden = false; msg.textContent = 'No Hindi voice was found on this device. Install a Hindi (India) voice in your system speech settings (iPad: Settings > Accessibility > Spoken Content > Voices; Windows: Settings > Time & language > Speech), then press the button again.'; return; }
+      msg.hidden = true;
+      var ns = document.getElementById('nStop'); if (ns) ns.click();
+      if (hx.comp && hx.comp !== c) { hx.playing = false; hx.paused = false; ui(hx.comp); }
+      hx.token++; synth.cancel(); hx.comp = c; hx.segs = segs; hx.playing = true; hx.paused = false; hx.i = 0; hx.sents = []; hx.j = 0; ui(c); speak();
+    };
+    if (synth.getVoices().length) go(); else { var done = false; var t = setTimeout(function(){ if (!done) { done = true; go(); } }, 1500); synth.onvoiceschanged = function(){ if (!done) { done = true; clearTimeout(t); go(); } }; }
+  }
+  function build(L){
+    var segs = HX[L.key]; if (!segs || !segs.length) return;
+    var c = mk('div', 'hx');
+    c.innerHTML = '<button type="button" class="hxbtn">🗣️ Explain in Hindi</button><button type="button" class="hxctl" data-act="prev" hidden aria-label="Previous step">⏮</button><button type="button" class="hxctl" data-act="pause" hidden>⏸ Pause</button><button type="button" class="hxctl" data-act="stop" hidden>⏹ Stop</button><button type="button" class="hxctl" data-act="next" hidden aria-label="Next step">⏭</button>' +
+      '<span class="hxsub">Listen to this lesson explained in simple language (spoken in Hindi; captions are in English).</span><div class="hxcap" hidden></div><div class="hxmsg" hidden></div>';
+    var h2 = L.card.querySelector('h2'); if (h2 && h2.nextSibling) L.card.insertBefore(c, h2.nextSibling); else L.card.appendChild(c);
+    c.querySelector('.hxbtn').onclick = function(){ begin(c, segs); };
+    c.querySelector('[data-act="stop"]').onclick = function(){ stop(false); };
+    c.querySelector('[data-act="pause"]').onclick = function(){
+      if (hx.paused) { hx.paused = false; hx.playing = true; hx.token++; ui(c); speak(); } else { hx.paused = true; hx.playing = false; hx.token++; synth.cancel(); ui(c); }
+    };
+    c.querySelector('[data-act="next"]').onclick = function(){ if (hx.i < hx.segs.length - 1) { var was = hx.paused; hx.token++; synth.cancel(); hx.i++; hx.sents = []; hx.j = 0; if (was) caption(c); else { hx.playing = true; speak(); } } };
+    c.querySelector('[data-act="prev"]').onclick = function(){ var was = hx.paused; hx.token++; synth.cancel(); hx.i = Math.max(0, hx.i - 1); hx.sents = []; hx.j = 0; if (was) caption(c); else { hx.playing = true; speak(); } };
+  }
+  lessons.forEach(build);
+  window.addEventListener('pagehide', function(){ if (synth) synth.cancel(); });
+
+  /* ---------- start ---------- */
+  var startId = (location.hash || '').replace('#', '');
+  if (!byId(startId)) startId = byId(store.last) ? store.last : lessons[0].id;
+  window.addEventListener('hashchange', function(){ var id = (location.hash || '').replace('#', ''); if (byId(id) && (!current || current.id !== id)) show(id); });
+  show(startId); updateProgress();
+})();
+</script>
+<script>
+(function(){
+  var dock = document.getElementById('narrator');
+  if (!('speechSynthesis' in window) || !window.SpeechSynthesisUtterance) { dock.innerHTML = '<div class="row">🔇 Narration is not supported in this browser.</div>'; return; }
+  var synth = window.speechSynthesis, KEY = 'notes-narrator-v1';
+  var $ = function(id){ return document.getElementById(id); };
+  var bPlay=$('nPlay'), bStop=$('nStop'), bPrev=$('nPrev'), bNext=$('nNext'), bMin=$('nMin'), selRate=$('nRate'), selVoice=$('nVoice'), chkLabels=$('nLabels'), statusEl=$('nStatus'), bar=$('nBar');
+  var SEL = 'h1,h2,h3,p,li,tr,pre,svg';
+  var blocks = [], chunks = [], cur = 0, ci = 0, playing = false, token = 0, fresh = true, voices = [], marked = null;
+
+  var prefs = {}; try { prefs = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e){}
+  function savePrefs(){ try { localStorage.setItem(KEY, JSON.stringify({ rate:selRate.value, voice:selVoice.value, labels:chkLabels.checked })); } catch(e){} }
+  if (prefs.rate) selRate.value = prefs.rate;
+  chkLabels.checked = !!prefs.labels;
+
+  function buildBlocks(){
+    blocks = [];
+    document.querySelectorAll('.lesson').forEach(function(pg, pi){
+      pg.querySelectorAll(SEL).forEach(function(el){
+        var a = el.parentElement && el.parentElement.closest(SEL);
+        if (a && pg.contains(a)) return;
+        blocks.push({ el:el, page:pi+1, tag:el.tagName.toLowerCase() });
+      });
+    });
+  }
+
+  // add a "read from here" button to every main heading
+  function addSpeakButtons(){
+    document.querySelectorAll('.lesson h1, .lesson h2').forEach(function(h){
+      var b = document.createElement('button'); b.className = 'spk'; b.type = 'button'; b.textContent = '🔊'; b.setAttribute('aria-label','Read from here'); b.title = 'Read from here';
+      b.onclick = function(){ if (!blocks.length) buildBlocks(); var i = indexOfEl(h); if (i >= 0) start(i); };
+      h.appendChild(b);
+    });
+  }
+  function indexOfEl(el){ for (var i=0;i<blocks.length;i++){ if (blocks[i].el === el) return i; } return -1; }
+
+  var MAP = [[/\bK8s\b/g,'Kubernetes'],[/\bkubectl\b/gi,'kube control'],[/\betcd\b/gi,'et see dee'],[/\u03bb/g,'Lambda'],[/\bIAM\b/g,'I A M'],[/\bSQS\b/g,'S Q S'],[/\bSNS\b/g,'S N S'],
+    [/\bS3\b/g,'S three'],[/\bYAML\b/g,'yamul'],[/\bRBAC\b/g,'R back'],[/\bEKS\b/g,'E K S'],[/\bGKE\b/g,'G K E'],[/\bAKS\b/g,'A K S'],[/\bPVC\b/g,'P V C'],[/\bPV\b/g,'P V'],
+    [/\bHPA\b/g,'H P A'],[/\bVPA\b/g,'V P A'],[/\bCNI\b/g,'C N I'],[/\bDLQ\b/g,'D L Q'],[/\bVPC\b/g,'V P C'],[/\bARN\b/g,'A R N'],[/\bKMS\b/g,'K M S'],[/\bCLI\b/g,'C L I'],
+    [/\bCRDs?\b/g,'C R D'],[/\bCNCF\b/g,'C N C F'],[/\bSDK\b/g,'S D K'],[/\bGB-s(econds)?\b/gi,'gigabyte seconds'],[/\bp(95|99)\b/g,'P $1'],[/\bCI\/CD\b/g,'C I C D'],[/\bDB\b/g,'database'],
+    [/\bAZs?\b/g,'availability zone'],[/\bARM64\b/gi,'arm sixty four'],[/\bx86_64\b/g,'x eighty six'],[/\bMB\b/g,'megabytes'],[/\bGB\b/g,'gigabytes'],
+    [/[\u2192\u279c]/g,' to '],[/[\u21d2\u21e6]/g,' means '],[/\u2248/g,' about '],[/\u2265/g,' at least '],[/\u2264/g,' at most '],[/\u00d7/g,' times '],[/&/g,' and '],[/[\u2713\u2714\u2717\u2718\u2022\u00b7]/g,' ']];
+  function speakable(t){
+    t = t.replace(/[\p{Extended_Pictographic}\uFE0F\u200d]/gu, ' ');
+    for (var i=0;i<MAP.length;i++) t = t.replace(MAP[i][0], MAP[i][1]);
+    return t.replace(/\s+/g,' ').trim();
+  }
+  function textOf(b){
+    var el = b.el;
+    if (b.tag === 'pre') return 'Code example on screen.';
+    if (b.tag === 'svg') {
+      if (!chkLabels.checked) return 'There is a diagram here.';
+      var parts = [].map.call(el.querySelectorAll('text'), function(t){ return t.textContent.trim(); }).filter(Boolean);
+      return 'Diagram. ' + parts.join('. ') + '.';
+    }
+    if (b.tag === 'tr') return [].map.call(el.children, function(c){ return c.textContent.trim(); }).filter(Boolean).join('. ') + '.';
+    var c = el.cloneNode(true); [].forEach.call(c.querySelectorAll('.spk'), function(x){ x.remove(); });
+    var t = c.textContent;
+    return /^h[1-3]$/.test(b.tag) ? t + '.' : t;
+  }
+  function chunkText(t){
+    t = speakable(t); if (!t) return [];
+    var out = [];
+    t.replace(/([.!?])\s+/g, '$1\u0001').split('\u0001').forEach(function(x){
+      x = x.trim();
+      while (x.length > 180) { var i = x.lastIndexOf(',', 180); if (i < 60) i = x.lastIndexOf(' ', 180); if (i < 1) i = 180; out.push(x.slice(0, i+1)); x = x.slice(i+1).trim(); }
+      if (x) out.push(x);
+    });
+    return out;
+  }
+
+  function headingFor(i){ for (var k=i;k>=0;k--){ if (/^h[12]$/.test(blocks[k].tag)) { var c = blocks[k].el.cloneNode(true); [].forEach.call(c.querySelectorAll('.spk'), function(x){ x.remove(); }); return c.textContent.trim(); } } return ''; }
+  function mark(){
+    if (marked) marked.classList.remove('reading');
+    var b = blocks[cur]; if (!b) return;
+    var les = b.el.closest && b.el.closest('.lesson'); if (les && window.CMS && !les.classList.contains('active')) window.CMS.show(les.id);
+    marked = b.el; marked.classList.add('reading');
+    try { marked.scrollIntoView({ block:'center', behavior:'smooth' }); } catch(e){ marked.scrollIntoView(); }
+    statusEl.textContent = '🔊 Lesson ' + b.page + ' · ' + headingFor(cur);
+    bar.style.width = Math.round(cur / Math.max(1, blocks.length) * 100) + '%';
+  }
+  function ui(){ bPlay.textContent = playing ? '⏸' : '▶'; bPlay.setAttribute('aria-label', playing ? 'Pause narration' : 'Play narration'); }
+
+  function speakCurrent(){
+    if (!playing) return;
+    if (cur >= blocks.length) { finish(); return; }
+    if (!chunks.length && ci === 0) { chunks = chunkText(textOf(blocks[cur])); mark(); if (!chunks.length) { cur++; return speakCurrent(); } }
+    if (ci >= chunks.length) { cur++; ci = 0; chunks = []; return speakCurrent(); }
+    var my = token, u = new SpeechSynthesisUtterance(chunks[ci]);
+    u.rate = parseFloat(selRate.value) || 1;
+    var v = voices.filter(function(x){ return x.name === selVoice.value; })[0];
+    if (v) { u.voice = v; u.lang = v.lang; } else { u.lang = 'en-US'; }
+    u.onend = function(){ if (my !== token) return; ci++; speakCurrent(); };
+    u.onerror = function(e){ if (my !== token) return; if (e && (e.error === 'interrupted' || e.error === 'canceled')) return; ci++; speakCurrent(); };
+    synth.speak(u);
+  }
+  function firstVisible(){
+    for (var i=0;i<blocks.length;i++){ var r = blocks[i].el.getBoundingClientRect(); if (r.top > 70 && r.height > 0) return i; }
+    return 0;
+  }
+  function start(i){
+    if (!blocks.length) buildBlocks();
+    token++; synth.cancel();
+    cur = Math.max(0, Math.min(i, blocks.length-1)); ci = 0; chunks = []; playing = true; fresh = false; ui(); speakCurrent();
+  }
+  function pause(){ playing = false; token++; synth.cancel(); ui(); statusEl.textContent = '⏸ Paused – ' + headingFor(cur); }
+  function resume(){ playing = true; token++; ui(); speakCurrent(); }
+  function stop(){ playing = false; token++; synth.cancel(); fresh = true; ci = 0; chunks = []; if (marked) { marked.classList.remove('reading'); marked = null; } bar.style.width = '0'; statusEl.textContent = '🎧 Narrator – tap ▶ to listen'; ui(); }
+  function finish(){ stop(); statusEl.textContent = '✅ Finished – tap ▶ to listen again'; }
+  function jump(dir){
+    if (!blocks.length) buildBlocks();
+    var base = fresh ? firstVisible() : cur, idx = -1, k;
+    if (dir > 0) { for (k=base+1;k<blocks.length;k++) if (/^h[12]$/.test(blocks[k].tag)) { idx = k; break; } }
+    else { for (k=base-1;k>=0;k--) if (/^h[12]$/.test(blocks[k].tag)) { idx = k; break; } }
+    if (idx >= 0) start(idx);
+  }
+  bPlay.onclick = function(){ if (playing) pause(); else if (fresh) { buildBlocks(); start(firstVisible()); } else resume(); };
+  bStop.onclick = stop; bPrev.onclick = function(){ jump(-1); }; bNext.onclick = function(){ jump(1); };
+  
+  selRate.onchange = function(){ savePrefs(); if (playing) { token++; synth.cancel(); speakCurrent(); } };
+  selVoice.onchange = function(){ savePrefs(); if (playing) { token++; synth.cancel(); speakCurrent(); } };
+  chkLabels.onchange = function(){ savePrefs(); };
+
+  function loadVoices(){
+    var all = synth.getVoices() || [];
+    voices = all.filter(function(v){ return /^en/i.test(v.lang); }); if (!voices.length) voices = all;
+    if (!voices.length) return;
+    selVoice.innerHTML = '';
+    voices.forEach(function(v){ var o = document.createElement('option'); o.value = v.name; o.textContent = v.name + ' (' + v.lang + ')'; selVoice.appendChild(o); });
+    var pick = prefs.voice && voices.filter(function(v){ return v.name === prefs.voice; })[0];
+    if (!pick) pick = voices.filter(function(v){ return /Samantha|Google US English|Natural|Aria|Jenny|Daniel|Karen|Rishi|Veena|Moira/i.test(v.name); })[0] || voices[0];
+    selVoice.value = pick.name;
+  }
+  loadVoices(); if ('onvoiceschanged' in synth) synth.onvoiceschanged = loadVoices;
+
+  
+  addSpeakButtons(); ui();
+  window.addEventListener('pagehide', function(){ synth.cancel(); });
+
+  // top bar hides while scrolling down, returns when scrolling up
+  var tb = document.getElementById('toolbar'), lastY = 0;
+  window.addEventListener('scroll', function(){ var y = window.pageYOffset; if (tb) tb.classList.toggle('hide', y > lastY && y > 140); lastY = y; }, { passive:true });
+})();
+</script>
+<script>
+(function(){
+  var btn = document.getElementById('settingsBtn'), panel = document.getElementById('settingsPanel'), scrim = document.getElementById('settingsScrim');
+  function setOpen(o){ panel.classList.toggle('open', o); scrim.classList.toggle('open', o); btn.setAttribute('aria-expanded', o ? 'true' : 'false'); btn.textContent = o ? '✕' : '⚙️'; }
+  btn.onclick = function(){ setOpen(!panel.classList.contains('open')); };
+  document.getElementById('settingsClose').onclick = function(){ setOpen(false); };
+  scrim.onclick = function(){ setOpen(false); };
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape') setOpen(false); });
+  var nPlay = document.getElementById('nPlay');
+  function refreshBtn(){ var o = panel.classList.contains('open'), p = nPlay && nPlay.textContent === '\u23f8'; btn.textContent = o ? '\u2715' : (p ? '\ud83d\udd0a' : '\u2699\ufe0f'); btn.classList.toggle('playing', !o && p); }
+  var _setOpen = setOpen; setOpen = function(o){ _setOpen(o); refreshBtn(); };
+  if (nPlay) { nPlay.addEventListener('click', function(){ setTimeout(function(){ if (nPlay.textContent === '\u23f8') setOpen(false); else refreshBtn(); }, 0); });
+    new MutationObserver(refreshBtn).observe(nPlay, { childList:true, characterData:true, subtree:true }); }
+  var nMin = null;
+  if (nMin) { nMin.onclick = function(){ setOpen(!panel.classList.contains('open')); }; nMin.title = 'Settings'; nMin.setAttribute('aria-label','Open settings'); }
+})();
+</script>
+<script>
+(function(){
+  var btn = document.getElementById('animToggle'); if (!btn) return;
+  var svgs = [].slice.call(document.querySelectorAll('svg[aria-label^="Animated"]'));
+  var paused = false;
+  function apply(p){
+    paused = p; document.body.classList.toggle('anim-paused', p);
+    svgs.forEach(function(s){ try { if (p) s.pauseAnimations(); else s.unpauseAnimations(); } catch(e){} });
+    btn.textContent = p ? '\u25b6 Play animations' : '\u23f8 Pause animations'; btn.setAttribute('aria-pressed', p ? 'true' : 'false');
+  }
+  btn.onclick = function(){ apply(!paused); };
+  var rm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
+  if (rm && rm.matches) { svgs.forEach(function(s){ try { s.setCurrentTime(15.9); } catch(e){} }); apply(true); }
+})();
+</script>
+<script>
+(function(){
+  // keep CSS highlight animations and SVG (SMIL) animations on the same clock
+  function sync(){
+    var anims = document.getAnimations ? document.getAnimations() : [];
+    anims.forEach(function(a){
+      if (a.animationName !== 'act' && a.animationName !== 'actbg') return;
+      var el = a.effect && a.effect.target, pg = el && el.closest && el.closest('.lesson, .page');
+      var s = pg && pg.querySelector('svg[aria-label^="Animated"]');
+      if (!s || !s.getCurrentTime) return;
+      try { a.currentTime = s.getCurrentTime() * 1000; } catch (e) {}
+    });
+  }
+  window.__syncAnim = sync; window.addEventListener('load', function(){ sync(); setInterval(function(){ if (!document.body.classList.contains('anim-paused')) sync(); }, 6000); });
+  document.addEventListener('visibilitychange', function(){ if (!document.hidden) sync(); });
+  var b = document.getElementById('animToggle'); if (b) b.addEventListener('click', function(){ setTimeout(sync, 50); });
+})();
+</script>
+<script>(function(){
+  var INFO = {"ar-host":{"icon":"🖥️","title":"Host application","type":"MCP architecture","what":"The AI application the user interacts with, such as a chat app, an IDE or your own agent.","role":"Owns the user, the model and the security policy.","does":["Creates and manages one client per server.","Decides what the model may see and do."],"facts":[["Examples","Claude Desktop, IDEs, custom agents"]],"diagram":"Tile.","qa":[["What is the host in MCP?","<p><b>Short answer:</b> The application that embeds the model, manages MCP clients and enforces user consent and security policy.</p><p>It is where trust decisions are made.</p>"]],"related":["ar-client"]},"ar-client":{"icon":"🔌","title":"MCP client","type":"MCP architecture","what":"A connector inside the host that keeps a one-to-one session with a single MCP server.","role":"Speaks the protocol.","does":["Negotiates capabilities and protocol version.","Translates server tools into model tool definitions."],"facts":[["Ratio","One client per server"]],"diagram":"Tile.","qa":[["What does an MCP client do?","<p><b>Short answer:</b> It maintains a stateful session with one server, negotiates capabilities, lists and calls its tools and resources, and hands results to the host.</p><p>A host may run many clients at once.</p>"]],"related":["ar-host","ar-transport"]},"ar-transport":{"icon":"🚚","title":"Transport","type":"MCP architecture","what":"How messages travel: stdio for local processes, Streamable HTTP for remote servers.","role":"The pipe.","does":["All messages are JSON-RPC 2.0.","Choice affects deployment and auth."],"facts":[["Options","stdio, Streamable HTTP"]],"diagram":"Tile.","qa":[["Which transports does MCP use?","<p><b>Short answer:</b> Standard input and output for local servers launched as subprocesses, and Streamable HTTP for remote servers; the older HTTP with SSE transport was replaced by Streamable HTTP.</p><p>Remote servers need authentication.</p>"]],"related":["ar-client","ar-server"]},"ar-server":{"icon":"🧰","title":"MCP server","type":"MCP architecture","what":"A program that exposes tools, resources and prompts for a capability or system.","role":"The integration point.","does":["Wraps an API, database, file system or service.","Written once, usable by any client."],"facts":[["Exposes","Tools, resources, prompts"]],"diagram":"Tile.","qa":[["What is an MCP server?","<p><b>Short answer:</b> A program that exposes capabilities, tools, resources and prompts, from an underlying system through the standard protocol.</p><p>It can run locally or remotely.</p>"]],"related":["ar-transport","ar-system"]},"ar-system":{"icon":"🏢","title":"External systems","type":"MCP architecture","what":"The real data and services behind a server: databases, SaaS APIs, files, internal tools.","role":"Where the work happens.","does":["Credentials live with the server or flow through auth.","Apply least privilege."],"facts":[["Rule","Server enforces access"]],"diagram":"Tile.","qa":[["Why use MCP instead of custom integrations?","<p><b>Short answer:</b> MCP removes the need to build one custom integration per application and per system: a server is written once and any compatible client can use it.</p><p>It turns an N by M problem into N plus M.</p>"]],"related":["ar-server"]},"pm-tools":{"icon":"🛠️","title":"Tools","type":"Protocol primitives","what":"Functions the model can call, defined with a name, description and JSON Schema.","role":"Model-controlled actions.","does":["tools/list discovers them and tools/call runs them.","Annotations hint at read-only or destructive behaviour."],"facts":[["Control","Model decides to call"]],"diagram":"Tile.","qa":[["What are MCP tools?","<p><b>Short answer:</b> Executable functions with a schema that the model can choose to invoke, such as querying a database or creating a ticket.</p><p>Tool annotations are hints, not security guarantees.</p>"]],"related":["pm-res"]},"pm-res":{"icon":"📄","title":"Resources","type":"Protocol primitives","what":"Read-only data identified by URIs, such as files, records or documents.","role":"Application-controlled context.","does":["Resource templates use URI patterns.","Clients can subscribe to changes."],"facts":[["Control","Application selects"]],"diagram":"Tile.","qa":[["What are MCP resources?","<p><b>Short answer:</b> Data the server exposes by URI for the application to attach as context, for example a file, a database row or an API response.</p><p>They are for reading context, not performing actions.</p>"]],"related":["pm-tools","pm-prompts"]},"pm-prompts":{"icon":"💬","title":"Prompts","type":"Protocol primitives","what":"Reusable, parameterised prompt templates the user can invoke.","role":"User-controlled workflows.","does":["prompts/list and prompts/get.","Often surfaced as slash commands."],"facts":[["Control","User picks"]],"diagram":"Tile.","qa":[["What are MCP prompts?","<p><b>Short answer:</b> Server-defined templates, with arguments, that a user can select to start a common workflow such as code review or incident triage.</p><p>They package best-practice prompts.</p>"]],"related":["pm-res","pm-sampling"]},"pm-sampling":{"icon":"🧠","title":"Sampling","type":"Protocol primitives","what":"A server asks the client to run a model completion on its behalf.","role":"Server-initiated model use.","does":["The client keeps control and the user can approve.","Lets servers be agentic without their own model keys."],"facts":[["Control","Client and user approve"]],"diagram":"Tile.","qa":[["What is sampling in MCP?","<p><b>Short answer:</b> A client feature that lets a server request an LLM completion through the host, so the server needs no model credentials and the user stays in control.</p><p>Use with care because it can chain model calls.</p>"]],"related":["pm-prompts","pm-roots"]},"pm-roots":{"icon":"📁","title":"Roots","type":"Protocol primitives","what":"The client tells the server which directories or URIs it may operate within.","role":"Scope boundaries.","does":["Servers should respect the roots.","Helpful for file-based tools."],"facts":[["Use","Limit file access scope"]],"diagram":"Tile.","qa":[["What are roots?","<p><b>Short answer:</b> A client feature that declares the filesystem or URI boundaries a server should work inside, such as a project folder.</p><p>It is guidance and must be backed by real enforcement.</p>"]],"related":["pm-sampling","pm-elicit"]},"pm-elicit":{"icon":"🙋","title":"Elicitation","type":"Protocol primitives","what":"A server asks the user for missing information through the client, using a small schema.","role":"Interactive input.","does":["The user can accept, decline or cancel.","Never ask for secrets this way."],"facts":[["Rule","No sensitive data"]],"diagram":"Tile.","qa":[["What is elicitation?","<p><b>Short answer:</b> A client feature that lets a server request structured input from the user, for example a missing parameter, via the host UI.</p><p>It should not be used to collect passwords or tokens.</p>"]],"related":["pm-roots"]},"lc-init":{"icon":"🤝","title":"Initialize","type":"Lifecycle and messages","what":"The client sends initialize with its protocol version, capabilities and info.","role":"Handshake.","does":["The server replies with its version, capabilities and info.","The client then sends notifications/initialized."],"facts":[["Method","initialize"]],"diagram":"Tile.","qa":[["What happens at the start of an MCP session?","<p><b>Short answer:</b> The client sends an initialize request with its protocol version and capabilities, the server answers with its own, and the client confirms with an initialized notification.</p><p>Version and capability negotiation happens here.</p>"]],"related":["lc-cap"]},"lc-cap":{"icon":"🧾","title":"Capability negotiation","type":"Lifecycle and messages","what":"Each side declares which features it supports, such as tools, resources, prompts or sampling.","role":"Only use what both support.","does":["Servers declare listChanged and subscribe options.","Unsupported features must not be used."],"facts":[["Why","Evolve without breaking"]],"diagram":"Tile.","qa":[["Why negotiate capabilities?","<p><b>Short answer:</b> So client and server only use features both support, which allows the protocol to evolve while remaining compatible.</p><p>Protocol versions are dated, for example 2025-06-18.</p>"]],"related":["lc-init","lc-list"]},"lc-list":{"icon":"📋","title":"Discover: list","type":"Lifecycle and messages","what":"tools/list, resources/list and prompts/list return what the server offers, with pagination.","role":"Discovery.","does":["Servers can notify when the list changes.","The host converts tool schemas for the model."],"facts":[["Notification","notifications/tools/list_changed"]],"diagram":"Tile.","qa":[["How does a client learn what a server offers?","<p><b>Short answer:</b> By calling the list methods, which return names, descriptions and schemas, and by listening for list_changed notifications.</p><p>Cache and refresh as needed.</p>"]],"related":["lc-cap","lc-call"]},"lc-call":{"icon":"📞","title":"Invoke: call and read","type":"Lifecycle and messages","what":"tools/call runs a tool with arguments; resources/read fetches content; prompts/get returns messages.","role":"The work.","does":["Results contain content blocks and an isError flag.","Long calls can report progress and be cancelled."],"facts":[["Result","content[] and isError"]],"diagram":"Tile.","qa":[["How are tool errors reported?","<p><b>Short answer:</b> A tool-level failure is returned as a normal result with isError set to true and a message the model can read, while protocol problems use JSON-RPC errors.</p><p>Good error text helps the model recover.</p>"]],"related":["lc-list","lc-end"]},"lc-end":{"icon":"🔚","title":"Shutdown and cancellation","type":"Lifecycle and messages","what":"Close the transport cleanly; requests can be cancelled; progress notifications report status.","role":"Clean exit.","does":["For stdio, close the pipes and the process exits.","Use timeouts on every request."],"facts":[["Habit","Timeouts everywhere"]],"diagram":"Tile.","qa":[["How do you handle long-running tool calls?","<p><b>Short answer:</b> Send progress notifications, support cancellation, set client timeouts and keep tools idempotent so retries are safe.</p><p>Newer spec revisions add task-based async patterns; check the current spec.</p>"]],"related":["lc-call"]},"bs-design":{"icon":"✏️","title":"Design the tools first","type":"Building a server","what":"Decide the few task-oriented tools, their schemas, outputs and errors before coding.","role":"Quality starts here.","does":["Think in user tasks, not API endpoints.","Write descriptions the model can act on."],"facts":[["Rule","Workflows over endpoints"]],"diagram":"Tile.","qa":[["How do you decide which tools to expose?","<p><b>Short answer:</b> Start from the tasks users and agents need, expose a small set of workflow-oriented tools with clear schemas rather than mirroring every endpoint of an API.</p><p>Fewer, richer tools are chosen more accurately.</p>"]],"related":["bs-impl"]},"bs-impl":{"icon":"💻","title":"Implement with an SDK","type":"Building a server","what":"Use an official SDK in Python, TypeScript, C#, Java or others to declare tools, resources and prompts.","role":"Less boilerplate.","does":["Decorators or attributes register tools.","The SDK handles JSON-RPC and transports."],"facts":[["SDKs","Python FastMCP, C# ModelContextProtocol"]],"diagram":"Tile.","qa":[["Which languages have MCP SDKs?","<p><b>Short answer:</b> Official SDKs exist for several languages including TypeScript, Python, C#, Java and Kotlin, which handle the protocol so you only write the tool logic.</p><p>Check the repository for the current list.</p>"]],"related":["bs-design","bs-test"]},"bs-test":{"icon":"🔍","title":"Test with the Inspector","type":"Building a server","what":"The MCP Inspector lets you connect to a server, list tools and call them interactively.","role":"Fast feedback.","does":["Add automated tests for tool logic and schemas.","Test with a real model too."],"facts":[["Command","npx @modelcontextprotocol/inspector"]],"diagram":"Tile.","qa":[["How do you test an MCP server?","<p><b>Short answer:</b> Use the MCP Inspector to explore and call it manually, unit-test the tool functions, and run evals with a real model to check tools are chosen and used correctly.</p><p>Testing the descriptions matters as much as testing the code.</p>"]],"related":["bs-impl","bs-ship"]},"bs-ship":{"icon":"🚀","title":"Package and deploy","type":"Building a server","what":"Ship local servers as packages (npx, uvx, dotnet tool) or remote servers over HTTPS.","role":"Distribution.","does":["Remote servers need auth, rate limits and monitoring.","Version your tools and docs."],"facts":[["Choice","Local vs remote"]],"diagram":"Tile.","qa":[["Local or remote server?","<p><b>Short answer:</b> Local stdio servers are simple and run with the user permissions; remote servers centralise updates and credentials but need authentication, scaling and monitoring.</p><p>Many enterprises prefer remote servers behind a gateway.</p>"]],"related":["bs-test"]},"cl-discover":{"icon":"🔎","title":"Connect and discover","type":"Building a client","what":"Open a session, initialize, then list the server tools.","role":"Step 1.","does":["Handle capability and version negotiation.","Refresh on list_changed."],"facts":[["Python","ClientSession.list_tools()"]],"diagram":"Tile.","qa":[["How does a client connect over stdio?","<p><b>Short answer:</b> It launches the server process, wraps its pipes in a session, calls initialize and then lists tools.</p><p>The Python SDK provides stdio_client and ClientSession.</p>"]],"related":["cl-expose"]},"cl-expose":{"icon":"🪄","title":"Expose tools to the model","type":"Building a client","what":"Convert each MCP tool into the model provider tool format.","role":"Step 2.","does":["Name, description and inputSchema map directly.","Namespace tools by server to avoid clashes."],"facts":[["Mapping","inputSchema to input_schema"]],"diagram":"Tile.","qa":[["How do you give MCP tools to an LLM?","<p><b>Short answer:</b> Map each tool name, description and input schema to the provider function-calling format and pass them in the request.</p><p>Prefix names with the server to avoid collisions.</p>"]],"related":["cl-discover","cl-route"]},"cl-route":{"icon":"🧭","title":"Route the call","type":"Building a client","what":"When the model requests a tool, send tools/call to the right server.","role":"Step 3.","does":["Apply user approval and policy first.","Enforce timeouts."],"facts":[["Rule","Policy before execution"]],"diagram":"Tile.","qa":[["Who decides whether a tool call runs?","<p><b>Short answer:</b> The host: it can require user confirmation, check policy and block calls before forwarding them to the server.</p><p>Never auto-run sensitive tools.</p>"]],"related":["cl-expose","cl-return"]},"cl-return":{"icon":"📤","title":"Return the result","type":"Building a client","what":"Convert the MCP result to a tool_result for the model and continue the loop.","role":"Step 4.","does":["Truncate huge results.","Pass isError through."],"facts":[["Tip","Trim and sanitise"]],"diagram":"Tile.","qa":[["What should you do with tool results?","<p><b>Short answer:</b> Trim large outputs, preserve the error flag, treat content as untrusted data and return it to the model in the provider tool-result format.</p><p>Results can contain injected instructions.</p>"]],"related":["cl-route"]},"dz-task":{"icon":"🎯","title":"Task-oriented tools","type":"Design principles","what":"Expose tools that complete a user task rather than thin wrappers over every API.","role":"Fewer calls, better accuracy.","does":["Combine steps that always go together.","Keep each tool single-purpose."],"facts":[["Example","create_ticket not 6 CRUD calls"]],"diagram":"Tile.","qa":[["How do you design tools for an LLM?","<p><b>Short answer:</b> Make them task-oriented, with clear names and descriptions, typed schemas, sensible defaults and compact outputs designed for a model, not a human or a raw API dump.</p><p>Review the descriptions as if they were prompts.</p>"]],"related":["dz-schema"]},"dz-schema":{"icon":"🧾","title":"Schemas and descriptions","type":"Design principles","what":"Use precise JSON Schemas with enums, ranges and descriptions that explain when to use each argument.","role":"Reduces bad calls.","does":["Add examples in descriptions.","Provide an outputSchema when results are structured."],"facts":[["Feature","Structured output"]],"diagram":"Tile.","qa":[["What is structured tool output?","<p><b>Short answer:</b> A tool can declare an output schema and return structured content alongside text, so clients can validate and parse results reliably.</p><p>It was added in later spec revisions.</p>"]],"related":["dz-task","dz-result"]},"dz-result":{"icon":"📦","title":"Results and errors","type":"Design principles","what":"Return concise, relevant data, paginate large sets and give instructive error messages.","role":"Protects the context window.","does":["Return ids and links for follow-up calls.","Use isError for tool failures."],"facts":[["Rule","Small, useful outputs"]],"diagram":"Tile.","qa":[["How do you handle large results?","<p><b>Short answer:</b> Paginate, summarise or return resource links instead of dumping everything, so the model context is not flooded.</p><p>Include next-step hints in errors.</p>"]],"related":["dz-schema","dz-safe"]},"dz-safe":{"icon":"🛡️","title":"Safe by design","type":"Design principles","what":"Make tools idempotent, require confirmation for destructive ones and use annotations honestly.","role":"Safety in the tool.","does":["readOnly, destructive and idempotent hints help clients.","Hints are not enforcement."],"facts":[["Principle","Enforce on the server"]],"diagram":"Tile.","qa":[["How do tool annotations help?","<p><b>Short answer:</b> They tell clients whether a tool is read-only, destructive or idempotent so UIs can ask for confirmation, but they are hints and the server must still enforce permissions.</p><p>Never trust annotations from an untrusted server.</p>"]],"related":["dz-result","dz-ops"]},"dz-ops":{"icon":"📈","title":"Operate it","type":"Design principles","what":"Log calls, measure latency and errors, rate limit, version and document.","role":"Production readiness.","does":["Trace tool calls end to end.","Deprecate tools gracefully."],"facts":[["Metrics","Calls, errors, latency"]],"diagram":"Tile.","qa":[["What do you monitor on an MCP server?","<p><b>Short answer:</b> Call counts, latency, error rates, usage per client and user, and security events, with traces linking model requests to tool calls.</p><p>Plan versioning for tool changes.</p>"]],"related":["dz-safe"]},"sc-inject":{"icon":"☣️","title":"Prompt injection","type":"Security","what":"Malicious instructions in tool results or resource content try to hijack the model.","role":"The top threat.","does":["Treat all server output as untrusted.","Limit what a hijacked model can do."],"facts":[["Defence","Least privilege + approval"]],"diagram":"Tile.","qa":[["How does prompt injection affect MCP?","<p><b>Short answer:</b> Content returned by tools or resources can contain instructions that steer the model, so the host must treat it as untrusted data and limit the damage with permissions and approvals.</p><p>Combining tools can create data-exfiltration paths.</p>"]],"related":["sc-poison"]},"sc-poison":{"icon":"🧪","title":"Tool poisoning and rug pulls","type":"Security","what":"A malicious or compromised server hides instructions in tool descriptions or changes them after approval.","role":"Supply-chain risk.","does":["Pin versions and review tool definitions.","Alert on changed descriptions."],"facts":[["Defence","Allow-list and pin"]],"diagram":"Tile.","qa":[["What is tool poisoning?","<p><b>Short answer:</b> Embedding malicious instructions in tool metadata that the model reads, or silently changing tool definitions after the user approved them.</p><p>Only connect to trusted servers and re-approve on changes.</p>"]],"related":["sc-inject","sc-auth"]},"sc-auth":{"icon":"🔑","title":"Authorization (OAuth)","type":"Security","what":"Remote servers use OAuth 2.1 style flows; servers act as resource servers and validate tokens.","role":"Who is calling.","does":["Use audience-bound tokens and short lifetimes.","Check the current spec for details."],"facts":[["Rule","Validate audience and scope"]],"diagram":"Tile.","qa":[["How is a remote MCP server secured?","<p><b>Short answer:</b> With OAuth-based authorization where the client obtains an access token for that server, and the server validates the token, its audience and scopes on every request.</p><p>Follow the authorization section of the current spec.</p>"]],"related":["sc-poison","sc-confused"]},"sc-confused":{"icon":"🎭","title":"Confused deputy and token passthrough","type":"Security","what":"A server must not forward the client token to other APIs or act with more authority than the user has.","role":"Common design flaw.","does":["Token passthrough is explicitly discouraged by the spec.","Use separate downstream credentials with on-behalf-of exchange."],"facts":[["Rule","Never pass tokens through"]],"diagram":"Tile.","qa":[["What is the token passthrough anti-pattern?","<p><b>Short answer:</b> Accepting a token not issued for the MCP server and forwarding it to a downstream API, which breaks audience validation and audit; use a proper token exchange instead.</p><p>Map user identity to downstream permissions.</p>"]],"related":["sc-auth","sc-local"]},"sc-local":{"icon":"💻","title":"Local server risks","type":"Security","what":"Local stdio servers run commands with the user permissions and can be abused.","role":"Sandbox and review.","does":["Show the exact command before running it.","Prefer sandboxed or remote servers."],"facts":[["Defence","Sandbox, consent, allow-list"]],"diagram":"Tile.","qa":[["What are the risks of local MCP servers?","<p><b>Short answer:</b> They execute code on the user machine with the user permissions, so a malicious server or command injection can do real harm; require explicit consent, show the command and sandbox where possible.</p><p>Review third-party servers like any dependency.</p>"]],"related":["sc-confused"]},"en-gw":{"icon":"🚪","title":"MCP gateway","type":"Enterprise orchestration","what":"A central proxy that authenticates users, applies policy, logs calls and routes to servers.","role":"Governance point.","does":["Rate limits, allow-lists and audit in one place.","Hides server details from clients."],"facts":[["Benefit","Central control"]],"diagram":"Tile.","qa":[["Why use an MCP gateway?","<p><b>Short answer:</b> It centralises authentication, authorisation, policy, rate limiting, logging and routing for many servers and clients, giving governance and observability.</p><p>It also simplifies credential handling.</p>"]],"related":["en-reg"]},"en-reg":{"icon":"📚","title":"Server registry and catalogue","type":"Enterprise orchestration","what":"A catalogue of approved servers, versions, owners and security reviews.","role":"Discoverability and trust.","does":["Only approved servers can be connected.","Track owners and versions."],"facts":[["Benefit","Curated ecosystem"]],"diagram":"Tile.","qa":[["How do enterprises manage many MCP servers?","<p><b>Short answer:</b> With a registry of approved, reviewed and versioned servers, ownership, and a gateway that enforces which teams may use which servers.</p><p>It prevents shadow integrations.</p>"]],"related":["en-gw","en-a2a"]},"en-a2a":{"icon":"🤝","title":"Agent-to-agent (A2A)","type":"Enterprise orchestration","what":"A separate open protocol for agents to discover and delegate tasks to other agents.","role":"Complements MCP.","does":["MCP connects agents to tools; A2A connects agents to agents.","Agents advertise capabilities in an agent card."],"facts":[["Rule of thumb","MCP = tools, A2A = agents"]],"diagram":"Tile.","qa":[["MCP versus A2A?","<p><b>Short answer:</b> MCP standardises how an agent connects to tools and data, while A2A standardises how independent agents discover each other and exchange tasks; they are complementary.</p><p>Check the current status of both protocols.</p>"]],"related":["en-reg","en-fw"]},"en-fw":{"icon":"🕸️","title":"Orchestration frameworks","type":"Enterprise orchestration","what":"LangGraph, Semantic Kernel, Microsoft Agent Framework and vendor SDKs orchestrate agents and can consume MCP tools.","role":"The control layer.","does":["Frameworks add state, graphs and approvals.","Keep tools portable through MCP or OpenAPI."],"facts":[["Tip","Decouple tools from orchestration"]],"diagram":"Tile.","qa":[["What are equivalent orchestration standards?","<p><b>Short answer:</b> Native function calling with JSON Schema, OpenAPI-described tools, framework-specific plugin models and A2A for agent collaboration; MCP is the most widely adopted open tool protocol.</p><p>Choose by ecosystem, but design tools so they can move.</p>"]],"related":["en-a2a","en-obs"]},"en-obs":{"icon":"🔭","title":"Observability and audit","type":"Enterprise orchestration","what":"Trace every model request and tool call with identity, arguments and outcome.","role":"Accountability.","does":["OpenTelemetry GenAI conventions help standardise traces.","Retain audit logs per policy."],"facts":[["Habit","End-to-end tracing"]],"diagram":"Tile.","qa":[["What audit data do you need?","<p><b>Short answer:</b> Who invoked which tool with what arguments, what was approved, what was returned and how long it took, linked into one trace.</p><p>Redact sensitive values.</p>"]],"related":["en-fw"]}};
+  var ORDERS = {"ar":["ar-host","ar-client","ar-transport","ar-server","ar-system"],"pm":["pm-tools","pm-res","pm-prompts","pm-sampling","pm-roots","pm-elicit"],"lc":["lc-init","lc-cap","lc-list","lc-call","lc-end"],"bs":["bs-design","bs-impl","bs-test","bs-ship"],"cl":["cl-discover","cl-expose","cl-route","cl-return"],"dz":["dz-task","dz-schema","dz-result","dz-safe","dz-ops"],"sc":["sc-inject","sc-poison","sc-auth","sc-confused","sc-local"],"en":["en-gw","en-reg","en-a2a","en-fw","en-obs"]};
+  var NAMES = {"ar":"Architecture","pm":"Primitives","lc":"Lifecycle","bs":"Building a server","cl":"Building a client","dz":"Design principles","sc":"Security","en":"Enterprise orchestration"};
+  var modal = document.getElementById('kModal'); if (!modal) return;
+  var bodyEl = document.getElementById('kBody'), lastFocus = null, cur = null, curOrder = null;
+  function row(label, val){ return '<tr><td>' + label + '</td><td>' + val + '</td></tr>'; }
+  function render(k){
+    var d = INFO[k]; if (!d) return false; cur = k;
+    document.getElementById('kIcon').textContent = d.icon;
+    document.getElementById('kTitle').textContent = d.title;
+    document.getElementById('kMeta').innerHTML = '<span class="kpill red">' + d.type + '</span><span class="kpill">' + d.qa.length + ' interview Q&amp;As</span>';
+    function fx(s) { return String(s).replace(/<(?![/]?(?:p|b|i|ul|li|code|br|strong|em|pre|span)[^a-z])/g, '&lt;'); }
+    var h = '';
+    h += '<div class="ksec"><h4>What it is</h4><p>' + fx(d.what) + '</p></div>';
+    h += '<div class="ksec"><h4>Role</h4><p>' + fx(d.role) + '</p></div>';
+    h += '<div class="ksec"><h4>What it does</h4><ul>' + d.does.map(function(x){ return '<li>' + fx(x) + '</li>'; }).join('') + '</ul></div>';
+    h += '<div class="ksec"><h4>Where to see it in the diagram</h4><p class="kdiagram">' + fx(d.diagram) + '</p></div>';
+    h += '<div class="ksec"><h4>Key facts</h4><table class="kfacts">' + d.facts.map(function(f){ return row(fx(f[0]), fx(f[1])); }).join('') + '</table></div>';
+    h += '<div class="ksec"><div class="kqa-h"><h4>Interview questions &amp; answers</h4><button type="button" id="kExpand">Expand all</button></div>' +
+         d.qa.map(function(q, i){ return '<details class="kqa"' + (i === 0 ? ' open' : '') + '><summary>' + fx(q[0]) + '</summary><div class="ans">' + fx(q[1]) + '</div></details>'; }).join('') + '</div>';
+    if (d.related && d.related.length) h += '<div class="ksec"><h4>Related topics</h4><div class="krel">' + d.related.filter(function(r){ return INFO[r]; }).map(function(r){ return '<button type="button" class="kchip" data-k="' + r + '">' + INFO[r].icon + ' ' + fx(INFO[r].title) + '</button>'; }).join('') + '</div></div>';
+    bodyEl.innerHTML = h; bodyEl.scrollTop = 0;
+    var ord = ORDERS[curOrder] || [], i = ord.indexOf(k);
+    document.getElementById('kPos').textContent = i >= 0 ? (NAMES[curOrder] + ': topic ' + (i + 1) + ' of ' + ord.length) : '';
+    document.getElementById('kPrev').disabled = !ord.length; document.getElementById('kNext').disabled = !ord.length;
+    return true;
+  }
+  function open(k, order){
+    if (!INFO[k]) return;
+    if (order) curOrder = order;
+    if (!modal.classList.contains('open')) lastFocus = document.activeElement;
+    render(k);
+    modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); document.body.classList.add('kmodal-open');
+    document.getElementById('kClose').focus();
+  }
+  function close(){
+    modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); document.body.classList.remove('kmodal-open');
+    if (lastFocus && lastFocus.focus) { try { lastFocus.focus({ preventScroll:true }); } catch(e){} }
+  }
+  function step(d){
+    var ord = ORDERS[curOrder]; if (!ord || !ord.length) return;
+    var i = ord.indexOf(cur); if (i < 0) i = d > 0 ? -1 : 0;
+    open(ord[(i + d + ord.length) % ord.length]);
+  }
+  function orderOf(el){ var s = el && el.closest ? el.closest('svg[data-order]') : null; return s ? s.getAttribute('data-order') : null; }
+  document.addEventListener('click', function(e){
+    var st = e.target.closest ? e.target.closest('[data-study]') : null;
+    if (st) { var o = st.getAttribute('data-study'); if (ORDERS[o]) { curOrder = o; open(ORDERS[o][0], o); } return; }
+    var t = e.target.closest ? e.target.closest('[data-k]') : null;
+    if (t && INFO[t.getAttribute('data-k')]) { e.preventDefault(); open(t.getAttribute('data-k'), orderOf(t)); return; }
+    if (e.target === modal) close();
+    if (e.target.id === 'kExpand') {
+      var ds = bodyEl.querySelectorAll('details.kqa'), allOpen = [].every.call(ds, function(x){ return x.open; });
+      [].forEach.call(ds, function(x){ x.open = !allOpen; }); e.target.textContent = allOpen ? 'Expand all' : 'Collapse all';
+    }
+  });
+  document.getElementById('kClose').onclick = close;
+  document.getElementById('kPrev').onclick = function(){ step(-1); };
+  document.getElementById('kNext').onclick = function(){ step(1); };
+  document.addEventListener('keydown', function(e){
+    if (modal.classList.contains('open')) {
+      if (e.key === 'Escape') { close(); return; }
+      if (e.key === 'ArrowRight' && !/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) { step(1); return; }
+      if (e.key === 'ArrowLeft' && !/INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) { step(-1); return; }
+      if (e.key === 'Tab') {
+        var f = modal.querySelectorAll('button, summary, [href], [tabindex]:not([tabindex="-1"])'); if (!f.length) return;
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+      return;
+    }
+    var g = e.target && e.target.closest ? e.target.closest('.clk[data-k]') : null;
+    if (g && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(g.getAttribute('data-k'), orderOf(g)); }
+  });
+})();
+</script>
+<!--UIX-JS-START-->
+<script>
+/* ui-extras-v3: back-to-index button + editor-style syntax highlighting. Injected into every course page. */
+(function () {
+  var HOME = '../index.html#ai';
+
+  /* ---------------- back to index ---------------- */
+  function makeHome(floating) {
+    var a = document.createElement('a');
+    a.className = 'homebtn' + (floating ? ' homefloat' : '');
+    a.href = HOME; a.title = 'Back to the course list'; a.setAttribute('aria-label', 'Back to the course list');
+    a.innerHTML = '<span class="hbi">⌂</span><span class="hbl"> Courses</span>';
+    return a;
+  }
+  function addHome() {
+    var bar = document.getElementById('cmsbar');
+    if (!bar) return false;
+    if (bar.querySelector('.homebtn')) return true;
+    var a = makeHome(false), menu = document.getElementById('cmsMenu');
+    if (menu && menu.nextSibling) bar.insertBefore(a, menu.nextSibling); else bar.insertBefore(a, bar.firstChild);
+    return true;
+  }
+  function initHome() {
+    if (addHome()) return;
+    var tries = 0, t = setInterval(function () {
+      if (addHome()) { clearInterval(t); return; }
+      if (++tries > 30) { clearInterval(t); if (!document.querySelector('.homebtn')) document.body.appendChild(makeHome(true)); }
+    }, 100);
+  }
+
+  /* ---------------- syntax highlighting ---------------- */
+  function words(s) { var o = {}; s.split(/\s+/).forEach(function (w) { if (w) o[w] = 1; }); return o; }
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  var CS_KW = words('abstract as base bool byte char checked class const decimal delegate double enum event explicit extern false fixed float implicit in int interface internal is lock long namespace new null object operator out override params private protected public readonly ref sbyte sealed short sizeof stackalloc static string struct this true typeof uint ulong unchecked unsafe ushort using var virtual void volatile record init required get set when with from select where orderby group into join let partial global nameof dynamic async value');
+  var CS_CTL = words('if else switch case default for foreach while do break continue return throw try catch finally await yield goto');
+  var JS_KW = words('const let var function new class extends import from export default async static get set interface type enum implements public private protected readonly as null undefined true false void delete typeof instanceof in of this super abstract declare namespace');
+  var JS_CTL = words('if else for while do switch case break continue return throw try catch finally await yield');
+  var PY_KW = words('def class lambda is not and or in as with None True False global nonlocal async self cls print');
+  var PY_CTL = words('if elif else for while return try except finally raise yield break continue pass import from await assert del');
+  var SQL_KW = words('select from where and or not in is null as join left right inner outer full cross natural on group by order having limit offset fetch first next rows only insert into values update set delete create alter drop table index unique primary key foreign references constraint default check view materialized with recursive union intersect except all distinct case when then else end exists between like ilike similar to asc desc nulls begin commit rollback savepoint transaction returning using partition range list hash attach detach concurrently if for over unbounded preceding following current row explain analyze verbose buffers vacuum reindex cluster grant revoke schema database extension function procedure returns language replace trigger before after each execute declare cursor conflict do nothing cascade restrict add column rename truncate temporary temp unlogged tablespace lock share nowait skip locked generated always identity stored include storage inherits owner publication subscription connection slot window filter within lateral any some collate enable disable force row level security policy role user password login superuser to');
+  var SQL_TY = words('bigint int integer smallint text varchar char character boolean bool numeric decimal real double precision float timestamp timestamptz date time timetz interval jsonb json uuid serial bigserial smallserial bytea inet cidr money oid xml tsvector tsquery vector geometry geography array');
+  var BASH_KW = words('if then else elif fi for while until do done case esac in function select time');
+  var BASH_CTL = words('return exit break continue');
+  var HCL_KW = words('resource data variable output module provider locals terraform dynamic for in if true false null for_each count content lifecycle depends_on required_providers backend');
+  var DOCKER_KW = words('FROM RUN CMD LABEL EXPOSE ENV ADD COPY ENTRYPOINT VOLUME USER WORKDIR ARG ONBUILD STOPSIGNAL HEALTHCHECK SHELL AS MAINTAINER');
+  var JAVA_KW = words('abstract assert boolean byte char class const double enum extends final float implements import instanceof int interface long native new package private protected public short static strictfp super synchronized this throws transient void volatile null true false var record sealed permits');
+  var JAVA_CTL = words('if else switch case default for while do break continue return throw try catch finally');
+  var NGINX_KW = words('server location upstream http events worker_processes listen server_name root index proxy_pass proxy_set_header return rewrite try_files include add_header ssl_certificate ssl_certificate_key gzip access_log error_log keepalive_timeout client_max_body_size');
+  var LITS = words('true false null nil none undefined yes no on off');
+
+  var LANGS = {
+    sql: { ci: 1, lc: '--[^\\n]*', bc: '/\\*[\\s\\S]*?\\*/', str: ["\\$\\$[\\s\\S]*?\\$\\$", "'(?:[^']|'')*'"], idq: '"[^"\\n]*"', pre: [['v', '\\$\\d+|:[A-Za-z_]\\w*(?!:)']], kw: SQL_KW, ty: SQL_TY },
+    csharp: { lc: '//[^\\n]*', bc: '/\\*[\\s\\S]*?\\*/', str: ['"""[\\s\\S]*?"""', '\\$@"(?:[^"]|"")*"|@\\$"(?:[^"]|"")*"|@"(?:[^"]|"")*"', '\\$"(?:[^"\\\\\\n]|\\\\.)*"', '"(?:[^"\\\\\\n]|\\\\.)*"', "'(?:[^'\\\\\\n]|\\\\.)*'"], pre: [['m', '^[ \\t]*#\\w+[^\\n]*']], kw: CS_KW, ctl: CS_CTL, pascal: 1 },
+    javascript: { lc: '//[^\\n]*', bc: '/\\*[\\s\\S]*?\\*/', str: ['`(?:[^`\\\\]|\\\\[\\s\\S])*`', '"(?:[^"\\\\\\n]|\\\\.)*"', "'(?:[^'\\\\\\n]|\\\\.)*'"], kw: JS_KW, ctl: JS_CTL, pascal: 1 },
+    python: { lc: '#[^\\n]*', str: ['[rRbBfFuU]{0,2}"""[\\s\\S]*?"""', "[rRbBfFuU]{0,2}'''[\\s\\S]*?'''", '[rRbBfFuU]{0,2}"(?:[^"\\\\\\n]|\\\\.)*"', "[rRbBfFuU]{0,2}'(?:[^'\\\\\\n]|\\\\.)*'"], pre: [['f', '@[A-Za-z_][\\w.]*']], kw: PY_KW, ctl: PY_CTL, pascal: 1 },
+    bash: { lc: '#[^\\n]*', str: ['"(?:[^"\\\\]|\\\\[\\s\\S])*"', "'[^']*'"], pre: [['v', '\\$\\{[^}\\n]*\\}|\\$[A-Za-z_]\\w*|\\$[0-9?@#*!$]'], ['p', '--?[A-Za-z][\\w-]*']], kw: BASH_KW, ctl: BASH_CTL, wordRe: '[A-Za-z_][A-Za-z0-9_.\\-]*', cmd: 'fn' },
+    yaml: { lc: '#[^\\n]*', str: ['"(?:[^"\\\\\\n]|\\\\.)*"', "'(?:[^'\\n]|'')*'"], pre: [['p', '^[ \\t]*(?:-[ \\t]+)?[A-Za-z_][\\w.\\-/]*(?=[ \\t]*:(?:[ \\t]|$))'], ['v', '[&*][A-Za-z_]\\w*']], kw: {}, lit: 1, strKey: 1, wordRe: '[A-Za-z_][A-Za-z0-9_.\\-]*' },
+    json: { str: ['"(?:[^"\\\\\\n]|\\\\.)*"'], kw: {}, lit: 1, strKey: 1 },
+    hcl: { lc: '(?:#|//)[^\\n]*', bc: '/\\*[\\s\\S]*?\\*/', str: ['"(?:[^"\\\\\\n]|\\\\.)*"'], pre: [['p', '[A-Za-z_][\\w-]*(?=[ \\t]*=(?!=))']], kw: HCL_KW, lit: 1 },
+    dockerfile: { lc: '^[ \\t]*#[^\\n]*', str: ['"(?:[^"\\\\\\n]|\\\\.)*"', "'[^'\\n]*'"], pre: [['v', '\\$\\{[^}\\n]*\\}|\\$[A-Za-z_]\\w*'], ['p', '--[A-Za-z][\\w-]*']], kw: DOCKER_KW, bash: 1 },
+    ini: { lc: '^[ \\t]*[#;][^\\n]*', str: ['"(?:[^"\\\\\\n]|\\\\.)*"'], pre: [['t', '^[ \\t]*\\[[^\\]\\n]+\\]'], ['p', '^[ \\t]*[A-Za-z_][\\w.\\-]*(?=[ \\t]*[=:])']], kw: {}, lit: 1, wordRe: '[A-Za-z_][A-Za-z0-9_.\\-]*' },
+    xml: { bc: '\\x3c!--[\\s\\S]*?-->', str: ['"[^"]*"', "'[^']*'"], pre: [['k', '</?[A-Za-z][\\w:.\\-]*'], ['p', '[A-Za-z_:][\\w:.\\-]*(?=\\s*=)']], kw: {}, wordRe: '[A-Za-z_][A-Za-z0-9_.\\-]*' },
+    java: { lc: '//[^\\n]*', bc: '/\\*[\\s\\S]*?\\*/', str: ['"""[\\s\\S]*?"""', '"(?:[^"\\\\\\n]|\\\\.)*"', "'(?:[^'\\\\\\n]|\\\\.)*'"], pre: [['p', '@[A-Za-z_]\\w*']], kw: JAVA_KW, ctl: JAVA_CTL, pascal: 1 },
+    nginx: { lc: '#[^\\n]*', str: ['"(?:[^"\\\\\\n]|\\\\.)*"', "'[^'\\n]*'"], pre: [['v', '\\$[A-Za-z_]\\w*']], kw: NGINX_KW, cmd: 'kw', wordRe: '[A-Za-z_][A-Za-z0-9_.\\-]*' },
+    http: { str: ['"(?:[^"\\\\\\n]|\\\\.)*"'], pre: [['k', '^(?:GET|POST|PUT|PATCH|DELETE|HEAD|OPTIONS)\\b'], ['t', 'HTTP/\\d(?:\\.\\d)?'], ['p', '^[A-Za-z][\\w-]*(?=:)']], kw: {}, lit: 1 }
+  };
+  var ALIAS = { cs: 'csharp', 'c#': 'csharp', dotnet: 'csharp', js: 'javascript', ts: 'javascript', typescript: 'javascript', jsx: 'javascript', tsx: 'javascript', py: 'python', sh: 'bash', shell: 'bash', zsh: 'bash', powershell: 'bash', ps1: 'bash', yml: 'yaml', terraform: 'hcl', tf: 'hcl', docker: 'dockerfile', properties: 'ini', conf: 'ini', toml: 'ini', html: 'xml', xaml: 'xml', razor: 'csharp', psql: 'sql', postgres: 'sql', mysql: 'sql', tsql: 'sql' };
+  var CACHE = {};
+
+  function compile(name) {
+    if (CACHE[name]) return CACHE[name];
+    var c = LANGS[name], parts = [], names = [];
+    function add(n, re) { parts.push('(' + re + ')'); names.push(n); }
+    if (c.bc) add('c', c.bc);
+    if (c.lc) add('c', c.lc);
+    (c.str || []).forEach(function (s) { add('s', s); });
+    if (c.idq) add('i', c.idq);
+    (c.pre || []).forEach(function (p) { add(p[0], p[1]); });
+    add('n', '\\b0[xX][0-9a-fA-F_]+\\b|\\b\\d[\\d_]*(?:\\.\\d+)?(?:[eE][+-]?\\d+)?[a-zA-Z]*\\b');
+    add('w', c.wordRe || '[A-Za-z_][A-Za-z0-9_]*');
+    add('o', '[|;&(){}]|=>|->|::');
+    var out = { re: new RegExp(parts.join('|'), 'gm'), names: names, c: c };
+    CACHE[name] = out; return out;
+  }
+
+  function span(cls, text) { return '<span class="t-' + cls + '">' + esc(text) + '</span>'; }
+
+  function highlight(src, lang) {
+    var cp = compile(lang), c = cp.c, re = cp.re, names = cp.names, out = '', last = 0, m, atCmd = true, prevDot = false;
+    re.lastIndex = 0;
+    while ((m = re.exec(src)) !== null) {
+      if (m[0].length === 0) { re.lastIndex++; continue; }
+      var gap = src.slice(last, m.index);
+      if (gap) {
+        out += esc(gap);
+        if (c.cmd && gap.indexOf('\n') >= 0 && gap.replace(/\\[ \t]*\n/g, '').indexOf('\n') >= 0) atCmd = true;
+        prevDot = /\.\s*$/.test(gap);
+      }
+      var type = null;
+      for (var g = 0; g < names.length; g++) { if (m[g + 1] !== undefined) { type = names[g]; break; } }
+      var t = m[0];
+      if (type === 'w') {
+        var key = c.ci ? t.toLowerCase() : t, after = src.charAt(re.lastIndex), cls = null;
+        if (c.kw && c.kw[key]) cls = c.ctl && c.ctl[key] ? 'ct' : 'kw';
+        else if (c.ctl && c.ctl[key]) cls = 'ct';
+        else if (c.ty && c.ty[key]) cls = 'ty';
+        else if (c.lit && LITS[t.toLowerCase()]) cls = 'kw';
+        else if (c.cmd && atCmd) cls = c.cmd;
+        else if (!prevDot && after === '(' && lang !== 'sql') cls = 'fn';
+        else if (lang === 'sql' && after === '(') cls = 'fn';
+        else if (c.pascal && /^[A-Z][A-Za-z0-9_]*$/.test(t) && t.length > 1 && !/^[A-Z0-9_]+$/.test(t)) cls = 'ty';
+        else if (c.pascal && /^I[A-Z][a-z]/.test(t)) cls = 'ty';
+        if (c.cmd) { atCmd = !!(c.kw && c.kw[key] && /^(if|then|else|elif|do|while|until|time)$/.test(key)); }
+        out += cls ? span(cls, t) : esc(t);
+        prevDot = false;
+      } else if (type === 'o') {
+        if (c.cmd && /^[|;&(]$/.test(t)) atCmd = true;
+        out += esc(t); prevDot = false;
+      } else if (type === 's' && c.strKey && /^[ \t]*:/.test(src.slice(re.lastIndex, re.lastIndex + 12))) {
+        out += span('var', t); prevDot = false;
+      } else if (type === 'p') {
+        var mm = /^([ \t]*(?:-[ \t]+)?)([\s\S]*)$/.exec(t);
+        out += esc(mm[1]) + span('var', mm[2]); prevDot = false;
+      } else {
+        var map = { c: 'com', s: 'str', i: 'var', n: 'num', v: 'var', f: 'fn', p: 'var', k: 'kw', t: 'ty', m: 'ct' };
+        out += span(map[type] || 'str', t);
+        if (c.cmd && type === 'c') atCmd = true;
+        prevDot = false;
+      }
+      last = re.lastIndex;
+    }
+    out += esc(src.slice(last));
+    return out;
+  }
+
+  function guess(text) {
+    var t = text.replace(/^\s+/, '');
+    if (/^[{\[]/.test(t) && /["\]}]/.test(t)) return 'json';
+    if (/^\s*(apiVersion|kind|metadata|spec|version|services|name|on|jobs):/m.test(text) && /:\s/.test(text)) return 'yaml';
+    if (/^\s*(\$ |#!\/|kubectl|docker|aws|helm|git|curl|sudo|npm|dotnet|az |eksctl|terraform|echo|export|cd |ls |cat |mkdir|chmod)/m.test(text)) return 'bash';
+    if (/\b(select|insert into|update|delete from|create table|alter table)\b/i.test(text) && /\b(from|into|set|table|values)\b/i.test(text)) return 'sql';
+    if (/\b(public|private|internal)\b[\s\S]*[;{]|\bnamespace\b|\busing\s+[A-Z]/.test(text)) return 'csharp';
+    return null;
+  }
+
+  function norm(l) {
+    if (!l) return null;
+    l = String(l).toLowerCase().trim();
+    l = ALIAS[l] || l;
+    return LANGS[l] ? l : null;
+  }
+
+  /* copy button: icon only (the page script swaps its text to "Copied" for 1.5 s; show a tick instead) */
+  var ICON_COPY = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>';
+  var ICON_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="4 12.5 9.5 18 20 6.5"/></svg>';
+  function iconize(b) {
+    if (b.__ic) return; b.__ic = 1;
+    function render(done) { b.innerHTML = done ? ICON_OK : ICON_COPY; b.classList.toggle('done', !!done); }
+    render(false); b.title = 'Copy code'; b.setAttribute('aria-label', 'Copy code');
+    new MutationObserver(function () {
+      var t = (b.textContent || '').trim();
+      if (!t) return;
+      if (/copied/i.test(t)) { render(true); setTimeout(function () { render(false); }, 1500); } else render(false);
+    }).observe(b, { childList: true, characterData: true, subtree: true });
+  }
+
+  function run() {
+    [].forEach.call(document.querySelectorAll('.codewrap .copy'), iconize);
+    [].forEach.call(document.querySelectorAll('pre'), function (pre) {
+      if (pre.getAttribute('data-hl')) return;
+      var code = pre.querySelector('code') || pre;
+      if (code.children.length > 0) { pre.setAttribute('data-hl', 'pre'); return; }
+      var text = code.textContent, lang = norm(pre.getAttribute('data-lang')) || (pre.getAttribute('data-lang') ? null : guess(text));
+      if (!lang) { pre.setAttribute('data-hl', 'none'); return; }
+      try { code.innerHTML = highlight(text, lang); pre.setAttribute('data-hl', lang); } catch (e) { pre.setAttribute('data-hl', 'err'); }
+    });
+  }
+  window.__highlightCode = run; window.__highlight = highlight;
+
+  /* ---------------- keep the window pinned (iPad rotation / URL-bar resize can scroll it) ---------------- */
+  function pin() {
+    if (!document.body.classList.contains('cms')) return;
+    if (window.pageYOffset || window.pageXOffset) window.scrollTo(0, 0);
+    var root = document.documentElement; if (root.scrollTop) root.scrollTop = 0; if (document.body.scrollTop) document.body.scrollTop = 0;
+  }
+  /* iOS can keep the pre-rotation layout size until something nudges it: force a reflow and re-apply the viewport meta */
+  function reflow() {
+    var d = document.documentElement, m = document.querySelector('meta[name="viewport"]');
+    d.style.minHeight = 'calc(100% + 1px)'; void d.offsetHeight; d.style.minHeight = '';
+    if (m) { var c = m.getAttribute('content'); m.setAttribute('content', c); }
+  }
+  function pinSoon() { pin(); reflow(); setTimeout(function () { pin(); reflow(); }, 120); setTimeout(pin, 400); setTimeout(function () { pin(); reflow(); }, 900); }
+  window.addEventListener('orientationchange', pinSoon);
+  window.addEventListener('resize', pinSoon);
+  window.addEventListener('scroll', pin, { passive: true });
+  if (window.visualViewport) { window.visualViewport.addEventListener('resize', pinSoon); window.visualViewport.addEventListener('scroll', pin); }
+
+  function start() { initHome(); run(); pin(); setTimeout(run, 400); setTimeout(run, 1500); }
+  if (document.readyState === 'complete') start(); else window.addEventListener('load', start);
+})();
+</script>
+<!--UIX-JS-END-->
+</body>
+</html>
