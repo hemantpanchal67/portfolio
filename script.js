@@ -22,8 +22,7 @@ function initThemeToggle() {
   const themeToggleBtn = document.getElementById('theme-toggle');
   if (!themeToggleBtn) return;
 
-  const currentTheme = localStorage.getItem('hemant_portfolio_theme') ||
-    (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  const currentTheme = localStorage.getItem('hemant_portfolio_theme') || 'dark';
 
   document.documentElement.setAttribute('data-theme', currentTheme);
   updateThemeIcon(currentTheme);
