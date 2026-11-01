@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Interview Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #161412; --bg: #EEF0F6; --dots: #D2D7E4; --card: #ffffff; --text: #161412; --muted: #5B6072;
+    --line: #161412; --shadow: #161412;
+    --accent: #FF9A5C; --pop: #7A4CFF; --hot: #FF4D7E; --ok: #19B98A; --soft: #F6F2FF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14151B; --dots: #23252F; --card: #1E2029; --text: #F1F1F4; --muted: #A4A9BA;
+      --line: #3B3E4C; --shadow: #000000; --soft: #252036;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14151B; --dots: #23252F; --card: #1E2029; --text: #F1F1F4; --muted: #A4A9BA;
+    --line: #3B3E4C; --shadow: #000000; --soft: #252036;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; font-family: "Baloo 2", system-ui, -apple-system, sans-serif; color: var(--text); font-size: 18px; line-height: 1.55;
+    background: var(--bg) radial-gradient(var(--dots) 1.6px, transparent 2px) 0 0 / 26px 26px;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 28px 16px 80px; }
+  a { color: var(--pop); font-weight: 700; }
+  h1 { font-size: clamp(36px, 8vw, 56px); line-height: 1.02; margin: 18px 0 8px; letter-spacing: -1px; font-weight: 800; }
+  h2 { font-size: 24px; line-height: 1.15; margin: 0 0 4px; font-weight: 800; }
+  p { margin: 8px 0; }
+  .hot { color: var(--hot); }
+  .hand { font-family: Kalam, cursive; color: var(--pop); }
+  .lead { font-size: 20px; color: var(--muted); font-weight: 600; }
+  .tag { display: inline-block; background: var(--accent); color: var(--ink); border: 3px solid var(--line); border-radius: 10px; box-shadow: 3px 3px 0 var(--shadow); padding: 1px 12px 0; font-weight: 800; font-size: 15px; }
+  .list { list-style: none; padding: 0; margin: 26px 0 0; display: grid; gap: 18px; }
+  .note-card { display: block; text-decoration: none; color: var(--text); background: var(--card); border: 3px solid var(--line); border-radius: 18px; box-shadow: 6px 6px 0 var(--shadow); padding: 18px 18px 14px; font-weight: 400; }
+  .note-card:active { transform: translate(3px, 3px); box-shadow: 3px 3px 0 var(--shadow); }
+  .note-card .row { display: flex; align-items: center; gap: 14px; }
+  .ico { flex: none; width: 56px; height: 56px; border-radius: 14px; border: 3px solid var(--line); background: var(--pop); color: #fff; display: grid; place-items: center; font-size: 30px; }
+  .note-card .t { flex: 1; }
+  .note-card p { color: var(--muted); font-weight: 600; font-size: 16px; margin: 2px 0 0; line-height: 1.35; }
+  .go { flex: none; font-weight: 800; font-size: 26px; color: var(--pop); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .chip { font-size: 13px; font-weight: 800; border: 2px solid var(--ink); border-radius: 7px; padding: 0 7px; background: var(--accent); color: var(--ink); }
+  .chip.free { background: var(--ok); color: #fff; }
+  .theme { position: fixed; top: 12px; right: 12px; z-index: 5; font: inherit; font-weight: 800; font-size: 14px; background: var(--card); color: var(--text); border: 2px solid var(--line); border-radius: 10px; padding: 3px 10px 1px; cursor: pointer; }
+  .foot { text-align: center; margin-top: 40px; font-weight: 700; }
+  @media (max-width: 560px) { body { font-size: 17px; } .note-card { padding: 16px 14px 12px; } }
+</style>
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="Toggle theme">◐ theme</button>
+<main>
+  <span class="tag">interview prep</span>
+  <h1>My <span class="hot">Notes</span></h1>
+  <p class="lead">Quick, visual notes for system design and DevOps interviews.</p>
+  <p class="hand">pick a topic to start</p>
+
+  <ul class="list">
+    <li>
+      <a class="note-card" href="k8/kubernetes-notes.html">
+        <div class="row">
+          <div class="ico" aria-hidden="true">☸</div>
+          <div class="t">
+            <h2>Kubernetes</h2>
+            <p>Practical intro: architecture, Pods, Services, Deployment and Volume, with diagrams and YAML.</p>
+          </div>
+          <div class="go" aria-hidden="true">→</div>
+        </div>
+        <div class="chips"><span class="chip">architecture</span><span class="chip">pods</span><span class="chip">services</span><span class="chip">deployment</span><span class="chip free">volume</span></div>
+      </a>
+    </li>
+  </ul>
+
+  <p class="foot">More topics coming soon.</p>
+</main>
+<script>
+  (function () {
+    var root = document.documentElement, key = "theme";
+    try { var s = localStorage.getItem(key); if (s) root.setAttribute("data-theme", s); } catch (e) {}
+    document.getElementById("theme").addEventListener("click", function () {
+      var dark = root.getAttribute("data-theme") === "dark" ||
+        (!root.getAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+      var next = dark ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try { localStorage.setItem(key, next); } catch (e) {}
+    });
+  })();
+</script>
+</body>
+</html>
