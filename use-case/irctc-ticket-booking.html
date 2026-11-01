@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>IRCTC Ticket Booking System Design</title>
+<meta name="description" content="System design of an IRCTC-style train ticket booking system: seat inventory, Tatkal rush, waiting room, payment saga, waitlist.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="usecase.css">
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="Toggle theme">&#9680; theme</button>
+<main>
+
+<div class="crumbs"><a href="../index.html">&larr; Home</a><a href="index.html">All use cases</a></div>
+<span class="tag">system design use case</span>
+<h1>IRCTC Ticket Booking <span class="hot">System Design</span></h1><p class="lead">Design a railway ticketing platform that handles millions of searches and a violent 10 AM booking spike without ever selling a seat twice.</p><p class="hand">seat inventory, Tatkal rush, payment saga</p>
+<nav class="toc" aria-label="Sections"><a href="#req">requirements</a><a href="#scale">scale</a><a href="#arch">architecture</a><a href="#seat">seat inventory</a><a href="#saga">payment saga</a><a href="#wait">waitlist</a><a href="#data">data model</a><a href="#risk">trade-offs</a><a href="#qa">interview Q&amp;A</a></nav>
+<section class="card" id="req"><span class="step ">1</span><h2>Requirements</h2><p>Think of IRCTC as a <b>very large inventory system</b> with a brutal traffic spike: Tatkal opens at 10:00 and 11:00 and everyone shows up in the same minute.</p><h3>Functional</h3><div class="chips"><span class="chip p">search trains</span><span class="chip p">check availability</span><span class="chip p">book ticket</span><span class="chip p">pay</span><span class="chip p">PNR status</span><span class="chip p">cancel + refund</span><span class="chip p">waitlist / RAC</span><span class="chip p">Tatkal quota</span></div><h3>Non-functional</h3><div class="chips"><span class="chip g">no double booking</span><span class="chip g">burst traffic</span><span class="chip g">high availability</span><span class="chip g">fast search</span><span class="chip g">idempotent payments</span><span class="chip g">bot protection</span></div><div class="note ok"><b>Golden rule:</b> a seat can be sold only once. Inventory needs <b>strong consistency</b>. Search can be <b>eventually consistent</b>.</div></section>
+<section class="card" id="scale"><span class="step o">2</span><h2>Back-of-the-envelope scale</h2><p>Interview assumptions, not official numbers:</p><div class="tblwrap"><table><tr><th>Item</th><th>Assumption</th><th>Result</th></tr><tr><td>Tickets per day</td><td>~1.3 million bookings</td><td>~15 bookings/sec on average</td></tr><tr><td>Tatkal burst</td><td>~1000× average for ~2 minutes</td><td>~15,000 booking attempts/sec</td></tr><tr><td>Read : write</td><td>~100 searches per booking</td><td>~1.5 lakh searches/sec at peak</td></tr><tr><td>Inventory size</td><td>~13,000 trains × 120 days × ~10 classes</td><td>~15 million (train, date, class) rows</td></tr></table></div><div class="note">Peak is the design target. Average load is easy. <b>The queue in front of booking is what keeps the system alive.</b></div></section>
+<section class="card" id="arch"><span class="step g">3</span><h2>High-level architecture</h2><svg class="dg" viewBox="0 0 800 470" role="img" aria-label="IRCTC architecture: CDN and WAF, waiting room, gateway, search, booking, payment, inventory database, Redis seat holds, Kafka, waitlist worker and notifier">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+<line class="e" x1="142.0" y1="37.0" x2="176.0" y2="37.0"/>
+<line class="e" x1="332.0" y1="37.0" x2="366.0" y2="37.0"/>
+<line class="e" x1="522.0" y1="37.0" x2="606.0" y2="37.0"/>
+<text class="el" x="564.0" y="33.0">admit</text>
+<line class="e" x1="608.0" y1="54.8" x2="174.0" y2="143.8"/>
+<line class="e" x1="611.6" y1="64.0" x2="404.0" y2="131.2"/>
+<line class="e" x1="95.0" y1="187.0" x2="95.0" y2="256.0"/>
+<line class="e" x1="303.7" y1="187.0" x2="274.7" y2="256.0"/>
+<text class="el" x="289.2" y="217.5">hold</text>
+<line class="e" x1="358.2" y1="187.0" x2="468.6" y2="256.0"/>
+<text class="el" x="413.4" y="217.5">commit</text>
+<line class="e" x1="402.0" y1="160.0" x2="456.0" y2="160.0"/>
+<line class="e" x1="566.7" y1="187.0" x2="660.6" y2="256.0"/>
+<line class="e async" x1="323.5" y1="187.0" x2="385.9" y2="386.0"/>
+<text class="el" x="354.7" y="282.5">event</text>
+<line class="e async" x1="462.0" y1="415.0" x2="486.0" y2="415.0"/>
+<line class="e async" x1="462.0" y1="415.0" x2="646.0" y2="415.0"/>
+<line class="e" x1="698.3" y1="64.0" x2="706.5" y2="131.0"/>
+<line class="e" x1="550.7" y1="388.0" x2="525.0" y2="314.0"/>
+<g class="n client"><rect x="20" y="12" width="120" height="50" rx="10"/>
+<text x="80.0" y="34.0">Users</text><text class="sub" x="80.0" y="50.0">web / app</text>
+</g>
+<g class="n edge"><rect x="180" y="12" width="150" height="50" rx="10"/>
+<text x="255.0" y="34.0">CDN + WAF</text><text class="sub" x="255.0" y="50.0">captcha, bot filter</text>
+</g>
+<g class="n queue"><rect x="370" y="12" width="150" height="50" rx="10"/>
+<text x="445.0" y="34.0">Waiting room</text><text class="sub" x="445.0" y="50.0">token queue</text>
+</g>
+<g class="n edge"><rect x="610" y="12" width="170" height="50" rx="10"/>
+<text x="695.0" y="34.0">API Gateway</text><text class="sub" x="695.0" y="50.0">auth, rate limit</text>
+</g>
+<g class="n svc"><rect x="20" y="135" width="150" height="50" rx="10"/>
+<text x="95.0" y="157.0">Search</text><text class="sub" x="95.0" y="173.0">trains &amp; routes</text>
+</g>
+<g class="n svc"><rect x="230" y="135" width="170" height="50" rx="10"/>
+<text x="315.0" y="157.0">Booking</text><text class="sub" x="315.0" y="173.0">saga orchestrator</text>
+</g>
+<g class="n svc"><rect x="460" y="135" width="140" height="50" rx="10"/>
+<text x="530.0" y="157.0">Payment</text><text class="sub" x="530.0" y="173.0">idempotent</text>
+</g>
+<g class="n svc"><rect x="640" y="135" width="140" height="50" rx="10"/>
+<text x="710.0" y="157.0">PNR / Refund</text><text class="sub" x="710.0" y="173.0">status, cancel</text>
+</g>
+<g class="n db"><rect x="20" y="260" width="150" height="50" rx="10"/>
+<text x="95.0" y="282.0">Search index</text><text class="sub" x="95.0" y="298.0">Elasticsearch</text>
+</g>
+<g class="n db"><rect x="195" y="260" width="135" height="50" rx="10"/>
+<text x="262.5" y="282.0">Redis</text><text class="sub" x="262.5" y="298.0">seat holds (TTL)</text>
+</g>
+<g class="n db"><rect x="440" y="260" width="150" height="50" rx="10"/>
+<text x="515.0" y="282.0">Inventory DB</text><text class="sub" x="515.0" y="298.0">sharded SQL</text>
+</g>
+<g class="n ext"><rect x="620" y="260" width="160" height="50" rx="10"/>
+<text x="700.0" y="282.0">Payment gateway</text><text class="sub" x="700.0" y="298.0">bank / UPI</text>
+</g>
+<g class="n queue"><rect x="330" y="390" width="130" height="50" rx="10"/>
+<text x="395.0" y="412.0">Kafka</text><text class="sub" x="395.0" y="428.0">booking events</text>
+</g>
+<g class="n svc"><rect x="490" y="390" width="140" height="50" rx="10"/>
+<text x="560.0" y="412.0">Waitlist worker</text><text class="sub" x="560.0" y="428.0">auto-promote</text>
+</g>
+<g class="n svc"><rect x="650" y="390" width="130" height="50" rx="10"/>
+<text x="715.0" y="412.0">Notifier</text><text class="sub" x="715.0" y="428.0">SMS / email / push</text>
+</g>
+</svg><div class="legend"><span><i style="background:color-mix(in srgb,var(--accent) 35%,var(--card))"></i>client</span><span><i style="background:color-mix(in srgb,var(--hot) 18%,var(--card))"></i>edge / protection</span><span><i style="background:color-mix(in srgb,var(--pop) 16%,var(--card))"></i>service</span><span><i style="background:color-mix(in srgb,var(--ok) 20%,var(--card))"></i>data store</span><span><i style="background:color-mix(in srgb,#3B82F6 22%,var(--card))"></i>queue / stream</span><span>solid arrow = sync call &middot; dashed = async event</span></div><h3>Booking flow</h3><ol><li>User passes <b>CDN + WAF + captcha</b>. Bots and scripts are filtered here.</li><li>During Tatkal the user enters a <b>waiting room</b>. The gateway admits users at a rate the backend can handle.</li><li><b>Search</b> reads trains from Elasticsearch and cached availability. It never touches the inventory DB directly.</li><li><b>Booking</b> places a <b>seat hold</b> in Redis (TTL ~10 min), then calls <b>Payment</b>.</li><li>On payment success, Booking <b>commits</b> the seat in the Inventory DB and emits a <b>Kafka event</b>.</li><li>Workers send the ticket (SMS / email / push) and run <b>waitlist promotion</b> when seats free up.</li></ol></section>
+<section class="card" id="seat"><span class="step ">4</span><h2>Deep dive 1: seat inventory without double booking</h2><p>A train runs A &rarr; B &rarr; C &rarr; D. A seat sold for A&rarr;C must stay <b>available for C&rarr;D</b>. So inventory is per <b>segment</b>, not per seat.</p><div class="code"><div class="label">segment bitmap per seat</div><pre><code>train 12951, date 2026-11-20, class 3A, coach B2, seat 41
+stops:   A    B    C    D
+legs:      A-B  B-C  C-D
+bitmap:     1    1    0     (seat is taken for A-&gt;C, free for C-&gt;D)
+
+booking(from=B, to=D) needs legs B-C and C-D free:
+  (bitmap &amp; mask(B..D)) == 0  -&gt;  seat is allocatable</code></pre></div><div class="grid"><div class="opt"><b>Pessimistic lock</b><span><strong>SELECT ... FOR UPDATE SKIP LOCKED</strong> on candidate seats. Simple and correct, but hot trains create lock contention.</span></div><div class="opt"><b>Optimistic version</b><span>Update with <strong>WHERE version = ?</strong>. Great when conflicts are rare, wasteful in a Tatkal rush.</span></div><div class="opt"><b>Single writer per train</b><span>Partition Kafka by <strong>train_id</strong>. One consumer allocates seats for a train, so no contention at all. <strong>Best for Tatkal.</strong></span></div><div class="opt"><b>Redis hold</b><span><strong>SET hold:{train}:{seat} user NX EX 600</strong> reserves the seat while the user pays. TTL releases it automatically.</span></div></div><div class="note ok"><b>Final guard:</b> a unique constraint on <code>(train, date, class, seat, leg)</code> in the DB. Even if Redis or app logic fails, the DB refuses a second sale.</div></section>
+<section class="card" id="saga"><span class="step o">5</span><h2>Deep dive 2: booking + payment as a saga</h2><p>Payment is slow and external. Do <b>not</b> hold a DB transaction open while waiting for the bank.</p><ol><li><b>Hold</b> seat in Redis (10 minutes).</li><li>Create a <b>payment intent</b> with an <b>idempotency key</b> (booking id).</li><li>Redirect to bank / UPI. Result arrives through a <b>webhook</b> and a polling fallback.</li><li><b>Success &rarr;</b> commit seat, generate PNR, send ticket.</li><li><b>Failure or timeout &rarr;</b> release hold (compensation).</li><li>A <b>reconciliation job</b> compares bank statements with bookings. Money debited but no ticket means auto-refund.</li></ol><div class="note">Duplicate webhooks and double-clicks are normal. The idempotency key makes the second call a no-op.</div></section>
+<section class="card" id="wait"><span class="step g">6</span><h2>Deep dive 3: waitlist, RAC and Tatkal</h2><ul><li><b>Waitlist</b> is a per-train, per-class queue ordered by booking time. A cancellation emits an event and the waitlist worker promotes the head of the queue.</li><li><b>RAC</b> (Reservation Against Cancellation) gives a shared berth first, then upgrades to a full berth.</li><li><b>Tatkal</b> is a separate quota with its own opening time. Treat it as its own inventory pool, so one rush does not lock general-quota seats.</li><li><b>Waiting room + token bucket</b> admit only as many users as the booking tier can serve. Everyone else sees a calm queue page, not an error.</li></ul></section>
+<section class="card" id="data"><span class="step ">7</span><h2>Data model and APIs</h2><div class="code"><div class="label">core tables</div><pre><code>train(id, number, name)
+schedule(train_id, stop_seq, station_id, arrival, departure)
+inventory(train_id, run_date, class, coach, seat_no, leg_bitmap, version)
+booking(pnr PK, user_id, train_id, run_date, from_stn, to_stn, status, amount, idem_key UNIQUE)
+passenger(pnr, name, age, berth_pref, seat_no, status)   -- CNF / RAC / WL
+payment(id, pnr, gateway_ref, status, idem_key UNIQUE)</code></pre></div><div class="code"><div class="label">key APIs</div><pre><code>GET  /trains?from=NDLS&amp;to=MMCT&amp;date=2026-11-20
+GET  /trains/12951/availability?date=2026-11-20&amp;class=3A
+POST /bookings            { train, date, from, to, passengers[], idemKey }
+POST /bookings/{pnr}/pay  { method }
+GET  /pnr/{pnr}
+POST /bookings/{pnr}/cancel</code></pre></div><p>Shard the inventory DB by <code>(train_id, run_date)</code>, so one booking touches exactly one shard.</p></section>
+<section class="card" id="risk"><span class="step o">8</span><h2>Trade-offs and failure handling</h2><div class="tblwrap"><table><tr><th>Choice</th><th>Why</th><th>Cost</th></tr><tr><td>Strong consistency for inventory</td><td>Money and seats are involved</td><td>Lower write throughput, so we queue per train</td></tr><tr><td>Cached, stale availability on search</td><td>Search is 100× heavier than booking</td><td>User may see 'available' then get 'sold out'</td></tr><tr><td>Waiting room</td><td>Protects backend</td><td>Some users wait a few minutes</td></tr><tr><td>Kafka per-train partition</td><td>Serial allocation, no locks</td><td>A hot train is a hot partition</td></tr></table></div><ul><li><b>Redis down:</b> fall back to DB-based holds with a short <code>hold_until</code> column.</li><li><b>Payment gateway slow:</b> extend hold slightly, show a 'confirming' screen, and reconcile later.</li><li><b>Region failure:</b> active-passive DR for inventory DB, since active-active writes risk double sales.</li></ul></section>
+<section class="card" id="qa"><span class="step g">9</span><h2>Interview cheat-sheet</h2><details class="qa"><summary>How do you stop two users getting the same seat?</summary><p>Hold in Redis with NX, serialise allocation per train through a partitioned queue, and keep a DB unique constraint as the final guard.</p></details><details class="qa"><summary>How do you survive the 10:00 Tatkal rush?</summary><p>CDN + WAF + captcha, a waiting room with a token bucket, cached search, and a queue in front of booking. Scale reads horizontally, serialise writes per train.</p></details><details class="qa"><summary>What if payment succeeds but the user's session dies?</summary><p>Webhook still reaches Booking, which confirms the seat if the hold is alive. If the hold expired, we try to re-allocate, else auto-refund via reconciliation.</p></details><details class="qa"><summary>Why not a microservice per class?</summary><p>Booking is one transaction across a train's inventory. Splitting by class adds cross-service transactions with no real benefit.</p></details></section>
+<p class="foot">Personal study notes. Numbers are interview-style assumptions, not official figures.<br><a href="index.html">&larr; All use cases</a> &middot; <a href="../index.html">Home</a></p>
+</main>
+<script src="usecase.js"></script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BookMyShow System Design</title>
+<meta name="description" content="System design of a BookMyShow-style movie ticket booking system: catalog, seat locking with Redis, payment, live seat updates.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="usecase.css">
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="Toggle theme">&#9680; theme</button>
+<main>
+
+<div class="crumbs"><a href="../index.html">&larr; Home</a><a href="index.html">All use cases</a></div>
+<span class="tag">system design use case</span>
+<h1>BookMyShow <span class="hot">System Design</span></h1><p class="lead">Design a movie and event booking platform where thousands of people pick seats on the same show and nobody pays for a seat that is already gone.</p><p class="hand">seat map, atomic holds, hot releases</p>
+<nav class="toc" aria-label="Sections"><a href="#req">requirements</a><a href="#scale">scale</a><a href="#arch">architecture</a><a href="#lock">seat locking</a><a href="#hot">hot release</a><a href="#pay">payment</a><a href="#data">data model</a><a href="#risk">trade-offs</a><a href="#qa">interview Q&amp;A</a></nav>
+<section class="card" id="req"><span class="step ">1</span><h2>Requirements</h2><p>Browsing is easy. The hard part is <b>many people fighting for the same seat</b> on a Friday-night blockbuster.</p><h3>Functional</h3><div class="chips"><span class="chip p">browse by city</span><span class="chip p">show timings</span><span class="chip p">seat map</span><span class="chip p">select + hold seats</span><span class="chip p">pay</span><span class="chip p">e-ticket / QR</span><span class="chip p">cancel + refund</span><span class="chip p">offers</span></div><h3>Non-functional</h3><div class="chips"><span class="chip g">no double booking</span><span class="chip g">fast seat map</span><span class="chip g">spikes on releases</span><span class="chip g">high availability</span><span class="chip g">payment safety</span></div><div class="note ok">Same shape as IRCTC, but <b>seat selection is interactive</b>. The user sees a live map and expects it to be accurate.</div></section>
+<section class="card" id="scale"><span class="step o">2</span><h2>Back-of-the-envelope scale</h2><p>Interview assumptions:</p><div class="tblwrap"><table><tr><th>Item</th><th>Assumption</th><th>Result</th></tr><tr><td>Daily users</td><td>10 million</td><td>~115 users/sec average</td></tr><tr><td>Bookings</td><td>~1 million tickets/day</td><td>~12/sec avg, ~1,000/sec on a big release</td></tr><tr><td>Hot show</td><td>300 seats, 50,000 people trying</td><td>heavy contention on one show</td></tr><tr><td>Catalog reads</td><td>~50 reads per booking</td><td>cache at CDN + city level</td></tr></table></div><div class="note">Contention is <b>per show</b>, not global. That makes sharding by <code>show_id</code> natural.</div></section>
+<section class="card" id="arch"><span class="step g">3</span><h2>High-level architecture</h2><svg class="dg" viewBox="0 0 800 455" role="img" aria-label="BookMyShow architecture: CDN, gateway, waiting room, catalog, seat service, booking, payment, Redis seat locks, booking database, Kafka, ticket service, notifier, live seat updates">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+<line class="e" x1="152.0" y1="37.0" x2="186.0" y2="37.0"/>
+<line class="e" x1="152.0" y1="37.0" x2="356.0" y2="37.0"/>
+<line class="e" x1="522.0" y1="37.0" x2="556.0" y2="37.0"/>
+<line class="e" x1="367.6" y1="64.0" x2="187.8" y2="131.0"/>
+<line class="e" x1="412.6" y1="64.0" x2="344.5" y2="131.0"/>
+<line class="e" x1="451.0" y1="64.0" x2="478.2" y2="131.0"/>
+<line class="e" x1="110.0" y1="187.0" x2="110.0" y2="256.0"/>
+<line class="e" x1="315.0" y1="187.0" x2="315.0" y2="256.0"/>
+<text class="el" x="315.0" y="217.5">lock</text>
+<line class="e" x1="452.2" y1="187.0" x2="355.6" y2="256.0"/>
+<line class="e" x1="493.2" y1="187.0" x2="501.5" y2="256.0"/>
+<text class="el" x="497.4" y="217.5">confirm</text>
+<line class="e" x1="552.0" y1="160.0" x2="586.0" y2="160.0"/>
+<line class="e" x1="661.5" y1="187.0" x2="678.0" y2="256.0"/>
+<line class="e async" x1="477.6" y1="187.0" x2="388.3" y2="381.0"/>
+<line class="e async" x1="452.0" y1="410.0" x2="486.0" y2="410.0"/>
+<line class="e async" x1="452.0" y1="410.0" x2="656.0" y2="410.0"/>
+<line class="e async" x1="300.4" y1="187.0" x2="195.7" y2="381.0"/>
+<g class="n client"><rect x="20" y="12" width="130" height="50" rx="10"/>
+<text x="85.0" y="34.0">Users</text><text class="sub" x="85.0" y="50.0">app / web</text>
+</g>
+<g class="n edge"><rect x="190" y="12" width="130" height="50" rx="10"/>
+<text x="255.0" y="34.0">CDN</text><text class="sub" x="255.0" y="50.0">posters, static</text>
+</g>
+<g class="n edge"><rect x="360" y="12" width="160" height="50" rx="10"/>
+<text x="440.0" y="34.0">API Gateway</text><text class="sub" x="440.0" y="50.0">auth, rate limit</text>
+</g>
+<g class="n queue"><rect x="560" y="12" width="160" height="50" rx="10"/>
+<text x="640.0" y="34.0">Waiting room</text><text class="sub" x="640.0" y="50.0">hot releases</text>
+</g>
+<g class="n svc"><rect x="20" y="135" width="180" height="50" rx="10"/>
+<text x="110.0" y="157.0">Catalog</text><text class="sub" x="110.0" y="173.0">movies, theatres, shows</text>
+</g>
+<g class="n svc"><rect x="240" y="135" width="150" height="50" rx="10"/>
+<text x="315.0" y="157.0">Seat service</text><text class="sub" x="315.0" y="173.0">map + holds</text>
+</g>
+<g class="n svc"><rect x="430" y="135" width="120" height="50" rx="10"/>
+<text x="490.0" y="157.0">Booking</text><text class="sub" x="490.0" y="173.0">saga</text>
+</g>
+<g class="n svc"><rect x="590" y="135" width="130" height="50" rx="10"/>
+<text x="655.0" y="157.0">Payment</text><text class="sub" x="655.0" y="173.0">idempotent</text>
+</g>
+<g class="n db"><rect x="20" y="260" width="180" height="50" rx="10"/>
+<text x="110.0" y="282.0">Search</text><text class="sub" x="110.0" y="298.0">Elasticsearch (city)</text>
+</g>
+<g class="n db"><rect x="240" y="260" width="150" height="50" rx="10"/>
+<text x="315.0" y="282.0">Redis</text><text class="sub" x="315.0" y="298.0">seat locks, TTL</text>
+</g>
+<g class="n db"><rect x="430" y="260" width="150" height="50" rx="10"/>
+<text x="505.0" y="282.0">Booking DB</text><text class="sub" x="505.0" y="298.0">UNIQUE(show, seat)</text>
+</g>
+<g class="n ext"><rect x="610" y="260" width="150" height="50" rx="10"/>
+<text x="685.0" y="282.0">Payment gateway</text><text class="sub" x="685.0" y="298.0">cards / UPI</text>
+</g>
+<g class="n queue"><rect x="300" y="385" width="150" height="50" rx="10"/>
+<text x="375.0" y="407.0">Kafka</text><text class="sub" x="375.0" y="423.0">booking events</text>
+</g>
+<g class="n svc"><rect x="490" y="385" width="140" height="50" rx="10"/>
+<text x="560.0" y="407.0">Ticket service</text><text class="sub" x="560.0" y="423.0">QR e-ticket</text>
+</g>
+<g class="n svc"><rect x="660" y="385" width="120" height="50" rx="10"/>
+<text x="720.0" y="407.0">Notifier</text><text class="sub" x="720.0" y="423.0">SMS / push</text>
+</g>
+<g class="n svc"><rect x="100" y="385" width="160" height="50" rx="10"/>
+<text x="180.0" y="407.0">Live seat updates</text><text class="sub" x="180.0" y="423.0">WebSocket / SSE</text>
+</g>
+</svg><div class="legend"><span><i style="background:color-mix(in srgb,var(--accent) 35%,var(--card))"></i>client</span><span><i style="background:color-mix(in srgb,var(--hot) 18%,var(--card))"></i>edge / protection</span><span><i style="background:color-mix(in srgb,var(--pop) 16%,var(--card))"></i>service</span><span><i style="background:color-mix(in srgb,var(--ok) 20%,var(--card))"></i>data store</span><span><i style="background:color-mix(in srgb,#3B82F6 22%,var(--card))"></i>queue / stream</span><span>solid arrow = sync call &middot; dashed = async event</span></div><h3>Flow</h3><ol><li>User picks a city. <b>Catalog</b> serves movies, theatres and shows from a city-level cache backed by Elasticsearch.</li><li>User opens a show. <b>Seat service</b> returns the seat map: booked, held, free.</li><li>User taps seats. Seat service tries an <b>atomic multi-seat lock</b> in Redis (10 minutes).</li><li><b>Booking</b> creates a pending booking and calls <b>Payment</b>.</li><li>On success: write confirmed seats to the DB, emit an event, <b>Ticket service</b> creates the QR e-ticket, <b>Notifier</b> sends it.</li><li>Other viewers of the same show get <b>live updates</b> so seats turn grey without refreshing.</li></ol></section>
+<section class="card" id="lock"><span class="step ">4</span><h2>Deep dive 1: seat locking</h2><p>Which locking strategy fits an interactive seat map with a payment step?</p><div class="tblwrap"><table><tr><th>Option</th><th>Good</th><th>Bad</th></tr><tr><td>DB row lock</td><td>Simple, correct</td><td>Held during payment = blocked rows, deadlocks</td></tr><tr><td>Optimistic version</td><td>No locks</td><td>Users lose the race after choosing and paying</td></tr><tr><td><b>Redis lock + TTL</b></td><td>Fast, auto-expires, fair</td><td>Needs a DB guard for safety</td></tr></table></div><div class="code"><div class="label">atomic multi-seat hold (Lua, all-or-nothing)</div><pre><code>-- KEYS = seat:{show}:{seatId} ...   ARGV = userId, ttlSeconds
+for i = 1, #KEYS do
+  if redis.call('EXISTS', KEYS[i]) == 1 then return 0 end   -- any seat taken -&gt; fail
+end
+for i = 1, #KEYS do
+  redis.call('SET', KEYS[i], ARGV[1], 'EX', ARGV[2])
+end
+return 1</code></pre></div><div class="note ok"><b>Final guard:</b> <code>UNIQUE (show_id, seat_id)</code> on confirmed bookings. If Redis loses data, the DB still refuses a duplicate sale.</div></section>
+<section class="card" id="hot"><span class="step o">5</span><h2>Deep dive 2: a blockbuster opens</h2><div class="grid"><div class="opt"><b>Waiting room</b><span>Admit users in batches so the booking tier stays within capacity.</span></div><div class="opt"><b>Pre-warm caches</b><span>Load seat maps and show lists into Redis <strong>before</strong> booking opens.</span></div><div class="opt"><b>Shard by show</b><span>Partition Redis and DB by <strong>show_id</strong>, so a hot show does not hurt others.</span></div><div class="opt"><b>Cap seats per user</b><span>Max 6 seats per hold. Stops hoarding and bot abuse.</span></div></div><ul><li><b>Live seat updates:</b> WebSocket or Server-Sent Events push seat state changes. Fall back to polling every few seconds.</li><li><b>Release on abandon:</b> TTL expiry frees the seats and pushes an update to everyone watching.</li><li><b>Bots:</b> captcha at hold time, per-account and per-device rate limits.</li></ul></section>
+<section class="card" id="pay"><span class="step g">6</span><h2>Deep dive 3: payment and timeouts</h2><ol><li><b>Hold</b> seats, then create a payment with an <b>idempotency key</b>.</li><li>Payment success webhook arrives &rarr; if the hold is still valid, <b>confirm</b>.</li><li>If the hold expired but payment succeeded, try to re-acquire the same seats. If taken, <b>auto-refund</b>.</li><li>A nightly <b>reconciliation</b> compares gateway records against bookings.</li></ol><div class="note">Never confirm a seat from the browser's 'success' redirect alone. The <b>server-side webhook</b> is the source of truth.</div></section>
+<section class="card" id="data"><span class="step ">7</span><h2>Data model and APIs</h2><div class="code"><div class="label">tables</div><pre><code>city(id, name)            theatre(id, city_id, name, geo)
+screen(id, theatre_id, layout_json)
+movie(id, title, language, duration)
+show(id, movie_id, screen_id, start_time, price_tiers)
+show_seat(show_id, seat_id, category, price)             -- static layout per show
+booking(id, user_id, show_id, status, amount, idem_key UNIQUE)
+booking_seat(booking_id, show_id, seat_id)               -- UNIQUE(show_id, seat_id)</code></pre></div><div class="code"><div class="label">key APIs</div><pre><code>GET  /cities/{id}/shows?movie=...&amp;date=...
+GET  /shows/{id}/seats                  -&gt; map with state
+POST /shows/{id}/hold      { seats[], userId }   -&gt; holdId, expiresAt
+POST /bookings             { holdId, idemKey }
+POST /bookings/{id}/cancel</code></pre></div></section>
+<section class="card" id="risk"><span class="step o">8</span><h2>Trade-offs and failure handling</h2><div class="tblwrap"><table><tr><th>Choice</th><th>Why</th><th>Cost</th></tr><tr><td>Redis holds + DB constraint</td><td>Fast UX, safe at the end</td><td>Two systems to keep consistent</td></tr><tr><td>Cached seat map</td><td>Cheap reads</td><td>Slightly stale, fixed by live updates</td></tr><tr><td>10-minute hold</td><td>Time to pay</td><td>Hot shows lock seats for non-buyers</td></tr><tr><td>Waiting room</td><td>Protects booking</td><td>Perceived delay</td></tr></table></div><ul><li><b>Redis outage:</b> degrade to DB-based holds with <code>hold_until</code> timestamps.</li><li><b>Theatre system sync:</b> some theatres have their own box-office system, so reconcile seat state through a sync API with conflict rules (box office wins).</li></ul></section>
+<section class="card" id="qa"><span class="step g">9</span><h2>Interview cheat-sheet</h2><details class="qa"><summary>Why not lock the DB row during payment?</summary><p>Payments take minutes. Held row locks block others and invite deadlocks. A TTL lock in Redis frees itself, and the DB constraint protects the final write.</p></details><details class="qa"><summary>How do you hold several seats atomically?</summary><p>A Lua script that checks all seat keys and sets them only if none are taken. Redis runs it as a single atomic step.</p></details><details class="qa"><summary>How do other users see seats change live?</summary><p>Push events over WebSocket or SSE from the seat service, with short polling as a fallback.</p></details><details class="qa"><summary>What if payment succeeds after the hold expired?</summary><p>Try to re-acquire the seats. If someone else took them, refund automatically.</p></details></section>
+<p class="foot">Personal study notes. Numbers are interview-style assumptions, not official figures.<br><a href="index.html">&larr; All use cases</a> &middot; <a href="../index.html">Home</a></p>
+</main>
+<script src="usecase.js"></script>
+</body>
+</html>

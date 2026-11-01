@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aadhaar Card Search System Design</title>
+<meta name="description" content="System design of an Aadhaar-like identity search: number lookup, tokenisation, demographic fuzzy search, biometric 1:N dedup, privacy and audit.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="usecase.css">
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="Toggle theme">&#9680; theme</button>
+<main>
+
+<div class="crumbs"><a href="../index.html">&larr; Home</a><a href="index.html">All use cases</a></div>
+<span class="tag">system design use case</span>
+<h1>Aadhaar Card Search <span class="hot">System Design</span></h1><p class="lead">Design a national-scale identity system: look up a person by number, search by name and DOB, and dedupe biometrics, all without leaking a single record.</p><p class="hand">lookup, fuzzy search, biometric dedup, privacy</p>
+<nav class="toc" aria-label="Sections"><a href="#scope">scope</a><a href="#scale">scale</a><a href="#arch">architecture</a><a href="#lookup">number lookup</a><a href="#search">demographic search</a><a href="#bio">biometric 1:N</a><a href="#sec">privacy</a><a href="#risk">trade-offs</a><a href="#qa">interview Q&amp;A</a></nav>
+<section class="card" id="scope"><span class="step ">1</span><h2>What are we designing?</h2><p>A <b>national identity system</b> with ~1.4 billion people where agencies verify or look up an identity. This is a <b>design exercise</b>, not UIDAI's real internals.</p><h3>Functional</h3><div class="chips"><span class="chip p">lookup by 12-digit number</span><span class="chip p">OTP authentication</span><span class="chip p">biometric authentication</span><span class="chip p">demographic search</span><span class="chip p">dedup at enrolment (1:N)</span><span class="chip p">eKYC with consent</span><span class="chip p">audit</span></div><h3>Non-functional</h3><div class="chips"><span class="chip g">privacy first</span><span class="chip g">high availability</span><span class="chip g">low-latency auth (&lt;1s)</span><span class="chip g">no enumeration</span><span class="chip g">tamper-proof audit</span><span class="chip g">DR</span></div><div class="note ok"><b>Mental model:</b> this is a <b>search system wrapped in a privacy fortress</b>. Speed matters, but leaking one record matters more.</div></section>
+<section class="card" id="scale"><span class="step o">2</span><h2>Back-of-the-envelope scale</h2><p>Interview assumptions:</p><div class="tblwrap"><table><tr><th>Item</th><th>Assumption</th><th>Result</th></tr><tr><td>Identities</td><td>1.4 billion</td><td>1.4B rows</td></tr><tr><td>Record size</td><td>~1 KB demographics (excluding biometrics)</td><td>~1.4 TB, before replicas</td></tr><tr><td>Biometric templates</td><td>10 fingers + 2 iris + face, ~10 KB templates</td><td>~14 TB of templates</td></tr><tr><td>Auth traffic</td><td>~100 million / day</td><td>~1,200/sec average, ~10,000/sec peak</td></tr><tr><td>Enrolments</td><td>~1 million / day</td><td>~12/sec, each runs a 1:N dedup</td></tr></table></div><div class="note">Number lookups are cheap. <b>Biometric 1:N over 1.4B is the expensive part</b>, so we must prune candidates before matching.</div></section>
+<section class="card" id="arch"><span class="step g">3</span><h2>High-level architecture</h2><svg class="dg" viewBox="0 0 800 455" role="img" aria-label="Aadhaar-like identity search: secure gateway, rate limit and consent, auth, lookup, demographic search, biometric match, token vault, encrypted identity store, audit stream">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+<line class="e" x1="182.0" y1="37.0" x2="226.0" y2="37.0"/>
+<line class="e" x1="422.0" y1="37.0" x2="466.0" y2="37.0"/>
+<line class="e" x1="274.5" y1="64.0" x2="149.2" y2="131.0"/>
+<line class="e" x1="319.5" y1="64.0" x2="305.9" y2="131.0"/>
+<line class="e" x1="555.1" y1="64.0" x2="530.6" y2="131.0"/>
+<line class="e" x1="96.1" y1="187.0" x2="103.8" y2="381.0"/>
+<line class="e" x1="97.2" y1="187.0" x2="102.7" y2="256.0"/>
+<line class="e" x1="257.9" y1="187.0" x2="150.2" y2="256.0"/>
+<line class="e" x1="302.2" y1="187.0" x2="307.7" y2="256.0"/>
+<line class="e" x1="521.1" y1="187.0" x2="523.8" y2="256.0"/>
+<line class="e" x1="715.0" y1="187.0" x2="715.0" y2="256.0"/>
+<line class="e async" x1="307.8" y1="312.0" x2="302.3" y2="381.0"/>
+<text class="el" x="305.1" y="342.5">audit</text>
+<line class="e async" x1="377.0" y1="410.0" x2="416.0" y2="410.0"/>
+<g class="n client"><rect x="20" y="12" width="160" height="50" rx="10"/>
+<text x="100.0" y="34.0">Agency / App</text><text class="sub" x="100.0" y="50.0">bank, telecom, gov</text>
+</g>
+<g class="n edge"><rect x="230" y="12" width="190" height="50" rx="10"/>
+<text x="325.0" y="34.0">Secure Gateway</text><text class="sub" x="325.0" y="50.0">mTLS, signed requests</text>
+</g>
+<g class="n edge"><rect x="470" y="12" width="190" height="50" rx="10"/>
+<text x="565.0" y="34.0">Rate limit + consent</text><text class="sub" x="565.0" y="50.0">per requester</text>
+</g>
+<g class="n svc"><rect x="20" y="135" width="150" height="50" rx="10"/>
+<text x="95.0" y="157.0">Auth service</text><text class="sub" x="95.0" y="173.0">OTP / biometric</text>
+</g>
+<g class="n svc"><rect x="215" y="135" width="170" height="50" rx="10"/>
+<text x="300.0" y="157.0">Lookup service</text><text class="sub" x="300.0" y="173.0">by Aadhaar number</text>
+</g>
+<g class="n svc"><rect x="430" y="135" width="180" height="50" rx="10"/>
+<text x="520.0" y="157.0">Demographic search</text><text class="sub" x="520.0" y="173.0">fuzzy name + DOB</text>
+</g>
+<g class="n svc"><rect x="650" y="135" width="130" height="50" rx="10"/>
+<text x="715.0" y="157.0">Biometric match</text><text class="sub" x="715.0" y="173.0">1:N dedup</text>
+</g>
+<g class="n db"><rect x="20" y="260" width="170" height="50" rx="10"/>
+<text x="105.0" y="282.0">Token vault</text><text class="sub" x="105.0" y="298.0">uid &lt;-&gt; token (HSM)</text>
+</g>
+<g class="n db"><rect x="225" y="260" width="170" height="50" rx="10"/>
+<text x="310.0" y="282.0">Identity store</text><text class="sub" x="310.0" y="298.0">sharded, encrypted</text>
+</g>
+<g class="n db"><rect x="430" y="260" width="190" height="50" rx="10"/>
+<text x="525.0" y="282.0">Search index</text><text class="sub" x="525.0" y="298.0">OpenSearch (no raw PII)</text>
+</g>
+<g class="n db"><rect x="650" y="260" width="130" height="50" rx="10"/>
+<text x="715.0" y="282.0">Template store</text><text class="sub" x="715.0" y="298.0">in-memory shards</text>
+</g>
+<g class="n queue"><rect x="225" y="385" width="150" height="50" rx="10"/>
+<text x="300.0" y="407.0">Audit stream</text><text class="sub" x="300.0" y="423.0">Kafka</text>
+</g>
+<g class="n db"><rect x="420" y="385" width="190" height="50" rx="10"/>
+<text x="515.0" y="407.0">Immutable audit log</text><text class="sub" x="515.0" y="423.0">WORM storage</text>
+</g>
+<g class="n ext"><rect x="20" y="385" width="170" height="50" rx="10"/>
+<text x="105.0" y="407.0">OTP / SMS gateway</text><text class="sub" x="105.0" y="423.0">telecom</text>
+</g>
+</svg><div class="legend"><span><i style="background:color-mix(in srgb,var(--accent) 35%,var(--card))"></i>client</span><span><i style="background:color-mix(in srgb,var(--hot) 18%,var(--card))"></i>edge / protection</span><span><i style="background:color-mix(in srgb,var(--pop) 16%,var(--card))"></i>service</span><span><i style="background:color-mix(in srgb,var(--ok) 20%,var(--card))"></i>data store</span><span><i style="background:color-mix(in srgb,#3B82F6 22%,var(--card))"></i>queue / stream</span><span>solid arrow = sync call &middot; dashed = async event</span></div><h3>Request flow (verify an identity)</h3><ol><li>Agency calls the <b>Secure Gateway</b> over mTLS with a signed request and a registered licence key.</li><li><b>Rate limit + consent</b> check: is this agency allowed, and did the person consent for these fields?</li><li><b>Lookup</b> validates the checksum, converts the number to a <b>token</b>, and reads the encrypted record from the right shard.</li><li><b>Auth</b> sends an OTP, or runs biometric matching, and returns only <b>yes / no</b> plus the consented fields.</li><li>Every call is written to the <b>audit stream</b> and ends up in write-once storage.</li></ol></section>
+<section class="card" id="lookup"><span class="step ">4</span><h2>Deep dive 1: lookup by Aadhaar number</h2><ul><li><b>Validate first.</b> The 12th digit is a <b>Verhoeff checksum</b>. Reject typos without touching a database.</li><li><b>Tokenise.</b> A token vault (backed by an HSM) maps the real number to an internal token. All other systems only see the token.</li><li><b>Shard by hash.</b> <code>shard = hash(token) mod N</code> with consistent hashing, so adding shards moves little data. Each shard has replicas in two data centres.</li><li><b>Field-level encryption.</b> Name, address and DOB are encrypted with per-record keys wrapped by the HSM.</li><li><b>Cache tokens, not PII.</b> Never cache decrypted demographics in shared caches.</li></ul><div class="code"><div class="label">lookup path</div><pre><code>verify(number):
+  if !verhoeff(number): return INVALID
+  token = vault.tokenize(number)          # HSM-backed
+  shard = ring.locate(token)
+  rec   = shard.get(token)                # encrypted blob
+  return mask(decrypt(rec, allowedFields))  # e.g. XXXX XXXX 1234</code></pre></div></section>
+<section class="card" id="search"><span class="step o">5</span><h2>Deep dive 2: demographic (fuzzy) search</h2><p>Authorised agencies sometimes search by <b>name + DOB + locality</b> when the number is unknown. Names are messy: spellings, transliteration, initials.</p><div class="grid"><div class="opt"><b>Blocking keys</b><span><strong>DOB year + first letters + pincode</strong> shrink 1.4B to a few thousand candidates before any fuzzy work.</span></div><div class="opt"><b>Phonetic + n-gram</b><span>Indic-aware phonetic codes and character n-grams match <strong>Sharma / Sarma</strong>, <strong>Mohammad / Mohd</strong>.</span></div><div class="opt"><b>Scoring</b><span>Weighted score on name, DOB, address, gender. Return <strong>top-k with scores</strong>, never a single guess.</span></div><div class="opt"><b>No raw PII in index</b><span>Index holds <strong>hashed / tokenised</strong> tokens plus the record token. Details are fetched from the vault only after authorisation.</span></div></div><div class="note">Search is the <b>enumeration risk</b>. Cap results (e.g. max 5), require consent or legal basis, and rate limit per agency and per user.</div></section>
+<section class="card" id="bio"><span class="step g">6</span><h2>Deep dive 3: biometric dedup (1:N)</h2><p>At enrolment, the new person's fingerprints, iris and face are compared against everyone, to make sure the same person is not enrolled twice.</p><ol><li><b>Extract templates</b> (compact feature vectors) from raw biometrics.</li><li><b>Prune candidates</b> using demographics such as gender and age band. This can cut the search space by 5&ndash;10×.</li><li><b>Scatter-gather</b> across template shards held in memory. Each shard returns its best matches with scores.</li><li><b>Fuse modalities</b> (finger + iris + face) into one score. Multi-modal fusion lowers false matches.</li><li>Above threshold &rarr; <b>possible duplicate</b>, routed to manual adjudication. Below &rarr; enrol.</li></ol><div class="note ok">1:1 authentication (is this the person who owns this number?) is far cheaper than 1:N dedup. Keep them as <b>separate services</b>.</div></section>
+<section class="card" id="sec"><span class="step ">7</span><h2>Security and privacy design</h2><div class="tblwrap"><table><tr><th>Concern</th><th>Control</th></tr><tr><td>Stored numbers</td><td>Tokenisation + HSM-held keys (a vault pattern)</td></tr><tr><td>Data in transit</td><td>mTLS, signed and timestamped requests, replay protection</td></tr><tr><td>Who can ask what</td><td>Per-agency licence, purpose binding, <b>consent artefact</b> per request</td></tr><tr><td>Mass enumeration</td><td>Rate limits, result caps, anomaly detection on query patterns</td></tr><tr><td>Output</td><td>Masked by default, only consented fields returned</td></tr><tr><td>Accountability</td><td>Append-only audit log, tamper-evident, queryable by the citizen</td></tr></table></div></section>
+<section class="card" id="risk"><span class="step o">8</span><h2>Trade-offs and failure handling</h2><ul><li><b>Consistency over availability for identity writes.</b> A duplicate identity is worse than a slow enrolment.</li><li><b>Reads degrade gracefully.</b> If biometrics are down, fall back to OTP; if OTP fails, fall back to a retry window.</li><li><b>Active-active reads, single-writer per shard</b> across regions, with synchronous replication inside a region.</li><li><b>Hot shards are unlikely</b> because tokens are hashes, but one agency can be hot, so rate-limit per agency.</li></ul></section>
+<section class="card" id="qa"><span class="step g">9</span><h2>Interview cheat-sheet</h2><details class="qa"><summary>How do you search 1.4B records quickly?</summary><p>Number lookup is a hash to shard to key read. Fuzzy search uses blocking keys and phonetic n-grams to shrink candidates before scoring.</p></details><details class="qa"><summary>How do you protect the numbers if the DB leaks?</summary><p>Tokenise, encrypt per record with HSM-wrapped keys, keep the token vault separate, and never store raw numbers in logs or indexes.</p></details><details class="qa"><summary>Why is biometric dedup hard?</summary><p>It is 1:N across billions with probabilistic scores. We prune with demographics, shard templates in memory, fuse modalities, and use thresholds plus manual review.</p></details><details class="qa"><summary>How do you stop someone enumerating all numbers?</summary><p>Checksum validation, per-requester rate limits, result caps, consent, and anomaly detection on query patterns.</p></details></section>
+<p class="foot">Personal study notes. Numbers are interview-style assumptions, not official figures.<br><a href="index.html">&larr; All use cases</a> &middot; <a href="../index.html">Home</a></p>
+</main>
+<script src="usecase.js"></script>
+</body>
+</html>

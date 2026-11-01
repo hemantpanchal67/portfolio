@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Netflix System Design</title>
+<meta name="description" content="System design of Netflix: encoding pipeline, Open Connect CDN, adaptive bitrate streaming, recommendations, Cassandra and resilience.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="usecase.css">
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="Toggle theme">&#9680; theme</button>
+<main>
+
+<div class="crumbs"><a href="../index.html">&larr; Home</a><a href="index.html">All use cases</a></div>
+<span class="tag">system design use case</span>
+<h1>Netflix <span class="hot">System Design</span></h1><p class="lead">Design a global video streaming service: from a studio master file to a smooth 4K stream on your TV, with personalised recommendations on top.</p><p class="hand">control plane, CDN data plane, ABR streaming</p>
+<nav class="toc" aria-label="Sections"><a href="#req">requirements</a><a href="#scale">scale</a><a href="#arch">architecture</a><a href="#encode">encoding pipeline</a><a href="#abr">adaptive streaming</a><a href="#oc">open connect</a><a href="#rec">recommendations</a><a href="#data">data and resilience</a><a href="#qa">interview Q&amp;A</a></nav>
+<section class="card" id="req"><span class="step ">1</span><h2>Requirements</h2><p>Two worlds: a <b>control plane</b> (login, browse, recommend, decide what to play) and a <b>data plane</b> (move huge amounts of video quickly).</p><h3>Functional</h3><div class="chips"><span class="chip p">browse + search</span><span class="chip p">play video (adaptive)</span><span class="chip p">resume anywhere</span><span class="chip p">profiles</span><span class="chip p">recommendations</span><span class="chip p">subscriptions + billing</span><span class="chip p">multi-device</span><span class="chip p">downloads</span></div><h3>Non-functional</h3><div class="chips"><span class="chip g">global scale</span><span class="chip g">start in &lt;2s</span><span class="chip g">very high availability</span><span class="chip g">no buffering</span><span class="chip g">cost-efficient delivery</span><span class="chip g">DRM</span></div><div class="note ok">Video bytes are ~95% of the traffic. <b>The CDN is the real hero.</b> The rest is metadata.</div></section>
+<section class="card" id="scale"><span class="step o">2</span><h2>Back-of-the-envelope scale</h2><p>Interview assumptions:</p><div class="tblwrap"><table><tr><th>Item</th><th>Assumption</th><th>Result</th></tr><tr><td>Subscribers</td><td>~250 million</td><td>~100 million daily users</td></tr><tr><td>Peak concurrent streams</td><td>~20 million</td><td>peak evening in many time zones</td></tr><tr><td>Bitrate</td><td>~5 Mbps average</td><td>20M &times; 5 Mbps &asymp; <b>100 Tbps</b></td></tr><tr><td>Catalog</td><td>~20,000 titles</td><td>each stored in ~1,200 encoded files (bitrate &times; codec &times; audio &times; subtitles)</td></tr><tr><td>Viewing events</td><td>~10 per session minute</td><td>billions per day to Kafka</td></tr></table></div><div class="note">100 Tbps cannot come from a few data centres. It has to be served from <b>inside ISP networks</b>.</div></section>
+<section class="card" id="arch"><span class="step g">3</span><h2>High-level architecture</h2><svg class="dg" viewBox="0 0 800 455" role="img" aria-label="Netflix architecture: player, gateway, playback service, microservices, Cassandra, EVCache, Kafka, ML pipeline, encoding pipeline, packager, and Open Connect CDN">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+<line class="e" x1="172.0" y1="37.0" x2="226.0" y2="37.0"/>
+<line class="e" x1="392.0" y1="37.0" x2="446.0" y2="37.0"/>
+<line class="e" x1="262.8" y1="64.0" x2="145.7" y2="131.0"/>
+<line class="e" x1="305.6" y1="64.0" x2="294.7" y2="131.0"/>
+<line class="e" x1="348.4" y1="64.0" x2="443.7" y2="131.0"/>
+<line class="e" x1="577.5" y1="64.0" x2="649.7" y2="116.0"/>
+<text class="el" x="613.6" y="86.0">steer</text>
+<line class="e" x1="172.0" y1="51.0" x2="596.0" y2="127.9"/>
+<text class="el" x="384.0" y="85.5">video chunks</text>
+<line class="e" x1="95.0" y1="187.0" x2="95.0" y2="256.0"/>
+<line class="e" x1="290.0" y1="187.0" x2="290.0" y2="256.0"/>
+<line class="e" x1="442.9" y1="187.0" x2="335.2" y2="256.0"/>
+<line class="e" x1="487.2" y1="187.0" x2="492.7" y2="256.0"/>
+<line class="e async" x1="109.1" y1="64.0" x2="274.8" y2="381.0"/>
+<text class="el" x="192.0" y="218.5">events</text>
+<line class="e async" x1="334.3" y1="383.0" x2="447.4" y2="314.0"/>
+<line class="e" x1="618.0" y1="410.0" x2="589.0" y2="410.0"/>
+<line class="e" x1="539.3" y1="383.0" x2="652.4" y2="314.0"/>
+<line class="e async" x1="698.1" y1="258.0" x2="692.1" y2="174.0"/>
+<text class="el" x="695.1" y="212.0">fill off-peak</text>
+<g class="n client"><rect x="20" y="12" width="150" height="50" rx="10"/>
+<text x="95.0" y="34.0">Player</text><text class="sub" x="95.0" y="50.0">TV / phone / web</text>
+</g>
+<g class="n edge"><rect x="230" y="12" width="160" height="50" rx="10"/>
+<text x="310.0" y="34.0">API Gateway</text><text class="sub" x="310.0" y="50.0">auth, routing</text>
+</g>
+<g class="n svc"><rect x="450" y="12" width="180" height="50" rx="10"/>
+<text x="540.0" y="34.0">Playback service</text><text class="sub" x="540.0" y="50.0">license + steering</text>
+</g>
+<g class="n edge"><rect x="600" y="120" width="180" height="50" rx="10"/>
+<text x="690.0" y="142.0">Open Connect CDN</text><text class="sub" x="690.0" y="158.0">boxes inside ISPs</text>
+</g>
+<g class="n svc"><rect x="20" y="135" width="150" height="50" rx="10"/>
+<text x="95.0" y="157.0">Account / Profile</text><text class="sub" x="95.0" y="173.0">plans, devices</text>
+</g>
+<g class="n svc"><rect x="215" y="135" width="150" height="50" rx="10"/>
+<text x="290.0" y="157.0">Catalog</text><text class="sub" x="290.0" y="173.0">titles, metadata</text>
+</g>
+<g class="n svc"><rect x="405" y="135" width="160" height="50" rx="10"/>
+<text x="485.0" y="157.0">Recommendation</text><text class="sub" x="485.0" y="173.0">ranking, artwork</text>
+</g>
+<g class="n db"><rect x="20" y="260" width="150" height="50" rx="10"/>
+<text x="95.0" y="282.0">Cassandra</text><text class="sub" x="95.0" y="298.0">history, profiles</text>
+</g>
+<g class="n db"><rect x="215" y="260" width="150" height="50" rx="10"/>
+<text x="290.0" y="282.0">EVCache</text><text class="sub" x="290.0" y="298.0">memcached tier</text>
+</g>
+<g class="n svc"><rect x="405" y="260" width="180" height="50" rx="10"/>
+<text x="495.0" y="282.0">ML pipeline</text><text class="sub" x="495.0" y="298.0">Spark batch + nearline</text>
+</g>
+<g class="n queue"><rect x="215" y="385" width="150" height="50" rx="10"/>
+<text x="290.0" y="407.0">Kafka</text><text class="sub" x="290.0" y="423.0">viewing events</text>
+</g>
+<g class="n svc"><rect x="405" y="385" width="180" height="50" rx="10"/>
+<text x="495.0" y="407.0">Encoding pipeline</text><text class="sub" x="495.0" y="423.0">parallel chunks</text>
+</g>
+<g class="n db"><rect x="620" y="385" width="160" height="50" rx="10"/>
+<text x="700.0" y="407.0">Master store</text><text class="sub" x="700.0" y="423.0">S3 originals</text>
+</g>
+<g class="n svc"><rect x="620" y="260" width="160" height="50" rx="10"/>
+<text x="700.0" y="282.0">Packager + DRM</text><text class="sub" x="700.0" y="298.0">DASH / HLS</text>
+</g>
+</svg><div class="legend"><span><i style="background:color-mix(in srgb,var(--accent) 35%,var(--card))"></i>client</span><span><i style="background:color-mix(in srgb,var(--hot) 18%,var(--card))"></i>edge / protection</span><span><i style="background:color-mix(in srgb,var(--pop) 16%,var(--card))"></i>service</span><span><i style="background:color-mix(in srgb,var(--ok) 20%,var(--card))"></i>data store</span><span><i style="background:color-mix(in srgb,#3B82F6 22%,var(--card))"></i>queue / stream</span><span>solid arrow = sync call &middot; dashed = async event</span></div><p class="cap">Simplified from publicly described Netflix architecture.</p><h3>Playback flow</h3><ol><li>Player calls the gateway; <b>Playback service</b> checks the plan, region, device and DRM rights.</li><li>It picks the <b>best Open Connect servers</b> (closest, healthy, holding the title) and returns a manifest with their URLs.</li><li>The player downloads small <b>video chunks directly from the CDN box</b>, not from the cloud.</li><li>While playing, the player sends <b>viewing events</b> to Kafka. They feed resume position and recommendations.</li></ol></section>
+<section class="card" id="encode"><span class="step ">4</span><h2>Deep dive 1: from master file to every screen</h2><ol><li>Studio uploads a high-quality <b>master</b> to object storage.</li><li><b>Split into chunks</b> (by scene or shot) and encode them in <b>parallel</b> on thousands of workers.</li><li>Create a <b>bitrate ladder</b>: many resolutions and bitrates, tuned <b>per title</b> (an animation needs fewer bits than an action film).</li><li><b>Package</b> into DASH / HLS segments, encrypt with <b>DRM</b>.</li><li><b>Push to CDN boxes during off-peak hours</b>, so popular content is already local when evening arrives.</li></ol><div class="note ok">Per-title encoding saves bandwidth with no visible quality loss. At this scale, 10% fewer bits is a very large number.</div></section>
+<section class="card" id="abr"><span class="step o">5</span><h2>Deep dive 2: adaptive bitrate (ABR)</h2><p>Networks fluctuate. The player constantly decides which quality to fetch next.</p><div class="code"><div class="label">player loop (simplified)</div><pre><code>every ~4s chunk:
+  throughput = measure(last downloads)
+  buffer     = seconds of video already downloaded
+  if buffer is low:   pick lower bitrate  (avoid stalls)
+  elif throughput is high and buffer is healthy:  pick higher bitrate
+  request next chunk at that bitrate from the CDN box</code></pre></div><ul><li>Start with a <b>low quality</b> so playback begins in under two seconds, then ramp up.</li><li>Chunks are small and independent, so switching quality mid-stream is seamless.</li><li>If an OCA is slow or fails, the player <b>falls over to another URL</b> from the manifest.</li></ul></section>
+<section class="card" id="oc"><span class="step g">6</span><h2>Deep dive 3: Open Connect CDN</h2><div class="grid"><div class="opt"><b>What it is</b><span>Netflix-owned cache servers placed <strong>inside ISP data centres</strong> or at internet exchanges.</span></div><div class="opt"><b>Why</b><span>Traffic stays inside the ISP. The ISP saves transit cost, and the user gets a short, fast path.</span></div><div class="opt"><b>Fill strategy</b><span>Popular titles are pre-loaded <strong>overnight</strong>. Long-tail titles come from regional hubs.</span></div><div class="opt"><b>Steering</b><span>Playback service ranks boxes by <strong>health, load, proximity and content availability</strong>.</span></div></div></section>
+<section class="card" id="rec"><span class="step ">7</span><h2>Deep dive 4: recommendations and personalisation</h2><ul><li><b>Offline (batch):</b> Spark jobs train models on viewing history for the whole base.</li><li><b>Nearline:</b> events from Kafka update user features within minutes.</li><li><b>Online:</b> at request time, rank a pre-computed candidate list using fresh context (time, device).</li><li><b>Personalised artwork:</b> the same title can show different posters for different users.</li><li>Results are cached in <b>EVCache</b>, so the home page loads from memory, not from ML at request time.</li></ul></section>
+<section class="card" id="data"><span class="step o">8</span><h2>Data model and resilience</h2><div class="code"><div class="label">viewing history (Cassandra, wide row)</div><pre><code>PRIMARY KEY ((user_id, profile_id), watched_at DESC)
+columns: title_id, episode_id, position_seconds, device, completed
+
+-- resume playback = latest row for (profile, title)
+-- partition by user: writes are fast and spread evenly</code></pre></div><div class="tblwrap"><table><tr><th>Technique</th><th>Purpose</th></tr><tr><td>Multi-region active-active</td><td>A whole region can fail; traffic shifts to others</td></tr><tr><td>Circuit breakers / timeouts</td><td>A slow recommendation service must not block playback</td></tr><tr><td>Fallbacks</td><td>If personalisation fails, show a generic popular list</td></tr><tr><td>Chaos engineering</td><td>Randomly kill instances to prove the system tolerates it</td></tr><tr><td>EVCache replication</td><td>Cache survives node and zone loss</td></tr></table></div></section>
+<section class="card" id="qa"><span class="step g">9</span><h2>Interview cheat-sheet</h2><details class="qa"><summary>Why does Netflix run its own CDN?</summary><p>Video is most of the traffic. Putting cache boxes inside ISPs cuts transit cost, shortens the path, and gives control over quality.</p></details><details class="qa"><summary>How does playback start so fast?</summary><p>Start at low bitrate from a nearby CDN box, small chunks, and ramp up as the buffer fills.</p></details><details class="qa"><summary>What if the recommendation service is down?</summary><p>Circuit breaker opens, the home page falls back to cached or generic rows. Playback is unaffected.</p></details><details class="qa"><summary>How do you store viewing history?</summary><p>Cassandra, partitioned by user and profile with time-ordered rows. Write-heavy, easy to scale, simple resume lookup.</p></details></section>
+<p class="foot">Personal study notes. Numbers are interview-style assumptions, not official figures.<br><a href="index.html">&larr; All use cases</a> &middot; <a href="../index.html">Home</a></p>
+</main>
+<script src="usecase.js"></script>
+</body>
+</html>

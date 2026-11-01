@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>System Design Use Cases</title>
+<meta name="description" content="System design walkthroughs: IRCTC, Aadhaar search, BookMyShow and Netflix.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="usecase.css">
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="Toggle theme">&#9680; theme</button>
+<main>
+
+<div class="crumbs"><a href="../index.html">&larr; Home</a><a href="../notes/index.html">Notes</a></div>
+<span class="tag">interview prep</span><h1>System Design <span class="hot">Use Cases</span></h1><p class="lead">Real-world designs explained step by step: requirements, scale, diagram, deep dives and interview Q&amp;A.</p><p class="hand">pick a use case</p>
+<ul class="list">
+<li><a class="uc-card" href="irctc-ticket-booking.html"><div class="row"><div class="ico" aria-hidden="true">🚆</div><div class="t"><h2>IRCTC Ticket Booking</h2><p>Seat inventory by segment, Tatkal rush, waiting room, payment saga and waitlist promotion.</p></div><div class="go" aria-hidden="true">&rarr;</div></div><div class="chips"><span class="chip">inventory</span><span class="chip">tatkal</span><span class="chip">saga</span></div></a></li>
+<li><a class="uc-card" href="aadhaar-card-search.html"><div class="row"><div class="ico" aria-hidden="true">🪪</div><div class="t"><h2>Aadhaar Card Search</h2><p>Number lookup, fuzzy demographic search, biometric 1:N dedup, tokenisation and audit.</p></div><div class="go" aria-hidden="true">&rarr;</div></div><div class="chips"><span class="chip">search</span><span class="chip">privacy</span><span class="chip">biometrics</span></div></a></li>
+<li><a class="uc-card" href="book-my-show.html"><div class="row"><div class="ico" aria-hidden="true">🎟️</div><div class="t"><h2>BookMyShow</h2><p>Seat map, atomic multi-seat holds in Redis, hot releases and live seat updates.</p></div><div class="go" aria-hidden="true">&rarr;</div></div><div class="chips"><span class="chip">seat lock</span><span class="chip">redis</span><span class="chip">websocket</span></div></a></li>
+<li><a class="uc-card" href="netflix.html"><div class="row"><div class="ico" aria-hidden="true">🎬</div><div class="t"><h2>Netflix</h2><p>Encoding pipeline, Open Connect CDN, adaptive bitrate and recommendations.</p></div><div class="go" aria-hidden="true">&rarr;</div></div><div class="chips"><span class="chip">cdn</span><span class="chip">abr</span><span class="chip">cassandra</span></div></a></li>
+</ul><p class="foot">More use cases coming soon.</p>
+</main>
+<script src="usecase.js"></script>
+</body>
+</html>

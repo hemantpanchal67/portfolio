@@ -1753,3 +1753,66 @@ section {
     flex-direction: column;
   }
 }
+
+/* ==========================================================================
+   SYSTEM DESIGN USE CASES
+   ========================================================================== */
+.usecase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.usecase-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.6rem;
+  box-shadow: var(--shadow-md);
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--transition-fast);
+}
+
+.usecase-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+.usecase-icon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.usecase-card h3 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.usecase-card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0;
+  flex: 1;
+}
+
+.usecase-link {
+  color: var(--accent-secondary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.usecase-all {
+  margin-top: 1.5rem;
+  text-align: right;
+}
+
+.usecase-all a {
+  color: var(--accent-secondary);
+  font-weight: 600;
+  text-decoration: none;
+}
