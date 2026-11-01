@@ -129,6 +129,7 @@
     <a href="#deploy">deployment</a>
     <a href="#volume">volume</a>
     <a href="#recap">recap</a>
+    <a href="#credits">sources</a>
   </nav>
 
   <section class="card" id="what">
@@ -170,8 +171,8 @@
     <h2>Kubernetes – behind the scenes</h2>
     <p>Developers rarely need the internals, but you can be tested on this in an <b>interview</b>. A basic understanding of the architecture sets you apart.</p>
     <p>Kubernetes is deployed as a <b>cluster</b> with two main parts: the <b>Master Node</b> and <b>Worker Nodes</b>.</p>
-    <img class="wide" src="img/k8s-architecture.png" alt="High-level Kubernetes cluster architecture: master node control plane and worker nodes" loading="lazy">
-    <p class="cap">High-level architecture of a Kubernetes cluster.</p>
+    <img class="wide" src="img/k8s-architecture-overview-v2.jpeg" alt="Kubernetes architecture: UI and CLI talk to the control plane (API server, scheduler, controller manager, etcd), which manages worker nodes running pods via containerd, kubelet and kube-proxy" loading="lazy">
+    <p class="cap">Kubernetes architecture: control plane on top, worker nodes below. Diagram: The System Design Newsletter.</p>
 
     <h3>Master Node <span class="hand">(the manager)</span></h3>
     <p>Hosts the <b>Control Plane</b>, the entity that controls the entire cluster.</p>
@@ -191,6 +192,36 @@
       <tr><td><code>kubelet</code></td><td>Talks to the API server and manages containers; makes sure the node operates according to the configuration.</td></tr>
       <tr><td><code>kube-proxy</code></td><td>Communication of pods within the cluster and to the outside network.</td></tr>
     </table>
+    <div class="note ok">Control plane decides <b>what runs where</b>. Worker nodes <b>run the containers</b>. Production clusters usually have many of both, so the system survives machine failures and moves workloads off failed nodes.</div>
+
+    <h3>Desired state vs actual state <span class="hand">(the big idea)</span></h3>
+    <p>You don't start apps yourself. You tell Kubernetes what the system should look like, e.g. <b>3 replicas</b>. That is the <b>desired state</b>. What is currently running is the <b>actual state</b>.</p>
+    <p>Kubernetes keeps comparing the two. If an app crashes or a node fails, it creates a new one on a healthy node. This ongoing check-and-fix is the <b>reconciliation loop</b>, and it is what makes Kubernetes <b>self-healing</b>.</p>
+    <img class="wide" src="img/k8s-reconciliation-loop-v2.jpeg" alt="Reconciliation loop comparing desired state with actual state" loading="lazy">
+    <p class="cap">Reconciliation loop. Diagram: The System Design Newsletter.</p>
+
+    <h3>Control plane in depth</h3>
+    <p>The control plane has five components. Components never talk to each other directly. They all read and update state through the <b>API server</b>.</p>
+    <table>
+      <tr><th>Component</th><th>What to remember</th></tr>
+      <tr><td><code>kube-apiserver</code></td><td>Central hub and the only entry point from outside (<code>kubectl</code> sends HTTPS requests to it). Does authentication, then authorization, notifies components of changes, and is the only one that reads/writes etcd. Traffic is encrypted with TLS.</td></tr>
+      <tr><td><code>etcd</code></td><td>Distributed key-value store and the <b>single source of truth</b>: Pods, Deployments, Services, Nodes, ConfigMaps, Secrets. Lose it and the cluster loses its state, so <b>back it up regularly</b>. Backups enable cluster recovery.</td></tr>
+      <tr><td><code>kube-scheduler</code></td><td>Picks the node for a Pod; it doesn't run it. Watches for unassigned Pods, <b>filters</b> out unfit nodes (not enough CPU/memory/GPU, under maintenance), <b>scores</b> the rest, then writes the chosen node to the Pod via the API server. The kubelet on that node runs it.</td></tr>
+      <tr><td><code>kube-controller-manager</code></td><td>Runs many controllers as control loops that compare actual vs desired state via the API server and correct drift. Enables self-healing, auto-scaling and rolling updates.</td></tr>
+      <tr><td><code>cloud-controller-manager</code></td><td>Connects Kubernetes to the cloud provider (load balancers, storage volumes, VMs for nodes). Keeps cloud-specific logic out of core code, so Kubernetes stays cloud-agnostic (AWS, GCP, Azure, on-prem).</td></tr>
+    </table>
+
+    <h3>Built-in controllers</h3>
+    <table>
+      <tr><td><b>Node</b></td><td>Detects node failures and responds.</td></tr>
+      <tr><td><b>Replication</b></td><td>Keeps the right number of Pod replicas running.</td></tr>
+      <tr><td><b>Deployment</b></td><td>Handles rolling updates and keeps Deployments at desired state.</td></tr>
+      <tr><td><b>Endpoint</b></td><td>Updates a Service's endpoints when Pods change.</td></tr>
+      <tr><td><b>Namespace</b></td><td>Manages namespace lifecycle and cleanup.</td></tr>
+      <tr><td><b>Service Account</b></td><td>Creates and manages service accounts and tokens.</td></tr>
+      <tr><td><b>Job</b></td><td>Ensures jobs complete successfully.</td></tr>
+    </table>
+    <p class="cap">Extra concepts from "Kubernetes Architecture" in The System Design Newsletter (Neo Kim, guest author Ayaan). Kubernetes itself descends from Google's internal system, Borg.</p>
   </section>
 
   <section class="card" id="pods">
@@ -354,7 +385,19 @@ spec:
     </ul>
   </section>
 
-  <p class="foot">Source: <a href="https://newsletter.systemdesigncodex.com/p/practical-intro-to-kubernetes">System Design Codex · SDC#25</a> by Saurabh Dashora.<br>Diagrams © the author (made on Eraser.io).</p>
+  <section class="card" id="credits">
+    <span class="step g">9</span>
+    <h2>Sources &amp; credits</h2>
+    <p>These are my personal study notes. The content and diagrams come from the articles below. All credit goes to their authors; please read the originals and subscribe.</p>
+    <ul>
+      <li><a href="https://newsletter.systemdesigncodex.com/p/practical-intro-to-kubernetes" target="_blank" rel="noopener">Practical Intro to Kubernetes</a> (SDC#25), <b>System Design Codex</b> by <b>Saurabh Dashora</b>. Source of the main structure, YAML examples and the workflow, pod, service, deployment and volume diagrams (made on Eraser.io).</li>
+      <li><a href="https://newsletter.systemdesign.one/p/kubernetes-architecture" target="_blank" rel="noopener">Kubernetes Architecture</a>, <b>The System Design Newsletter</b> by <b>Neo Kim</b>, with guest author <b>Ayaan</b>. Source of the architecture and reconciliation loop diagrams and the control plane concepts.</li>
+      <li>Page design inspired by the <a href="https://getanimo.io/blog/reel-studio-kit" target="_blank" rel="noopener">Reel Studio Kit</a> post on getanimo.io.</li>
+    </ul>
+    <p class="cap">Diagrams and original text © their respective authors. Shared here for personal learning, not for commercial use.</p>
+  </section>
+
+  <p class="foot">Sources: <a href="https://newsletter.systemdesigncodex.com/p/practical-intro-to-kubernetes" target="_blank" rel="noopener">System Design Codex</a> · <a href="https://newsletter.systemdesign.one/p/kubernetes-architecture" target="_blank" rel="noopener">The System Design Newsletter</a></p>
 </main>
 <script>
   (function () {
