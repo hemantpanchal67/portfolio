@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tamper-Proof Database Scenario</title>
+<meta name="description" content="Scenario-based system design: tamper-proof (tamper-evident) database using an append-only ledger, hash chain, Merkle tree and anchoring.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="usecase.css">
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="Toggle theme">&#9680; theme</button>
+<main>
+
+<div class="crumbs"><a href="../index.html">&larr; Home</a><a href="index.html">All use cases</a></div>
+<span class="tag">system design use case</span>
+<h1>Tamper-Proof Database <span class="hot">Scenario</span></h1><p class="lead">Regulators want proof that records were never altered, even by admins. The answer: an append-only, hash-chained ledger with externally anchored roots.</p><p class="hand">append-only ledger, hash chain, Merkle anchoring</p>
+<nav class="toc" aria-label="Sections"><a href="#sc">scenario</a><a href="#why">idea</a><a href="#arch">architecture</a><a href="#code">implementation</a><a href="#opt">options</a><a href="#ops">operations</a><a href="#qa">follow-ups</a></nav>
+<section class="card" id="sc"><span class="step ">1</span><h2>The scenario</h2><div class="note"><b>Scenario question</b><br>A bank must keep an <b>audit trail of every balance change</b>. Regulators demand proof that records have <b>not been altered or deleted</b>, even by a privileged DBA or by the bank's own engineers, and that the bank can <b>prove this to an outsider</b>. How do you design the database?</div><h3>Clues in the question that point to this answer</h3><div class="chips"><span class="chip p">audit / regulatory evidence</span><span class="chip p">even admins must not alter data</span><span class="chip p">prove integrity to a third party</span><span class="chip p">history must be complete</span><span class="chip p">detect any change</span></div><details class="qa"><summary>Think first: what would you answer?</summary><p>Try to name the pattern and one reason for each clue above. Then read on.</p></details><div class="note ok"><b>Answer in one line:</b> A <b>tamper-evident, append-only ledger</b>: every entry is hash-chained and signed, batches are rolled into a Merkle tree, and the root hash is <b>anchored outside</b> the database.</div></section>
+<section class="card" id="why"><span class="step o">2</span><h2>Tamper-proof vs tamper-evident</h2><p>No database can make an admin <i>physically unable</i> to touch disks. What we can do is make <b>any change detectable</b> and <b>provable</b>.</p><div class="tblwrap"><table><tr><th>Goal</th><th>Technique</th></tr><tr><td>Prevent updates and deletes</td><td>Insert-only table, revoke UPDATE / DELETE, triggers that reject changes</td></tr><tr><td>Detect edits to old rows</td><td><b>Hash chain</b>: each row stores the hash of the previous row</td></tr><tr><td>Detect deleted rows</td><td>Sequence numbers with no gaps, plus the chain</td></tr><tr><td>Prove it to outsiders</td><td><b>Merkle root</b> published to something the bank cannot rewrite</td></tr><tr><td>Prove who wrote it</td><td>Digital signatures with keys in an HSM</td></tr><tr><td>Keep copies safe</td><td>WORM (write once read many) storage, object lock, replicas in other accounts</td></tr></table></div></section>
+<section class="card" id="arch"><span class="step g">3</span><h2>Architecture</h2><svg class="dg" viewBox="0 0 800 455" role="img" aria-label="Tamper-proof database: application, ledger writer with signing, append-only hash-chained ledger, Merkle batcher, anchoring to WORM storage and external notary, verifier, auditor, alerting">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+<line class="e" x1="202.0" y1="37.0" x2="256.0" y2="37.0"/>
+<line class="e" x1="452.0" y1="37.0" x2="536.0" y2="37.0"/>
+<text class="el" x="494.0" y="33.0">sign</text>
+<line class="e" x1="356.1" y1="64.0" x2="358.8" y2="131.0"/>
+<line class="e async" x1="462.0" y1="160.0" x2="536.0" y2="160.0"/>
+<line class="e async" x1="655.0" y1="187.0" x2="655.0" y2="256.0"/>
+<text class="el" x="655.0" y="217.5">anchor root</text>
+<line class="e" x1="360.0" y1="258.0" x2="360.0" y2="189.0"/>
+<line class="e" x1="462.0" y1="285.0" x2="536.0" y2="285.0"/>
+<line class="e async" x1="360.0" y1="312.0" x2="360.0" y2="381.0"/>
+<line class="e" x1="212.0" y1="285.0" x2="256.0" y2="285.0"/>
+<line class="e async" x1="258.0" y1="160.0" x2="214.0" y2="160.0"/>
+<g class="n client"><rect x="20" y="12" width="180" height="50" rx="10"/>
+<text x="110.0" y="34.0">Application</text><text class="sub" x="110.0" y="50.0">append only API</text>
+</g>
+<g class="n svc"><rect x="260" y="12" width="190" height="50" rx="10"/>
+<text x="355.0" y="34.0">Ledger writer</text><text class="sub" x="355.0" y="50.0">hash + sign entry</text>
+</g>
+<g class="n ext"><rect x="540" y="12" width="230" height="50" rx="10"/>
+<text x="655.0" y="34.0">HSM / KMS</text><text class="sub" x="655.0" y="50.0">signing key</text>
+</g>
+<g class="n db"><rect x="260" y="135" width="200" height="50" rx="10"/>
+<text x="360.0" y="157.0">Ledger table</text><text class="sub" x="360.0" y="173.0">append-only, hash chain</text>
+</g>
+<g class="n svc"><rect x="540" y="135" width="230" height="50" rx="10"/>
+<text x="655.0" y="157.0">Merkle batcher</text><text class="sub" x="655.0" y="173.0">root hash per block</text>
+</g>
+<g class="n db"><rect x="540" y="260" width="230" height="50" rx="10"/>
+<text x="655.0" y="282.0">Anchor</text><text class="sub" x="655.0" y="298.0">WORM storage + external notary</text>
+</g>
+<g class="n svc"><rect x="260" y="260" width="200" height="50" rx="10"/>
+<text x="360.0" y="282.0">Verifier job</text><text class="sub" x="360.0" y="298.0">recompute and compare</text>
+</g>
+<g class="n client"><rect x="20" y="260" width="190" height="50" rx="10"/>
+<text x="115.0" y="282.0">Auditor</text><text class="sub" x="115.0" y="298.0">gets proof for any entry</text>
+</g>
+<g class="n db"><rect x="20" y="135" width="190" height="50" rx="10"/>
+<text x="115.0" y="157.0">Replica / backups</text><text class="sub" x="115.0" y="173.0">object lock enabled</text>
+</g>
+<g class="n queue"><rect x="260" y="385" width="200" height="50" rx="10"/>
+<text x="360.0" y="407.0">Alert</text><text class="sub" x="360.0" y="423.0">mismatch = incident</text>
+</g>
+</svg><div class="legend"><span><i style="background:color-mix(in srgb,var(--accent) 35%,var(--card))"></i>client</span><span><i style="background:color-mix(in srgb,var(--hot) 18%,var(--card))"></i>edge / protection</span><span><i style="background:color-mix(in srgb,var(--pop) 16%,var(--card))"></i>service</span><span><i style="background:color-mix(in srgb,var(--ok) 20%,var(--card))"></i>data store</span><span><i style="background:color-mix(in srgb,#3B82F6 22%,var(--card))"></i>queue / stream</span><span>solid arrow = sync call &middot; dashed = async event</span></div><h3>How it works</h3><ol><li>The application calls an <b>append-only API</b>. There is no update or delete endpoint.</li><li>The <b>ledger writer</b> computes <code>hash = SHA-256(prev_hash + payload + timestamp)</code> and <b>signs</b> it with an HSM key.</li><li>The entry is inserted into the <b>ledger table</b>. Database permissions allow INSERT and SELECT only.</li><li>Every N seconds the <b>Merkle batcher</b> builds a Merkle tree over new entries and produces one <b>root hash</b>.</li><li>The root hash is <b>anchored</b> in write-once storage and an external notary (a trusted timestamp service or a public ledger).</li><li>A <b>verifier job</b> recomputes the chain and roots, and compares them with the anchors. Any difference raises an alert.</li></ol></section>
+<section class="card" id="code"><span class="step ">4</span><h2>Implementation</h2><div class="code"><div class="label">hash-chained, insert-only ledger (PostgreSQL)</div><pre><code>CREATE TABLE ledger (
+  seq        bigint      PRIMARY KEY,          -- strictly increasing, no gaps
+  account_id bigint      NOT NULL,
+  payload    jsonb       NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  prev_hash  bytea       NOT NULL,
+  row_hash   bytea       NOT NULL,             -- SHA-256(prev_hash || payload || created_at)
+  signature  bytea       NOT NULL              -- signed by HSM key
+);
+
+REVOKE UPDATE, DELETE, TRUNCATE ON ledger FROM app_user, dba_user;
+
+CREATE FUNCTION no_change() RETURNS trigger AS $$
+BEGIN RAISE EXCEPTION 'ledger is append-only'; END $$ LANGUAGE plpgsql;
+CREATE TRIGGER ledger_no_update BEFORE UPDATE OR DELETE ON ledger
+  FOR EACH ROW EXECUTE FUNCTION no_change();</code></pre></div><div class="code"><div class="label">verification</div><pre><code>for each row in ledger order by seq:
+    assert row.seq == expected_seq                      # no deleted rows
+    assert row.prev_hash == previous.row_hash           # chain unbroken
+    assert row.row_hash == sha256(row.prev_hash + row.payload + row.created_at)
+    assert verify_signature(row.signature, row.row_hash, public_key)
+compare merkle_root(block) with the anchored copy       # catches full-chain rewrites</code></pre></div><div class="note ok">A clever insider could rewrite <b>every</b> row and recompute the whole chain. Only the <b>externally anchored roots</b> expose that. That is why anchoring matters.</div></section>
+<section class="card" id="opt"><span class="step o">5</span><h2>Technology options</h2><div class="tblwrap"><table><tr><th>Option</th><th>Good for</th><th>Notes</th></tr><tr><td>Hash-chained table in your SQL DB</td><td>Full control, cheapest</td><td>You build verification and anchoring</td></tr><tr><td>Ledger features in SQL databases (e.g. SQL Server / Azure SQL ledger)</td><td>Built-in tamper evidence and digests</td><td>Vendor specific</td></tr><tr><td>Purpose-built immutable DB (e.g. immudb)</td><td>Cryptographic proofs out of the box</td><td>Another system to run</td></tr><tr><td>WORM object storage (S3 Object Lock, compliance mode)</td><td>Immutable audit files and anchors</td><td>Great for exports, not for queries</td></tr><tr><td>Blockchain</td><td>Multiple mutually distrusting parties</td><td>Usually overkill for a single organisation</td></tr></table></div></section>
+<section class="card" id="ops"><span class="step g">6</span><h2>Operational must-haves</h2><ul><li><b>Separate duties:</b> the people who run the database cannot hold the signing keys or the anchor store credentials.</li><li><b>Corrections are new entries.</b> Never edit. Reverse with a compensating entry that references the original.</li><li><b>Privacy:</b> do not put raw PII in an immutable store (GDPR erasure). Store a hash or a pointer, or encrypt per subject and destroy the key.</li><li><b>Time:</b> use a trusted timestamp so the anchored time is believable.</li><li><b>Performance:</b> chain per account or per shard so writers do not serialise on one global chain.</li></ul></section>
+<section class="card" id="qa"><span class="step ">7</span><h2>Follow-up questions</h2><details class="qa"><summary>Can't the DBA just rewrite the whole chain?</summary><p>Yes, within the database. That is why root hashes are anchored in write-once storage and an external notary, and why signing keys sit in an HSM the DBA cannot use.</p></details><details class="qa"><summary>How do you prove one entry is genuine without sharing the whole ledger?</summary><p>Give the auditor a <b>Merkle proof</b> (the sibling hashes up to the anchored root). They verify it without seeing other rows.</p></details><details class="qa"><summary>How do you handle a mistake?</summary><p>Append a correcting entry that references the original. History stays intact, current balance is derived from all entries.</p></details><details class="qa"><summary>Hash chain vs blockchain?</summary><p>A hash chain with anchoring gives tamper evidence for one organisation. A blockchain adds consensus between parties who do not trust each other.</p></details></section>
+<p class="foot">Personal study notes. Numbers are interview-style assumptions, not official figures.<br><a href="index.html">&larr; All use cases</a> &middot; <a href="../index.html">Home</a></p>
+</main>
+<script src="usecase.js"></script>
+</body>
+</html>

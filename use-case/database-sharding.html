@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Database Sharding Scenario</title>
+<meta name="description" content="Scenario-based system design: when to use database sharding, shard key selection, virtual shards, resharding and cross-shard queries.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="usecase.css">
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="Toggle theme">&#9680; theme</button>
+<main>
+
+<div class="crumbs"><a href="../index.html">&larr; Home</a><a href="index.html">All use cases</a></div>
+<span class="tag">system design use case</span>
+<h1>Database Sharding <span class="hot">Scenario</span></h1><p class="lead">One database has hit its limit on writes and size. The answer: shard it, and pick the shard key carefully.</p><p class="hand">shard key, router, resharding</p>
+<nav class="toc" aria-label="Sections"><a href="#sc">scenario</a><a href="#why">sharding vs</a><a href="#arch">architecture</a><a href="#key">shard key</a><a href="#pain">challenges</a><a href="#alt">alternatives</a><a href="#qa">follow-ups</a></nav>
+<section class="card" id="sc"><span class="step ">1</span><h2>The scenario</h2><div class="note"><b>Scenario question</b><br>An e-commerce platform stores <b>800 million orders (12 TB)</b> on one PostgreSQL primary. CPU is at 90%, writes hit <b>20,000/sec</b>, and bigger hardware is no longer enough. 95% of queries filter by <b>customer_id</b>. How do you scale the database?</div><h3>Clues in the question that point to this answer</h3><div class="chips"><span class="chip p">single DB at its limit</span><span class="chip p">write throughput is the bottleneck</span><span class="chip p">data too big for one machine</span><span class="chip p">queries have a clear key (customer_id)</span><span class="chip p">scale-up already tried</span></div><details class="qa"><summary>Think first: what would you answer?</summary><p>Try to name the pattern and one reason for each clue above. Then read on.</p></details><div class="note ok"><b>Answer in one line:</b> <b>Database sharding</b>: split the data horizontally across many databases by <code>customer_id</code>, with a router in front.</div></section>
+<section class="card" id="why"><span class="step o">2</span><h2>Why sharding (and not the other fixes)?</h2><div class="tblwrap"><table><tr><th>Fix</th><th>Helps</th><th>Does not help</th></tr><tr><td>Bigger server (scale up)</td><td>Everything, briefly</td><td>Has a ceiling and cost explodes</td></tr><tr><td>Read replicas</td><td><b>Reads</b></td><td>Writes still go to one primary</td></tr><tr><td>Caching</td><td>Hot reads</td><td>Writes and data size unchanged</td></tr><tr><td>Partitioning (one server)</td><td>Large tables, retention</td><td>Still one machine's CPU / disk</td></tr><tr><td><b>Sharding</b></td><td><b>Writes, data size, throughput</b></td><td>Adds complexity (cross-shard queries, resharding)</td></tr></table></div><div class="note ok">Rule of thumb: <b>replicas for reads, sharding for writes and size</b>.</div></section>
+<section class="card" id="arch"><span class="step g">3</span><h2>Architecture</h2><svg class="dg" viewBox="0 0 800 460" role="img" aria-label="Database sharding: application, shard router with shard map, three shards each with a replica, CDC stream to analytics, ID generator">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+<line class="e" x1="182.0" y1="37.0" x2="246.0" y2="37.0"/>
+<line class="e" x1="100.0" y1="64.0" x2="100.0" y2="81.0"/>
+<line class="e" x1="452.0" y1="37.0" x2="516.0" y2="37.0"/>
+<line class="e" x1="309.9" y1="64.0" x2="173.1" y2="156.0"/>
+<line class="e" x1="359.1" y1="64.0" x2="390.2" y2="156.0"/>
+<line class="e" x1="408.4" y1="64.0" x2="607.3" y2="156.0"/>
+<line class="e async" x1="130.0" y1="212.0" x2="130.0" y2="276.0"/>
+<text class="el" x="130.0" y="240.0">repl</text>
+<line class="e async" x1="400.0" y1="212.0" x2="400.0" y2="276.0"/>
+<text class="el" x="400.0" y="240.0">repl</text>
+<line class="e async" x1="670.0" y1="212.0" x2="670.0" y2="276.0"/>
+<text class="el" x="670.0" y="240.0">repl</text>
+<line class="e async" x1="400.0" y1="332.0" x2="400.0" y2="396.0"/>
+<line class="e async" x1="502.0" y1="425.0" x2="566.0" y2="425.0"/>
+<g class="n client"><rect x="20" y="12" width="160" height="50" rx="10"/>
+<text x="100.0" y="34.0">Application</text><text class="sub" x="100.0" y="50.0">order service</text>
+</g>
+<g class="n svc"><rect x="20" y="85" width="160" height="42" rx="10"/>
+<text x="100.0" y="103.0">ID generator</text><text class="sub" x="100.0" y="119.0">Snowflake-style</text>
+</g>
+<g class="n edge"><rect x="250" y="12" width="200" height="50" rx="10"/>
+<text x="350.0" y="34.0">Shard router</text><text class="sub" x="350.0" y="50.0">Vitess / Citus / proxy</text>
+</g>
+<g class="n db"><rect x="520" y="12" width="200" height="50" rx="10"/>
+<text x="620.0" y="34.0">Shard map</text><text class="sub" x="620.0" y="50.0">key range / hash -&gt; shard</text>
+</g>
+<g class="n db"><rect x="30" y="160" width="200" height="50" rx="10"/>
+<text x="130.0" y="182.0">Shard 1</text><text class="sub" x="130.0" y="198.0">customers 0-33%</text>
+</g>
+<g class="n db"><rect x="300" y="160" width="200" height="50" rx="10"/>
+<text x="400.0" y="182.0">Shard 2</text><text class="sub" x="400.0" y="198.0">customers 33-66%</text>
+</g>
+<g class="n db"><rect x="570" y="160" width="200" height="50" rx="10"/>
+<text x="670.0" y="182.0">Shard 3</text><text class="sub" x="670.0" y="198.0">customers 66-100%</text>
+</g>
+<g class="n db"><rect x="30" y="280" width="200" height="50" rx="10"/>
+<text x="130.0" y="302.0">Replica 1</text><text class="sub" x="130.0" y="318.0">reads + failover</text>
+</g>
+<g class="n db"><rect x="300" y="280" width="200" height="50" rx="10"/>
+<text x="400.0" y="302.0">Replica 2</text><text class="sub" x="400.0" y="318.0">reads + failover</text>
+</g>
+<g class="n db"><rect x="570" y="280" width="200" height="50" rx="10"/>
+<text x="670.0" y="302.0">Replica 3</text><text class="sub" x="670.0" y="318.0">reads + failover</text>
+</g>
+<g class="n queue"><rect x="300" y="400" width="200" height="50" rx="10"/>
+<text x="400.0" y="422.0">CDC stream</text><text class="sub" x="400.0" y="438.0">Kafka</text>
+</g>
+<g class="n db"><rect x="570" y="400" width="200" height="50" rx="10"/>
+<text x="670.0" y="422.0">Analytics / search</text><text class="sub" x="670.0" y="438.0">cross-shard queries</text>
+</g>
+</svg><div class="legend"><span><i style="background:color-mix(in srgb,var(--accent) 35%,var(--card))"></i>client</span><span><i style="background:color-mix(in srgb,var(--hot) 18%,var(--card))"></i>edge / protection</span><span><i style="background:color-mix(in srgb,var(--pop) 16%,var(--card))"></i>service</span><span><i style="background:color-mix(in srgb,var(--ok) 20%,var(--card))"></i>data store</span><span><i style="background:color-mix(in srgb,#3B82F6 22%,var(--card))"></i>queue / stream</span><span>solid arrow = sync call &middot; dashed = async event</span></div><h3>How it works</h3><ol><li>Pick a <b>shard key</b>: <code>customer_id</code>. All of a customer's orders live together, so most queries hit <b>one shard</b>.</li><li>The <b>router</b> hashes the key and consults the <b>shard map</b> to find the right database.</li><li>Each shard has <b>replicas</b> for reads and failover.</li><li>Cross-shard questions (reports, search) are served from a separate <b>analytics store</b> fed by CDC, not by scatter-gather on production.</li><li>New row ids come from a <b>global ID generator</b>, since auto-increment is no longer unique across shards.</li></ol></section>
+<section class="card" id="key"><span class="step ">4</span><h2>Choosing the shard key</h2><div class="grid"><div class="opt"><b>Hash of key</b><span><strong>Even distribution</strong>. Range queries on the key become scatter-gather. Best default.</span></div><div class="opt"><b>Range of key</b><span><strong>Easy range scans</strong> but risk of hot shards (e.g. latest date).</span></div><div class="opt"><b>Directory (lookup table)</b><span><strong>Flexible</strong>: move any tenant anywhere. Extra lookup and a new single point of failure.</span></div><div class="opt"><b>Geo / tenant</b><span>Whole tenant or country on one shard. Good for isolation and residency, risk of uneven size.</span></div></div><div class="note">A good key has <b>high cardinality</b>, <b>even spread</b>, and appears in <b>most queries</b>. Never shard by a low-cardinality column like <code>status</code> or <code>country</code> alone.</div><div class="code"><div class="label">routing with virtual shards</div><pre><code>VIRTUAL_SHARDS = 1024                       # many more than physical servers
+vshard = hash(customer_id) % VIRTUAL_SHARDS
+server = shard_map[vshard]                  # e.g. vshard 0..341 -&gt; shard1
+# Resharding = move some virtual shards to a new server; no re-hash of data</code></pre></div></section>
+<section class="card" id="pain"><span class="step o">5</span><h2>The painful parts (and fixes)</h2><div class="tblwrap"><table><tr><th>Problem</th><th>Fix</th></tr><tr><td>Cross-shard joins</td><td>Denormalise, co-locate related tables on the same key, or use CDC into an analytics store</td></tr><tr><td>Cross-shard transactions</td><td>Avoid. Use <b>sagas</b> and idempotent steps; design so one request touches one shard</td></tr><tr><td>Unique IDs</td><td>Snowflake-style (time + shard + sequence) or UUIDv7</td></tr><tr><td>Hot shard (one giant customer)</td><td>Split that tenant, add a sub-key, or give it a dedicated shard</td></tr><tr><td>Resharding</td><td>Virtual shards, dual-write then cut over, verify with checksums</td></tr><tr><td>Schema change</td><td>Run migrations shard by shard, backward-compatible first</td></tr><tr><td>Global uniqueness (email)</td><td>Separate small lookup table / service keyed by email</td></tr></table></div></section>
+<section class="card" id="alt"><span class="step g">6</span><h2>Alternatives</h2><ul><li><b>Distributed SQL (CockroachDB, Spanner, YugabyteDB)</b> shard automatically and keep SQL. Fewer manual headaches, different cost and latency profile.</li><li><b>NoSQL (DynamoDB, Cassandra)</b> are built around partition keys. Great when access patterns are simple and known.</li><li><b>Application-level sharding</b> gives full control but every team must understand it. A router or proxy hides that.</li></ul></section>
+<section class="card" id="qa"><span class="step ">7</span><h2>Follow-up questions</h2><details class="qa"><summary>Sharding vs partitioning?</summary><p>Partitioning splits a table inside <b>one</b> database. Sharding splits data across <b>many</b> databases or servers. See the partitioning scenario.</p></details><details class="qa"><summary>How do you add a shard without downtime?</summary><p>Use virtual shards. Copy the chosen virtual shards to the new server, dual-write briefly, verify, then flip the shard map entry.</p></details><details class="qa"><summary>What if a query does not include the shard key?</summary><p>It becomes scatter-gather to all shards. Avoid on hot paths. Add a secondary lookup or use the search / analytics store.</p></details><details class="qa"><summary>Why not shard on order_id?</summary><p>Orders of one customer would spread across shards, so 'my orders' becomes scatter-gather. Shard by the entity you query by.</p></details></section>
+<p class="foot">Personal study notes. Numbers are interview-style assumptions, not official figures.<br><a href="index.html">&larr; All use cases</a> &middot; <a href="../index.html">Home</a></p>
+</main>
+<script src="usecase.js"></script>
+</body>
+</html>

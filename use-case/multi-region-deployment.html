@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Multi-Region Deployment Scenario</title>
+<meta name="description" content="Scenario-based system design: when to choose multi-region active-active deployment, data placement, failover, RTO and RPO.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="usecase.css">
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="Toggle theme">&#9680; theme</button>
+<main>
+
+<div class="crumbs"><a href="../index.html">&larr; Home</a><a href="index.html">All use cases</a></div>
+<span class="tag">system design use case</span>
+<h1>Multi-Region Deployment <span class="hot">Scenario</span></h1><p class="lead">A global app must survive a whole-region outage, serve users fast everywhere and keep EU data in the EU. The answer: multi-region deployment.</p><p class="hand">active-active, home region, failover</p>
+<nav class="toc" aria-label="Sections"><a href="#sc">scenario</a><a href="#why">why this</a><a href="#arch">architecture</a><a href="#data">data strategy</a><a href="#fail">failover</a><a href="#alt">alternatives</a><a href="#qa">follow-ups</a></nav>
+<section class="card" id="sc"><span class="step ">1</span><h2>The scenario</h2><div class="note"><b>Scenario question</b><br>A fintech app serves users in India, Europe and the US. The business wants <b>99.99% availability</b>, EU customer data must <b>stay in the EU</b>, latency should be under 200 ms for everyone, and a <b>complete region outage must not stop the app</b>. How do you deploy it?</div><h3>Clues in the question that point to this answer</h3><div class="chips"><span class="chip p">users in many continents</span><span class="chip p">regional outage must be survived</span><span class="chip p">data residency (EU)</span><span class="chip p">low latency worldwide</span><span class="chip p">99.99% SLA</span></div><details class="qa"><summary>Think first: what would you answer?</summary><p>Try to name the pattern and one reason for each clue above. Then read on.</p></details><div class="note ok"><b>Answer in one line:</b> <b>Active-active multi-region deployment</b> with geo-routing, stateless regional stacks, and data placed by <b>home region</b> plus cross-region replication for disaster recovery.</div></section>
+<section class="card" id="why"><span class="step o">2</span><h2>Why multi-region?</h2><div class="tblwrap"><table><tr><th>Requirement</th><th>Single region</th><th>Multi-region active-active</th></tr><tr><td>Region outage</td><td>Down until recovery</td><td>Traffic shifts to another region in seconds</td></tr><tr><td>Latency for far users</td><td>200-300 ms round trips</td><td>Served from the nearest region</td></tr><tr><td>Data residency</td><td>Hard</td><td>EU users' data lives in the EU region</td></tr><tr><td>Cost / complexity</td><td>Low</td><td><b>High</b>: replication, conflicts, testing</td></tr></table></div><div class="note">Multi-region is expensive. Use it when <b>availability, latency or residency</b> demand it, not by default. A multi-AZ setup in one region already survives a data-centre failure.</div></section>
+<section class="card" id="arch"><span class="step g">3</span><h2>Architecture</h2><svg class="dg" viewBox="0 0 800 455" role="img" aria-label="Multi-region active-active: global routing to three regional stacks, each with its own database, async replication between regions, event bus and backups">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+<line class="e" x1="172.0" y1="37.0" x2="286.0" y2="37.0"/>
+<line class="e" x1="348.5" y1="64.0" x2="196.0" y2="131.0"/>
+<line class="e" x1="407.8" y1="64.0" x2="402.4" y2="131.0"/>
+<line class="e" x1="467.1" y1="64.0" x2="608.7" y2="131.0"/>
+<line class="e" x1="130.0" y1="187.0" x2="130.0" y2="256.0"/>
+<line class="e" x1="400.0" y1="187.0" x2="400.0" y2="256.0"/>
+<line class="e" x1="670.0" y1="187.0" x2="670.0" y2="256.0"/>
+<line class="e async" x1="232.0" y1="285.0" x2="296.0" y2="285.0"/>
+<text class="el" x="264.0" y="281.0">async</text>
+<line class="e async" x1="502.0" y1="285.0" x2="566.0" y2="285.0"/>
+<text class="el" x="534.0" y="281.0">async</text>
+<line class="e async" x1="400.0" y1="312.0" x2="400.0" y2="381.0"/>
+<line class="e async" x1="670.0" y1="312.0" x2="670.0" y2="381.0"/>
+<line class="e" x1="689.5" y1="64.0" x2="675.9" y2="131.0"/>
+<g class="n client"><rect x="20" y="12" width="150" height="50" rx="10"/>
+<text x="95.0" y="34.0">Users</text><text class="sub" x="95.0" y="50.0">India / EU / US</text>
+</g>
+<g class="n edge"><rect x="290" y="12" width="240" height="50" rx="10"/>
+<text x="410.0" y="34.0">Global routing</text><text class="sub" x="410.0" y="50.0">GeoDNS / Anycast + health checks</text>
+</g>
+<g class="n svc"><rect x="610" y="12" width="170" height="50" rx="10"/>
+<text x="695.0" y="34.0">Control plane</text><text class="sub" x="695.0" y="50.0">flags, config, deploys</text>
+</g>
+<g class="n svc"><rect x="30" y="135" width="200" height="50" rx="10"/>
+<text x="130.0" y="157.0">Region IN</text><text class="sub" x="130.0" y="173.0">LB + app + cache</text>
+</g>
+<g class="n svc"><rect x="300" y="135" width="200" height="50" rx="10"/>
+<text x="400.0" y="157.0">Region EU</text><text class="sub" x="400.0" y="173.0">LB + app + cache</text>
+</g>
+<g class="n svc"><rect x="570" y="135" width="200" height="50" rx="10"/>
+<text x="670.0" y="157.0">Region US</text><text class="sub" x="670.0" y="173.0">LB + app + cache</text>
+</g>
+<g class="n db"><rect x="30" y="260" width="200" height="50" rx="10"/>
+<text x="130.0" y="282.0">IN database</text><text class="sub" x="130.0" y="298.0">home region for IN users</text>
+</g>
+<g class="n db"><rect x="300" y="260" width="200" height="50" rx="10"/>
+<text x="400.0" y="282.0">EU database</text><text class="sub" x="400.0" y="298.0">home region for EU users</text>
+</g>
+<g class="n db"><rect x="570" y="260" width="200" height="50" rx="10"/>
+<text x="670.0" y="282.0">US database</text><text class="sub" x="670.0" y="298.0">home region for US users</text>
+</g>
+<g class="n queue"><rect x="300" y="385" width="200" height="50" rx="10"/>
+<text x="400.0" y="407.0">Cross-region event bus</text><text class="sub" x="400.0" y="423.0">Kafka mirroring</text>
+</g>
+<g class="n db"><rect x="570" y="385" width="200" height="50" rx="10"/>
+<text x="670.0" y="407.0">Backups</text><text class="sub" x="670.0" y="423.0">object store, 2nd region</text>
+</g>
+</svg><div class="legend"><span><i style="background:color-mix(in srgb,var(--accent) 35%,var(--card))"></i>client</span><span><i style="background:color-mix(in srgb,var(--hot) 18%,var(--card))"></i>edge / protection</span><span><i style="background:color-mix(in srgb,var(--pop) 16%,var(--card))"></i>service</span><span><i style="background:color-mix(in srgb,var(--ok) 20%,var(--card))"></i>data store</span><span><i style="background:color-mix(in srgb,#3B82F6 22%,var(--card))"></i>queue / stream</span><span>solid arrow = sync call &middot; dashed = async event</span></div><h3>How a request flows</h3><ol><li>User hits <b>global routing</b> (GeoDNS or Anycast). It picks the nearest <b>healthy</b> region.</li><li>The regional stack (<b>stateless</b> app + cache) serves the request. Sessions live in a regional store or in signed tokens.</li><li>Reads and writes go to the user's <b>home-region database</b>.</li><li>Changes replicate <b>asynchronously</b> to other regions for DR. EU data replicates only to approved EU locations.</li><li>If a region fails, health checks remove it and users are routed to the next region, which already holds their replica.</li></ol></section>
+<section class="card" id="data"><span class="step ">4</span><h2>The hard part: data</h2><div class="grid"><div class="opt"><b>Home-region (partition by user)</b><span>Each user has one <strong>home region</strong> that accepts writes. No write conflicts, and residency is satisfied. Best default.</span></div><div class="opt"><b>Active-active writes</b><span>Any region accepts writes. Needs <strong>conflict resolution</strong> (last-write-wins, CRDTs). Use for low-risk data like preferences.</span></div><div class="opt"><b>Global tables</b><span>Reference data (currencies, product catalogue) replicated everywhere. <strong>Read local, write rarely.</strong></span></div><div class="opt"><b>Async vs sync replication</b><span>Sync across oceans adds 100+ ms to every write. Choose <strong>async</strong> and accept a small RPO, or sync only for critical ledgers.</span></div></div><div class="tblwrap"><table><tr><th>Term</th><th>Meaning</th><th>Target here</th></tr><tr><td>RTO</td><td>How long until service is back</td><td>&lt; 1 minute (automatic failover)</td></tr><tr><td>RPO</td><td>How much data can be lost</td><td>Seconds for async data, ~0 for critical ledger</td></tr></table></div></section>
+<section class="card" id="fail"><span class="step o">5</span><h2>Failover and operations</h2><ul><li><b>Health checks at multiple layers:</b> DNS health, load balancer health, synthetic transactions. Avoid flapping with sensible thresholds.</li><li><b>Capacity headroom:</b> if one of three regions dies, the other two must absorb its traffic. Plan ~50% spare per region.</li><li><b>Promote carefully:</b> when a home region fails, promote its replica in another region. Fence the old primary so it cannot accept writes when it returns (avoid <b>split-brain</b>).</li><li><b>Caches and sessions:</b> keep them regional and rebuildable. Never depend on a cross-region cache call in the hot path.</li><li><b>Deployments:</b> roll out region by region (canary first). One bad release must not hit every region at once.</li><li><b>Game days:</b> regularly simulate a region loss to prove RTO and RPO.</li></ul></section>
+<section class="card" id="alt"><span class="step g">6</span><h2>Alternatives and why not</h2><div class="tblwrap"><table><tr><th>Option</th><th>When it fits</th><th>Why not here</th></tr><tr><td>Multi-AZ, single region</td><td>Survive a data-centre failure</td><td>Does not survive a full region outage or fix far-user latency</td></tr><tr><td>Active-passive (warm standby)</td><td>Cheaper DR, RTO of minutes</td><td>Idle capacity, slower failover, no latency benefit</td></tr><tr><td>Backup and restore only</td><td>Non-critical systems, RTO of hours</td><td>Far too slow for 99.99%</td></tr><tr><td>Global distributed SQL (Spanner, CockroachDB)</td><td>Strong consistency across regions</td><td>Higher write latency and cost, but a valid choice</td></tr></table></div></section>
+<section class="card" id="qa"><span class="step ">7</span><h2>Follow-up questions</h2><details class="qa"><summary>What if two regions update the same record?</summary><p>Prefer home-region ownership so only one region writes a given record. For shared data, use a conflict rule (last-write-wins with timestamps) or CRDTs.</p></details><details class="qa"><summary>How do you keep EU data in the EU?</summary><p>Pin each EU user's home region to the EU, replicate only to EU locations, and keep analytics and logs that contain PII in-region too.</p></details><details class="qa"><summary>How do you prevent split-brain after failover?</summary><p>Use a fencing token or epoch number. A returning old primary with an older epoch is read-only until resynced.</p></details><details class="qa"><summary>Is multi-region the same as multi-AZ?</summary><p>No. AZs are separate data centres in one region (low latency, synchronous). Regions are far apart (high latency, usually asynchronous).</p></details></section>
+<p class="foot">Personal study notes. Numbers are interview-style assumptions, not official figures.<br><a href="index.html">&larr; All use cases</a> &middot; <a href="../index.html">Home</a></p>
+</main>
+<script src="usecase.js"></script>
+</body>
+</html>

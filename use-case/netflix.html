@@ -35,11 +35,10 @@
 <line class="e" x1="290.0" y1="187.0" x2="290.0" y2="256.0"/>
 <line class="e" x1="442.9" y1="187.0" x2="335.2" y2="256.0"/>
 <line class="e" x1="487.2" y1="187.0" x2="492.7" y2="256.0"/>
-<line class="e async" x1="109.1" y1="64.0" x2="274.8" y2="381.0"/>
-<text class="el" x="192.0" y="218.5">events</text>
-<line class="e async" x1="334.3" y1="383.0" x2="447.4" y2="314.0"/>
-<line class="e" x1="618.0" y1="410.0" x2="589.0" y2="410.0"/>
-<line class="e" x1="539.3" y1="383.0" x2="652.4" y2="314.0"/>
+<line class="e async" x1="511.0" y1="393.0" x2="499.3" y2="314.0"/>
+<text class="el" x="505.1" y="349.5">events</text>
+<line class="e" x1="172.0" y1="420.0" x2="211.0" y2="420.0"/>
+<line class="e" x1="384.0" y1="393.0" x2="616.0" y2="313.7"/>
 <line class="e async" x1="698.1" y1="258.0" x2="692.1" y2="174.0"/>
 <text class="el" x="695.1" y="212.0">fill off-peak</text>
 <g class="n client"><rect x="20" y="12" width="150" height="50" rx="10"/>
@@ -72,17 +71,17 @@
 <g class="n svc"><rect x="405" y="260" width="180" height="50" rx="10"/>
 <text x="495.0" y="282.0">ML pipeline</text><text class="sub" x="495.0" y="298.0">Spark batch + nearline</text>
 </g>
-<g class="n queue"><rect x="215" y="385" width="150" height="50" rx="10"/>
-<text x="290.0" y="407.0">Kafka</text><text class="sub" x="290.0" y="423.0">viewing events</text>
-</g>
-<g class="n svc"><rect x="405" y="385" width="180" height="50" rx="10"/>
-<text x="495.0" y="407.0">Encoding pipeline</text><text class="sub" x="495.0" y="423.0">parallel chunks</text>
-</g>
-<g class="n db"><rect x="620" y="385" width="160" height="50" rx="10"/>
-<text x="700.0" y="407.0">Master store</text><text class="sub" x="700.0" y="423.0">S3 originals</text>
-</g>
 <g class="n svc"><rect x="620" y="260" width="160" height="50" rx="10"/>
 <text x="700.0" y="282.0">Packager + DRM</text><text class="sub" x="700.0" y="298.0">DASH / HLS</text>
+</g>
+<g class="n db"><rect x="20" y="395" width="150" height="50" rx="10"/>
+<text x="95.0" y="417.0">Master store</text><text class="sub" x="95.0" y="433.0">S3 originals</text>
+</g>
+<g class="n svc"><rect x="215" y="395" width="180" height="50" rx="10"/>
+<text x="305.0" y="417.0">Encoding pipeline</text><text class="sub" x="305.0" y="433.0">parallel chunks</text>
+</g>
+<g class="n queue"><rect x="440" y="395" width="150" height="50" rx="10"/>
+<text x="515.0" y="417.0">Kafka</text><text class="sub" x="515.0" y="433.0">viewing events</text>
 </g>
 </svg><div class="legend"><span><i style="background:color-mix(in srgb,var(--accent) 35%,var(--card))"></i>client</span><span><i style="background:color-mix(in srgb,var(--hot) 18%,var(--card))"></i>edge / protection</span><span><i style="background:color-mix(in srgb,var(--pop) 16%,var(--card))"></i>service</span><span><i style="background:color-mix(in srgb,var(--ok) 20%,var(--card))"></i>data store</span><span><i style="background:color-mix(in srgb,#3B82F6 22%,var(--card))"></i>queue / stream</span><span>solid arrow = sync call &middot; dashed = async event</span></div><p class="cap">Simplified from publicly described Netflix architecture.</p><h3>Playback flow</h3><ol><li>Player calls the gateway; <b>Playback service</b> checks the plan, region, device and DRM rights.</li><li>It picks the <b>best Open Connect servers</b> (closest, healthy, holding the title) and returns a manifest with their URLs.</li><li>The player downloads small <b>video chunks directly from the CDN box</b>, not from the cloud.</li><li>While playing, the player sends <b>viewing events</b> to Kafka. They feed resume position and recommendations.</li></ol></section>
 <section class="card" id="encode"><span class="step ">4</span><h2>Deep dive 1: from master file to every screen</h2><ol><li>Studio uploads a high-quality <b>master</b> to object storage.</li><li><b>Split into chunks</b> (by scene or shot) and encode them in <b>parallel</b> on thousands of workers.</li><li>Create a <b>bitrate ladder</b>: many resolutions and bitrates, tuned <b>per title</b> (an animation needs fewer bits than an action film).</li><li><b>Package</b> into DASH / HLS segments, encrypt with <b>DRM</b>.</li><li><b>Push to CDN boxes during off-peak hours</b>, so popular content is already local when evening arrives.</li></ol><div class="note ok">Per-title encoding saves bandwidth with no visible quality loss. At this scale, 10% fewer bits is a very large number.</div></section>

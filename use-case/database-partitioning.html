@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Database Partitioning Scenario</title>
+<meta name="description" content="Scenario-based system design: when to use database table partitioning, range partitioning by date, pruning, retention and archiving.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="usecase.css">
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="Toggle theme">&#9680; theme</button>
+<main>
+
+<div class="crumbs"><a href="../index.html">&larr; Home</a><a href="index.html">All use cases</a></div>
+<span class="tag">system design use case</span>
+<h1>Database Partitioning <span class="hot">Scenario</span></h1><p class="lead">One giant time-series table is slow to query and impossible to purge. The answer: partition it by date.</p><p class="hand">range partitions, pruning, retention</p>
+<nav class="toc" aria-label="Sections"><a href="#sc">scenario</a><a href="#why">benefits</a><a href="#arch">architecture</a><a href="#sql">implementation</a><a href="#types">partition types</a><a href="#qa">follow-ups</a></nav>
+<section class="card" id="sc"><span class="step ">1</span><h2>The scenario</h2><div class="note"><b>Scenario question</b><br>A payments system writes <b>5 billion rows</b> to a single <code>transactions</code> table. Almost every query asks for the <b>last 7 days</b>. Monthly reports scan one month. Regulations say delete data older than <b>2 years</b>, and the <code>DELETE</code> job locks the table for hours. Indexes no longer fit in memory. What do you do?</div><h3>Clues in the question that point to this answer</h3><div class="chips"><span class="chip p">one huge table</span><span class="chip p">queries filter by date</span><span class="chip p">regular purge of old data</span><span class="chip p">delete is slow and bloats</span><span class="chip p">index too big for RAM</span></div><details class="qa"><summary>Think first: what would you answer?</summary><p>Try to name the pattern and one reason for each clue above. Then read on.</p></details><div class="note ok"><b>Answer in one line:</b> <b>Range partition the table by date (monthly)</b>. Queries touch only recent partitions, and retention becomes <code>DROP PARTITION</code>.</div></section>
+<section class="card" id="why"><span class="step o">2</span><h2>What partitioning gives you</h2><div class="grid"><div class="opt"><b>Partition pruning</b><span>A query with a date filter scans <strong>only matching partitions</strong>, not 5B rows.</span></div><div class="opt"><b>Small, hot indexes</b><span>Each partition has its own <strong>small index</strong> that fits in memory.</span></div><div class="opt"><b>Instant retention</b><span><strong>DROP / DETACH</strong> a month in milliseconds. No bloat, no long DELETE.</span></div><div class="opt"><b>Cheap archiving</b><span>Detach old partitions and move them to cheaper storage or Parquet files.</span></div></div><div class="note">Partitioning splits data <b>inside one database</b>. It does <b>not</b> add more CPU or write capacity beyond that server. That is what sharding is for.</div></section>
+<section class="card" id="arch"><span class="step g">3</span><h2>Architecture</h2><svg class="dg" viewBox="0 0 800 360" role="img" aria-label="Table partitioning: parent table split into monthly partitions, current month hot, old months archived to cold storage, job pre-creates next partition">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+<line class="e" x1="192.0" y1="37.0" x2="266.0" y2="37.0"/>
+<line class="e" x1="330.2" y1="64.0" x2="163.8" y2="146.0"/>
+<line class="e" x1="368.4" y1="64.0" x2="317.9" y2="146.0"/>
+<line class="e" x1="406.5" y1="64.0" x2="471.9" y2="146.0"/>
+<text class="el" x="439.2" y="101.0">prune</text>
+<line class="e" x1="445.2" y1="64.0" x2="627.9" y2="146.0"/>
+<line class="e" x1="603.0" y1="305.0" x2="584.0" y2="305.0"/>
+<line class="e async" x1="111.2" y1="202.0" x2="128.3" y2="276.0"/>
+<text class="el" x="119.8" y="235.0">archive</text>
+<g class="n client"><rect x="20" y="12" width="170" height="50" rx="10"/>
+<text x="105.0" y="34.0">Application</text><text class="sub" x="105.0" y="50.0">queries + inserts</text>
+</g>
+<g class="n db"><rect x="270" y="12" width="230" height="50" rx="10"/>
+<text x="385.0" y="34.0">events table</text><text class="sub" x="385.0" y="50.0">partitioned by month</text>
+</g>
+<g class="n db"><rect x="20" y="150" width="170" height="50" rx="10"/>
+<text x="105.0" y="172.0">events_2026_08</text><text class="sub" x="105.0" y="188.0">cold</text>
+</g>
+<g class="n db"><rect x="215" y="150" width="170" height="50" rx="10"/>
+<text x="300.0" y="172.0">events_2026_09</text><text class="sub" x="300.0" y="188.0">cold</text>
+</g>
+<g class="n db"><rect x="410" y="150" width="170" height="50" rx="10"/>
+<text x="495.0" y="172.0">events_2026_10</text><text class="sub" x="495.0" y="188.0">warm</text>
+</g>
+<g class="n db"><rect x="605" y="150" width="175" height="50" rx="10"/>
+<text x="692.5" y="172.0">events_2026_11</text><text class="sub" x="692.5" y="188.0">HOT (current)</text>
+</g>
+<g class="n db"><rect x="410" y="280" width="170" height="50" rx="10"/>
+<text x="495.0" y="302.0">events_2026_12</text><text class="sub" x="495.0" y="318.0">pre-created</text>
+</g>
+<g class="n svc"><rect x="605" y="280" width="175" height="50" rx="10"/>
+<text x="692.5" y="302.0">Partition job</text><text class="sub" x="692.5" y="318.0">pg_partman / cron</text>
+</g>
+<g class="n db"><rect x="20" y="280" width="230" height="50" rx="10"/>
+<text x="135.0" y="302.0">Cold storage</text><text class="sub" x="135.0" y="318.0">Parquet on object store</text>
+</g>
+</svg><div class="legend"><span><i style="background:color-mix(in srgb,var(--accent) 35%,var(--card))"></i>client</span><span><i style="background:color-mix(in srgb,var(--hot) 18%,var(--card))"></i>edge / protection</span><span><i style="background:color-mix(in srgb,var(--pop) 16%,var(--card))"></i>service</span><span><i style="background:color-mix(in srgb,var(--ok) 20%,var(--card))"></i>data store</span><span><i style="background:color-mix(in srgb,#3B82F6 22%,var(--card))"></i>queue / stream</span><span>solid arrow = sync call &middot; dashed = async event</span></div><h3>How it works</h3><ol><li>The <b>parent table</b> holds no rows. Rows are stored in child partitions, one per month.</li><li>Inserts are routed to the <b>current month</b> partition automatically.</li><li>Queries with a <code>created_at</code> filter hit <b>only the partitions that match</b> (pruning).</li><li>A scheduled job <b>creates next month's partition ahead of time</b>.</li><li>Partitions older than 2 years are <b>detached and archived</b>, then dropped.</li></ol></section>
+<section class="card" id="sql"><span class="step ">4</span><h2>Implementation (PostgreSQL)</h2><div class="code"><div class="label">declarative range partitioning</div><pre><code>CREATE TABLE transactions (
+  id          bigint       NOT NULL,
+  account_id  bigint       NOT NULL,
+  amount      numeric(18,2),
+  created_at  timestamptz  NOT NULL,
+  PRIMARY KEY (id, created_at)          -- partition key must be in the PK
+) PARTITION BY RANGE (created_at);
+
+CREATE TABLE transactions_2026_11 PARTITION OF transactions
+  FOR VALUES FROM ('2026-11-01') TO ('2026-12-01');
+
+CREATE INDEX ON transactions (account_id, created_at);   -- created per partition</code></pre></div><div class="code"><div class="label">retention in milliseconds</div><pre><code>-- instead of: DELETE FROM transactions WHERE created_at &lt; now() - interval '2 years';
+ALTER TABLE transactions DETACH PARTITION transactions_2024_10;
+-- archive it (COPY to Parquet / object storage), then:
+DROP TABLE transactions_2024_10;</code></pre></div><div class="code"><div class="label">check pruning</div><pre><code>EXPLAIN SELECT * FROM transactions
+WHERE created_at &gt;= now() - interval '7 days';
+-- plan should list only the current (and maybe previous) partition</code></pre></div></section>
+<section class="card" id="types"><span class="step o">5</span><h2>Which partition type?</h2><div class="tblwrap"><table><tr><th>Type</th><th>Use when</th><th>Example</th></tr><tr><td><b>Range</b></td><td>Time series, ordered data, retention by age</td><td>monthly <code>created_at</code></td></tr><tr><td><b>List</b></td><td>A small known set of values</td><td>region = 'IN', 'EU', 'US'</td></tr><tr><td><b>Hash</b></td><td>Spread evenly, no natural range</td><td>hash(account_id) into 16 buckets</td></tr><tr><td><b>Composite</b></td><td>Both needs</td><td>month, then hash(account_id)</td></tr></table></div><ul><li>Keep the partition count sensible (hundreds, not hundreds of thousands).</li><li>Always include the <b>partition key in queries</b>, otherwise every partition is scanned.</li><li>Unique constraints must include the partition key.</li></ul></section>
+<section class="card" id="qa"><span class="step g">6</span><h2>Follow-up questions</h2><details class="qa"><summary>Partitioning vs sharding?</summary><p>Partitioning: one database, many tables on the same server, for manageability and pruning. Sharding: many servers, for write and size scale.</p></details><details class="qa"><summary>Is partitioning enough when writes grow 10x?</summary><p>No. It does not add CPU or disk bandwidth. Add read replicas, then shard when one primary can no longer take the writes.</p></details><details class="qa"><summary>What if a query lacks the date filter?</summary><p>It scans all partitions and may be slower than before. Make date filters mandatory in the API or add a covering index.</p></details><details class="qa"><summary>Can I combine them?</summary><p>Yes. Shard by customer across servers, and inside each shard partition by month. Common in large systems.</p></details></section>
+<p class="foot">Personal study notes. Numbers are interview-style assumptions, not official figures.<br><a href="index.html">&larr; All use cases</a> &middot; <a href="../index.html">Home</a></p>
+</main>
+<script src="usecase.js"></script>
+</body>
+</html>

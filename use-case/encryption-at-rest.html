@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Encryption at Rest Scenario</title>
+<meta name="description" content="Scenario-based system design: encryption at rest with envelope encryption, KMS and HSM, TDE vs field-level encryption, key rotation and crypto-shredding.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Kalam:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="usecase.css">
+</head>
+<body>
+<button class="theme" id="theme" type="button" aria-label="Toggle theme">&#9680; theme</button>
+<main>
+
+<div class="crumbs"><a href="../index.html">&larr; Home</a><a href="index.html">All use cases</a></div>
+<span class="tag">system design use case</span>
+<h1>Encryption at Rest <span class="hot">Scenario</span></h1><p class="lead">Auditors ask what happens if a disk, snapshot or backup leaks. The answer: envelope encryption with layered keys, and field-level encryption for the crown jewels.</p><p class="hand">envelope encryption, KMS, key rotation</p>
+<nav class="toc" aria-label="Sections"><a href="#sc">scenario</a><a href="#why">what it protects</a><a href="#arch">architecture</a><a href="#code">implementation</a><a href="#search">searchable</a><a href="#ops">operations</a><a href="#qa">follow-ups</a></nav>
+<section class="card" id="sc"><span class="step ">1</span><h2>The scenario</h2><div class="note"><b>Scenario question</b><br>A healthcare and payments platform stores <b>patient records and card data</b> in the cloud. Auditors (PCI DSS, HIPAA, GDPR) ask: <i>if a disk, snapshot or backup is stolen, or a DBA browses the tables, can the attacker read customer data?</i> You also need <b>key rotation</b> and the ability to <b>revoke a customer's data</b>. What do you design?</div><h3>Clues in the question that point to this answer</h3><div class="chips"><span class="chip p">stolen disk / snapshot / backup</span><span class="chip p">compliance (PCI, HIPAA, GDPR)</span><span class="chip p">insider with DB access</span><span class="chip p">key rotation required</span><span class="chip p">per-customer data revocation</span></div><details class="qa"><summary>Think first: what would you answer?</summary><p>Try to name the pattern and one reason for each clue above. Then read on.</p></details><div class="note ok"><b>Answer in one line:</b> <b>Encryption at rest with envelope encryption</b>: data keys protect the data, a KMS / HSM-held master key protects the data keys, plus field-level encryption for the most sensitive columns.</div></section>
+<section class="card" id="why"><span class="step o">2</span><h2>What encryption at rest does (and does not) protect</h2><div class="tblwrap"><table><tr><th>Threat</th><th>Disk / TDE encryption</th><th>Field-level (app) encryption</th></tr><tr><td>Stolen disk or snapshot</td><td><b>Protected</b></td><td><b>Protected</b></td></tr><tr><td>Leaked backup file</td><td><b>Protected</b></td><td><b>Protected</b></td></tr><tr><td>DBA runs SELECT</td><td>Not protected (DB decrypts transparently)</td><td><b>Protected</b> (DB only sees ciphertext)</td></tr><tr><td>SQL injection / app compromise</td><td>Not protected</td><td>Partly protected (depends on key access)</td></tr><tr><td>Data in transit</td><td>Use TLS (separate control)</td><td>Use TLS (separate control)</td></tr></table></div><div class="note">Encryption at rest is <b>one layer</b>. It does not replace access control, TLS in transit, or monitoring.</div></section>
+<section class="card" id="arch"><span class="step g">3</span><h2>Architecture</h2><svg class="dg" viewBox="0 0 800 360" role="img" aria-label="Encryption at rest: application with crypto SDK, KMS and HSM key hierarchy, database with TDE and field encryption, volumes, backups, object storage, blind index, key audit log">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z"/></marker></defs>
+<line class="e" x1="212.0" y1="37.0" x2="266.0" y2="37.0"/>
+<line class="e" x1="462.0" y1="37.0" x2="556.0" y2="37.0"/>
+<text class="el" x="509.0" y="33.0">wrap / unwrap DEK</text>
+<line class="e" x1="665.0" y1="64.0" x2="665.0" y2="146.0"/>
+<line class="e" x1="319.0" y1="64.0" x2="179.4" y2="146.0"/>
+<text class="el" x="249.2" y="101.0">ciphertext</text>
+<line class="e" x1="371.8" y1="64.0" x2="392.6" y2="146.0"/>
+<line class="e" x1="130.0" y1="202.0" x2="130.0" y2="281.0"/>
+<line class="e async" x1="187.0" y1="202.0" x2="353.8" y2="281.0"/>
+<g class="n client"><rect x="20" y="12" width="190" height="50" rx="10"/>
+<text x="115.0" y="34.0">Application</text><text class="sub" x="115.0" y="50.0">encrypt sensitive fields</text>
+</g>
+<g class="n svc"><rect x="270" y="12" width="190" height="50" rx="10"/>
+<text x="365.0" y="34.0">Crypto SDK</text><text class="sub" x="365.0" y="50.0">envelope encryption</text>
+</g>
+<g class="n edge"><rect x="560" y="12" width="210" height="50" rx="10"/>
+<text x="665.0" y="34.0">KMS</text><text class="sub" x="665.0" y="50.0">master keys (KEK) + audit</text>
+</g>
+<g class="n db"><rect x="20" y="150" width="220" height="50" rx="10"/>
+<text x="130.0" y="172.0">Database</text><text class="sub" x="130.0" y="188.0">TDE + encrypted columns</text>
+</g>
+<g class="n db"><rect x="300" y="150" width="200" height="50" rx="10"/>
+<text x="400.0" y="172.0">Object storage</text><text class="sub" x="400.0" y="188.0">SSE-KMS, versioned</text>
+</g>
+<g class="n ext"><rect x="560" y="150" width="210" height="50" rx="10"/>
+<text x="665.0" y="172.0">HSM</text><text class="sub" x="665.0" y="188.0">root of trust</text>
+</g>
+<g class="n db"><rect x="20" y="285" width="220" height="50" rx="10"/>
+<text x="130.0" y="307.0">Disk / volume</text><text class="sub" x="130.0" y="323.0">AES-256, per-volume key</text>
+</g>
+<g class="n db"><rect x="300" y="285" width="230" height="50" rx="10"/>
+<text x="415.0" y="307.0">Backups + snapshots</text><text class="sub" x="415.0" y="323.0">encrypted, key in 2nd region</text>
+</g>
+</svg><div class="legend"><span><i style="background:color-mix(in srgb,var(--accent) 35%,var(--card))"></i>client</span><span><i style="background:color-mix(in srgb,var(--hot) 18%,var(--card))"></i>edge / protection</span><span><i style="background:color-mix(in srgb,var(--pop) 16%,var(--card))"></i>service</span><span><i style="background:color-mix(in srgb,var(--ok) 20%,var(--card))"></i>data store</span><span><i style="background:color-mix(in srgb,#3B82F6 22%,var(--card))"></i>queue / stream</span><span>solid arrow = sync call &middot; dashed = async event</span></div><h3>Key hierarchy (envelope encryption)</h3><ol><li><b>Root key</b> lives in an <b>HSM</b> and never leaves it.</li><li><b>KMS master key (KEK)</b> is protected by the root key. Apps cannot read it, they can only ask KMS to wrap or unwrap.</li><li>A <b>data key (DEK)</b> is generated per tenant, table or record. It encrypts the actual data with AES-256-GCM.</li><li>The DEK is stored next to the data, <b>encrypted by the KEK</b>. To read, the app asks KMS to unwrap the DEK, decrypts, then discards the plaintext key.</li></ol><div class="note ok">Why envelope? KMS only encrypts small keys, so big data is never sent to KMS. Rotating the KEK only <b>re-wraps small DEKs</b>, not terabytes of data.</div></section>
+<section class="card" id="code"><span class="step ">4</span><h2>Implementation</h2><div class="code"><div class="label">envelope encryption (pseudo-code)</div><pre><code>encrypt(plaintext, tenantId):
+  dek        = kms.generateDataKey(keyId = "tenant/" + tenantId)   # returns plaintext + wrapped
+  nonce      = random(12 bytes)
+  ciphertext = AES_256_GCM.encrypt(dek.plaintext, nonce, plaintext, aad = tenantId)
+  wipe(dek.plaintext)
+  return { wrappedDek: dek.wrapped, nonce, ciphertext }     # store all three
+
+decrypt(record, tenantId):
+  dek = kms.unwrap(record.wrappedDek, context = tenantId)    # audited, policy-checked
+  return AES_256_GCM.decrypt(dek, record.nonce, record.ciphertext, aad = tenantId)</code></pre></div><div class="grid"><div class="opt"><b>Layered encryption</b><span><strong>Volume/TDE</strong> for everything, <strong>field-level</strong> for card numbers, national IDs, health data.</span></div><div class="opt"><b>Key per tenant</b><span>Delete or disable a tenant key and their data becomes unreadable (<strong>crypto-shredding</strong>, helps GDPR erasure).</span></div><div class="opt"><b>Rotation</b><span>Rotate KEK on a schedule (e.g. yearly), <strong>re-wrap DEKs</strong>. Rotate DEKs when data is rewritten.</span></div><div class="opt"><b>BYOK / HYOK</b><span>Customers bring or hold their own key. They can cut access by revoking it.</span></div></div></section>
+<section class="card" id="search"><span class="step o">5</span><h2>How do you search encrypted columns?</h2><ul><li><b>Exact match:</b> store a <b>blind index</b> = <code>HMAC(secret, normalized_value)</code> next to the ciphertext. Query by the HMAC.</li><li><b>Prefix / last-4 digits:</b> store a separate, low-sensitivity derived column (e.g. last 4 of card).</li><li><b>Range / LIKE / sort:</b> not possible on strong ciphertext. Either avoid encrypting that column, tokenise it, or search a separate secured index.</li><li><b>Never</b> use deterministic encryption for low-entropy values without understanding the leakage (equal values look equal).</li></ul></section>
+<section class="card" id="ops"><span class="step g">6</span><h2>Operational must-haves</h2><ul><li><b>Least privilege on keys:</b> the app can use a key to encrypt and decrypt, but cannot export it or change its policy. Separate <b>key admins</b> from <b>data admins</b>.</li><li><b>Audit every key use</b> and alert on unusual decrypt volumes.</li><li><b>Encrypt backups and replicas</b> with keys available in the DR region.</li><li><b>Test restores</b>, including key availability. An encrypted backup you cannot decrypt is no backup.</li><li><b>Protect logs and caches:</b> plaintext copies in logs, caches or search indexes defeat the design.</li><li><b>Performance:</b> AES uses hardware acceleration. Cache unwrapped DEKs briefly in memory to avoid a KMS call per row.</li></ul></section>
+<section class="card" id="qa"><span class="step ">7</span><h2>Follow-up questions</h2><details class="qa"><summary>TDE vs application-level encryption?</summary><p>TDE encrypts files on disk transparently and defends against stolen media. Application-level encryption also defends against DB admins and some injection, but costs searchability and needs key handling in the app.</p></details><details class="qa"><summary>What if KMS is down?</summary><p>Cache unwrapped DEKs for a short time in memory, run KMS in multiple regions, and design degraded modes for read-only access.</p></details><details class="qa"><summary>How do you erase one customer's data from backups (GDPR)?</summary><p>Use a per-customer key. Destroying the key makes every copy, including backups, unreadable (crypto-shredding).</p></details><details class="qa"><summary>Why AES-GCM?</summary><p>It provides encryption and integrity together (authenticated encryption). Never reuse a nonce with the same key.</p></details></section>
+<p class="foot">Personal study notes. Numbers are interview-style assumptions, not official figures.<br><a href="index.html">&larr; All use cases</a> &middot; <a href="../index.html">Home</a></p>
+</main>
+<script src="usecase.js"></script>
+</body>
+</html>
